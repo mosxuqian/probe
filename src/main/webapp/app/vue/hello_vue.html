@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>vue.js的hello world!示例</title>
+</head>
+
+<body>
+    <div id="hello">
+        <p>{{message}}</p>
+        <input type="text" v-model="message" />
+        <div v-if="true" transition="expand">
+            v-if的测试div
+        </div>
+        <span v-show="show" transition="bounce">看我</span>
+    </div>
+
+    <div id="test_component">
+        <my-component2></my-component2>
+        <child msg="hello, child!"></child>
+    </div>
+
+    <script type="text/javascript" src="../../assets/plugins/vue/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#hello',
+            data: {
+                message: 'Hello, World!'
+            }
+        });
+
+        //定义组件
+        var myComponent = Vue.extend({
+            template: '<div>my custom compontent</div>'
+        });
+
+        //注册
+        // Vue.component('my-component', myComponent);
+        Vue.component('my-component2', {
+            template: '<div>my custom compontent2</div>'
+        });
+
+        Vue.component('child', {
+            props: ['msg'],
+            template: '<span>{{msg}}</span>'
+        });
+    </script>
+</body>
+
+</html>
