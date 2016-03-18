@@ -7,7 +7,8 @@ package com.blinkfox.test;
 public class Factorial {
 
     public static void main(String[] args) {
-        int n = Integer.parseInt(args[0]);
+//        int n = Integer.parseInt(args[0]);
+        int n = 50000;
 
         long startTime = System.currentTimeMillis();
         int[] arr = new int[n * 5];
@@ -27,9 +28,12 @@ public class Factorial {
         }
 
         int sum = 0;
+//        StringBuilder sb = new StringBuilder("");
         for (; len >= 0; len--) {
             sum = sum + arr[len];
+//            sb.append(String.valueOf(arr[len]));
         }
+//        System.out.println(n + "的阶乘为:" + sb.toString());
         System.out.println("陈家银：" + (System.currentTimeMillis() - startTime) + "：" + sum);
     }
 
