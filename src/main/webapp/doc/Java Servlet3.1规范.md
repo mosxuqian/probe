@@ -340,3 +340,28 @@ public void onComplete(AsyncEvent event)`–用于通知监听器在`Servlet`上
 - getDateHeader
 
 如果`getIntHeader`方法不能转换为`int`的头值，则抛出`NumberFormatException`异常。如果`getDateHeader`方法不能把头转换成一个`Date`对象，则抛出`IllegalArgumentException`异常。
+
+### 3.5请求路径元素
+
+引导`servlet`服务请求的请求路径由许多重要部分组成。以下元素从请求`URI`路径得到，并通过请求对象公开：
+
+- `Context Path`：与`ServletContext`相关联的路径前缀是这个`servlet`的一部分。如果这个上下文是基于`Web`服务器的`URL`命名空间基础上的“默认”上下文，那么这个路径将是一个空字符串。否则，如果上下文不是基于服务器的命名空间，那么这个路径以`/`字符开始，但不以`/`字符结束。
+- `Servlet Path`：路径部分直接与激活请求的映射对应。这个路径以`/`字符开头，如果请求与`/*`或`“”`模式匹配，在这种情况下，它是一个空字符串。
+- `PathInfo`：请求路径的一部分，不属于`Context Path`或`Servlet Path`。如果没有额外的路径，它要么是`null`，要么是以`/`开头的字符串。 使用`HttpServletRequest`接口中的下面方法来访问这些信息：
+
+- getContextPath
+- getServletPath
+- getPathInfo
+重要的是要注意，除了请求`URI`和路径部分的`URL`编码差异外，下面的等式永远为真：
+
+```
+requestURI = contextPath + servletPath + pathInfo
+```
+
+### 3.6 路径转换方法
+在`API`中有两个方便的方法，允许开发者获得与某个特定的路径等价的文件系统路径。这些方法是：
+
+- `ServletContext.getRealPath`
+- `HttpServletRequest.getPathTranslated`
+
+`getRealPath`方法需要一个`String`参数，并返回一个`String`形式的路径，这个路径对应一个在本地文件系统上的文件。`getPathTranslated`方法推断出请求的`pathInfo`的实际路径。这些方法在`servlet`容器无法确定一个有效的文件路径的情况下，如`Web`应用程序从归档中，在不能访问本地的远程文件系统上，或在一个数据库中执行时，这些方法必须返回`null`。`JAR`文件中`META-INF/resources`目录下的资源，只有当调用`getRealPath()`方法时才认为容器已经从包含它的`JAR`文件中解压，在这种情况下，必须返回解压缩后位置。
