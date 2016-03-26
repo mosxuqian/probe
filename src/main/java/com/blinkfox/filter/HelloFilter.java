@@ -9,8 +9,8 @@ import java.io.IOException;
  * 过滤器的注解使用示例
  * Created by blinkfox on 16-3-26.
  */
-@WebFilter(filterName = "HelloFilter", urlPatterns = "/*",
-        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
+//@WebFilter(filterName = "HelloFilter", urlPatterns = "/*",
+//        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class HelloFilter implements Filter {
 
     public void init(FilterConfig config) throws ServletException {
