@@ -264,6 +264,54 @@ header .hide-completed {
 
 ![todos应用2][10]
 
+## 三、在collection中存储tasks
+
+`Collections`是`Meteor`中用来存储持久化数据的方式。`Collections`的特别之处就在于在服务端和客户端都能进行访问，而无需编写大量的服务端代码，同时也保证了数据的实时更新，所以视图组件中才会自动显示最新的数据。你可以阅读更多关于Meteor的[Collections文章][11]。
+
+只需使用`MyCollection = new Mongo.Collection("my-collection");`就可以创建一个新的`collection`。为了创建collection，我们定义一个新的`todos`模块来创建`Mongo collection`并`exports`它。在`imports`目录中新建`api`目录，用于存放该应用的`API`，并在`api`目录中新建`tasks.js`，你可以阅读[这里的文章][12]来看如何构建自己的`Meteor`代码结构。`tasks.js`中添加如下代码：
+
+```javascript
+// imports/api/tasks.js
+import { Mongo } from 'meteor/mongo';
+ 
+export const Tasks = new Mongo.Collection('tasks');
+```
+
+我们需要在服务端`server/main.js`中导入`Mongo`创建的数据集。
+
+```javascript
+// server/main.js
+import '../imports/api/tasks.js';
+```
+
+我们再更新客户端`imports/ui/body.js`中的代码，通过获取`collection`中的数据来替代原来写死的数据：
+
+```javascript
+// imports/ui/body.js
+import { Template } from 'meteor/templating';
+ 
+import { Tasks } from '../api/tasks.js';
+ 
+import './body.html';
+ 
+Template.body.helpers({
+  tasks() {
+    return Tasks.find({});
+  },
+});
+```
+
+当你修改了你的代码并保存了之后，你会发现页面的`todo list`数据都消失了。因为当前数据库中的数据是空的——让我们插入些`tasks`数据！
+
+新开一个当前项目路径下的终端，执行`meteor mongo`将连接该todos应用的`Meteor`自带的`MongoDB`数据库。执行如下命令来插入一条tasks数据到`tasks`集合中。
+
+```bash
+db.tasks.insert({ text: "Hello world!", createdAt: new Date() });
+```
+
+此时在你的浏览器中将会看到你刚刚新插入的一条tasks数据。你可以看到，我们没有写任何代码到服务器端数据库连接到我们的前端代码——它都是自动发生的。
+
+在控制台数据库中插入不同的tasks来完成一些任务。在接下来的步骤中，我们将看到如何将一些功能添加到我们的应用程序的界面，因此我们可以在不使用数据库控制台来添加tasks任务。
 
   [1]: https://www.meteor.com/
   [2]: http://blinkfox.com/meteorde-an-zhuang-he-ru-men/
@@ -275,3 +323,5 @@ header .hide-completed {
   [8]: http://7xnrn5.com1.z0.glb.clouddn.com/todos1.jpg
   [9]: https://github.com/meteor/meteor/blob/devel/packages/spacebars/README.md
   [10]: http://7xnrn5.com1.z0.glb.clouddn.com/todos2.jpg
+  [11]: http://guide.meteor.com/collections.html
+  [12]: http://guide.meteor.com/structure.html
