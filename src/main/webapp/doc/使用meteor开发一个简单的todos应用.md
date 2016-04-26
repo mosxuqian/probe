@@ -54,9 +54,224 @@ meteor
 
 我们接下来会使用这个默认的项目来构建一个简单的todos应用。
 
+## 二、定义模版定义视图
+
+为了todos应用能运行，我们需要先使用下面的代码来替换默认创建的代码，然后再说明怎么做到的。
+
+首先，删掉`client/main.html`中`<body>`及其以下的代码，仅仅保留`<head>`标签中的内容：
+
+```html
+<!-- client/main.html -->
+<head>
+  <title>simple</title>
+</head>
+```
+
+然后我们创建`imports`目录和其下的一些文件:
+
+```html
+<!-- imports/ui/body.html -->
+<body>
+  <div class="container">
+    <header>
+      <h1>Todo List</h1>
+    </header>
+ 
+    <ul>
+      {{#each tasks}}
+        {{> task}}
+      {{/each}}
+    </ul>
+  </div>
+</body>
+ 
+<template name="task">
+  <li>{{text}}</li>
+</template>
+```
+
+```javasript
+// imports/ui/body.js
+import { Template } from 'meteor/templating';
+ 
+import './body.html';
+ 
+Template.body.helpers({
+  tasks: [
+    { text: 'This is task 1' },
+    { text: 'This is task 2' },
+    { text: 'This is task 3' },
+  ],
+});
+```
+
+`imports/`目录下的文件只有导入了才会加载，所以我们需要在`client/main.js`中导入`imports/ui/body.js`。*注意：我们需要删除`client/main.js`中以前的代码*。
+
+```javascript
+// client/main.js
+import '../imports/ui/body.js';
+```
+
+你可以阅读更多有关Meteor`imports`如何工作和构建项目结构的[文章][7]。
+
+在我们的浏览器中，这个应用将看起来像下面这样：
+
+![todos应用][8]
+
+现在让我们找出这些代码是怎么做到的！
+
+`Meteor`的模版定义在`HTML`文件中,`Meteor`解析`HTML`文件中三个顶级级别的标签：`<head>`, `<body>`, 和 `<template>`。在任何的`<head>`标签都添加到`HTML`的head发送到客户端，并在`<body>`标签都添加到body的部分，就像一个普通的HTML文件。任何在`<template>`标签中的内容都被编译成Meteor的模版，在html中通过`{{> task}}`引入，在js中通过`Template.templateName`引用。当然，如果是body标签,则在js中的通过`Template.body`来引用。
+
+### 在模版中添加逻辑和数据
+
+所有html中的代码都是通过[Meteor's Spacebars compiler][9]编译。`Spacebars`使用双大括号括起来的语法，如：`{{#each}}`和`{{＃if}}`，让你在视图中添加逻辑和数据。
+
+### 添加CSS样式
+
+在继续之前，为了让我们的应用看起来不错，在`simple-todos.css`文件中添加如下`CSS`。
+
+```css
+// Replace simple-todos.css with this code
+/* CSS declarations go here */
+body {
+  font-family: sans-serif;
+  background-color: #315481;
+  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
+  background-attachment: fixed;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 0;
+  margin: 0;
+
+  font-size: 14px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100%;
+  background: white;
+}
+
+header {
+  background: #d2edf4;
+  background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
+  padding: 20px 15px 15px 15px;
+  position: relative;
+}
+
+#login-buttons {
+  display: block;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin: 0;
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-right: 1em;
+}
+
+form {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  position: relative;
+}
+
+.new-task input {
+  box-sizing: border-box;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding-right: 80px;
+  font-size: 1em;
+}
+
+.new-task input:focus{
+  outline: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  background: white;
+}
+
+.delete {
+  float: right;
+  font-weight: bold;
+  background: none;
+  font-size: 1em;
+  border: none;
+  position: relative;
+}
+
+li {
+  position: relative;
+  list-style: none;
+  padding: 15px;
+  border-bottom: #eee solid 1px;
+}
+
+li .text {
+  margin-left: 10px;
+}
+
+li.checked {
+  color: #888;
+}
+
+li.checked .text {
+  text-decoration: line-through;
+}
+
+li.private {
+  background: #eee;
+  border-color: #ddd;
+}
+
+header .hide-completed {
+  float: right;
+}
+
+.toggle-private {
+  margin-left: 5px;
+}
+
+@media (max-width: 600px) {
+  li {
+    padding: 12px 15px;
+  }
+
+  .search {
+    width: 150px;
+    clear: both;
+  }
+
+  .new-task input {
+    padding-bottom: 5px;
+  }
+}
+```
+
+切换到浏览器中，将自动刷新页面，todos应用的效果如下图所示：
+
+![todos应用2][10]
+
+
   [1]: https://www.meteor.com/
   [2]: http://blinkfox.com/meteorde-an-zhuang-he-ru-men/
   [3]: http://localhost:3000
   [4]: http://git.io/es6features
   [5]: https://github.com/getify/You-Dont-Know-JS/tree/master/es6%20&%20beyond
   [6]: https://github.com/nzakas/understandinges6
+  [7]: http://guide.meteor.com/structure.html
+  [8]: http://7xnrn5.com1.z0.glb.clouddn.com/todos1.jpg
+  [9]: https://github.com/meteor/meteor/blob/devel/packages/spacebars/README.md
+  [10]: http://7xnrn5.com1.z0.glb.clouddn.com/todos2.jpg
