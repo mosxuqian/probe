@@ -1,4 +1,4 @@
-# 使用meteor开发一个简单的todos应用
+# 使用meteor开发一个简单的todos应用（一）
 
 [`Meteor`][1]是一个构建在Node.js之上的平台，用来开发实时网页程序。Meteor位于程序数据库和用户界面之间，保持二者之间的数据同步更新。因为Meteor是基于Node.js开发的，所以在客户端和服务器端都使用JavaScript作为开发语言。而且，Meteor程序的代码还能在前后两端共用。官方的介绍如下：
 
@@ -312,6 +312,125 @@ db.tasks.insert({ text: "Hello world!", createdAt: new Date() });
 此时在你的浏览器中将会看到你刚刚新插入的一条tasks数据。你可以看到，我们没有写任何代码到服务器端数据库连接到我们的前端代码——它都是自动发生的。
 
 在控制台数据库中插入不同的tasks来完成一些任务。在接下来的步骤中，我们将看到如何将一些功能添加到我们的应用程序的界面，因此我们可以在不使用数据库控制台来添加tasks任务。
+
+## 四、使用表单添加tasks
+
+在这一步中，我们将使用输入字段的方式添加到用户列表中。
+
+首先，让我们添加一个表单到我们的`HTML`中：
+
+```html
+<!-- imports/ui/body.html -->
+<div class="container">
+    <header>
+      <h1>Todo List</h1>
+    
+      <form class="new-task">
+        <input type="text" name="text" placeholder="Type to add new tasks" />
+      </form>
+    </header>
+    
+    <ul>
+```
+
+下面是监听表单提交事件的`javascript`代码：
+
+```javascript
+/* imports/ui/body.js */
+   return Tasks.find({});
+  },
+});
+ 
+Template.body.events({
+  'submit .new-task'(event) {
+    // Prevent default browser form submit
+    event.preventDefault();
+ 
+    // Get value from form element
+    const target = event.target;
+    const text = target.text.value;
+ 
+    // Insert a task into the collection
+    Tasks.insert({
+      text,
+      createdAt: new Date(), // current time
+    });
+ 
+    // Clear form
+    target.text.value = '';
+  },
+});
+```
+
+现在，在你的应用有一个新的输入框。要添加一个任务，只需输入相应的内容并按下回车键。如果你打开一个新的浏览器窗口，且再次打开该应用程序，你会看到列表中的所有tasks数据在各客户端之间是自动同步的。
+
+为了让列表中总是显示最新的tasks，在`imports/ui/body.js`中修改如下代码：
+
+```javascript
+// imports/ui/body.js
+Template.body.helpers({
+  tasks() {
+    // Show newest tasks at the top
+    return Tasks.find({}, { sort: { createdAt: -1 } });
+  },
+});
+```
+
+## 五、更新或删除tasks
+
+到现在为止，我已经能够向`collection`中插入数据了，现在我们来学习如何更新或删除一条tasks。
+
+我们新建一个`task`的模板,向其中添加一些新的特性、复选框和删除按钮：
+
+```html
+// imports/ui/task.html
+<template name="task">
+  <li class="{{#if checked}}checked{{/if}}">
+    <button class="delete">&times;</button>
+ 
+    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
+ 
+    <span class="text">{{text}}</span>
+  </li>
+</template>
+```
+
+**我们同时也需要从`imports/ui/body.html`文件中移除老的`task`模板**。我们已经添加了一些UI元素，但是并不起任何作用，我们还需要添加一些事件`handlers`：
+
+```javascript
+// imports/ui/task.js
+import { Template } from 'meteor/templating';
+ 
+import { Tasks } from '../api/tasks.js';
+ 
+import './task.html';
+ 
+Template.task.events({
+  'click .toggle-checked'() {
+    // Set the checked property to the opposite of its current value
+    Tasks.update(this._id, {
+      $set: { checked: ! this.checked },
+    });
+  },
+  'click .delete'() {
+    Tasks.remove(this._id);
+  },
+});
+```
+
+由于`body`模板使用了`task`模板，所以我们需要引入它：
+
+```javascript
+// imports/ui/body.js
+import { Tasks } from '../api/tasks.js';
+ 
+import './task.js';
+import './body.html';
+ 
+Template.body.helpers({
+```
+
+现在，你就可以在你的应用中做到添加、修改、删除tasks的功能啦。
 
   [1]: https://www.meteor.com/
   [2]: http://blinkfox.com/meteorde-an-zhuang-he-ru-men/
