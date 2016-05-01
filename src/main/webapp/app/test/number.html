@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jquery数字动画插件Animate Number的使用</title>
+</head>
+<body>
+
+    <p>This plugin only <span id="lines">0</span> lines of code.</p>
+
+    <p>World population is <span id="world-population">0</span>.</p>
+
+    <p>Fun level <span id="fun-level" style="color: red;">0 %</span>.</p>
+
+    <script src="../../assets/plugins/jquery/jquery-1.12.3.min.js"></script>
+    <script src="../../assets/plugins/number/jquery.animateNumber.min.js"></script>
+    <script>
+        /* 简单的动画 */
+        $('#lines').animateNumber({number: 165});
+
+        /* 分隔符 */
+        var comma_separator_number_step = $.animateNumber.numberStepFactories.separator(',')
+        $('#world-population').animateNumber({
+            number: 7095217980,
+            numberStep: comma_separator_number_step
+        });
+
+        /* 多个属性 */
+        var percent_number_step = $.animateNumber.numberStepFactories.append(' %')
+        $('#fun-level').animateNumber({
+            number: 100,
+            color: 'green',
+            'font-size': '30px',
+
+            easing: 'easeInQuad',
+
+            numberStep: percent_number_step
+        }, 15000);
+    </script>
+
+</body>
+</html>
