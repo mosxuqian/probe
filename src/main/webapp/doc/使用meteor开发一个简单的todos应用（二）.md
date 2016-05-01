@@ -61,7 +61,104 @@ meteor run android-device
 
 然后你的APP将会运行在你的手机上了。
 
+## 二、使用Reactive Dict存储UI临时状态
+
+接下来，我们将在我们的应用中添加客户端过滤的功能，让用户只能看到未完成的功能。我们将要学习使用[`Reactive Dict`][4]来在客户端存储状态。一个`Reactive Dict`就好像使用`key`、`value`的普通js对象，但是它是实时的。
+
+现在，我们需要添加一个复选框在`body.html`模版页面中
+
+```html
+<!-- imports/ui/body.html -->
+<header>
+      <h1>Todo List</h1>
+ 
+      <label class="hide-completed">
+        <input type="checkbox" />
+        Hide Completed Tasks
+      </label>
+ 
+      <form class="new-task">
+        <input type="text" name="text" placeholder="Type to add new tasks" />
+      </form>
+```
+
+接下来我们需要添加`reactive-dict`包，并在js中使用它,命令和代码如下：
+
+```bash
+meteor add reactive-dict
+```
+
+```javascript
+// 在imports/ui/body.js中添加state
+import { Template } from 'meteor/templating';
+import { ReactiveDict } from 'meteor/reactive-dict';
+ 
+import { Tasks } from '../api/tasks.js';
+ 
+import './task.js';
+import './body.html';
+ 
+Template.body.onCreated(function bodyOnCreated() {
+  this.state = new ReactiveDict();
+});
+ 
+Template.body.helpers({
+  tasks() {
+    // Show newest tasks at the top
+```
+
+```javascript
+// 在imports/ui/body.js中为复选框添加事件
+    // Clear form
+    target.text.value = '';
+  },
+  'change .hide-completed input'(event, instance) {
+    instance.state.set('hideCompleted', event.target.checked);
+  },
+});
+```
+
+```javascript
+// 在imports/ui/body.js添加helpers
+Template.body.helpers({
+  tasks() {
+    const instance = Template.instance();
+    if (instance.state.get('hideCompleted')) {
+      // If hide completed is checked, filter tasks
+      return Tasks.find({ checked: { $ne: true } }, { sort: { createdAt: -1 } });
+    }
+    // Otherwise, return all of the tasks
+    return Tasks.find({}, { sort: { createdAt: -1 } });
+  },
+});
+```
+
+为了显示未完成的task数量，在`imports/ui/body.js`中添加代码：
+
+```javascript
+    // Otherwise, return all of the tasks
+    return Tasks.find({}, { sort: { createdAt: -1 } });
+  },
+  incompleteCount() {
+    return Tasks.find({ checked: { $ne: true } }).count();
+  },
+});
+ 
+Template.body.events({
+```
+
+```html
+<!-- imports/ui/body.html -->
+<body>
+  <div class="container">
+    <header>
+      <h1>Todo List ({{incompleteCount}})</h1>
+ 
+      <label class="hide-completed">
+        <input type="checkbox" />
+```
 
   [1]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-yi/
   [2]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-yi/
   [3]: http://developer.android.com/tools/device.html#developer-device-options
+  [4]: https://atmospherejs.com/meteor/reactive-dict
