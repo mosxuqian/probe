@@ -158,6 +158,103 @@ Template.body.events({
         <input type="checkbox" />
 ```
 
+### 三、添加用户账户
+
+`Meteor`配备了账户系统和登录接口，让你在几分钟之类就可以集成多用户相关功能到你的APP中。为了激活帐户系统和UI，我们需要添加相应的包，切换到你的应用根目录执行如下命令：
+
+```bash
+meteor add accounts-ui accounts-password
+```
+
+在`imports/ui/body.html`中，引入如下代码添加一个下拉式的登录：
+
+```html
+        Hide Completed Tasks
+      </label>
+ 
+      {{> loginButtons}}
+ 
+      <form class="new-task">
+        <input type="text" name="text" placeholder="Type to add new tasks" />
+      </form>
+```
+
+然后，新建一个`accounts-config.js`，并在你的javascript中添加下面的代码用于配置用户帐户仅仅是用户名，不是邮箱：
+
+```javascript
+// imports/startup/accounts-config.js
+import { Accounts } from 'meteor/accounts-base';
+ 
+Accounts.ui.config({
+  passwordSignupFields: 'USERNAME_ONLY',
+});
+```
+
+在`client/main.js`中引入`accounts-config.js`：
+
+```javascript
+import '../imports/startup/accounts-config.js';
+import '../imports/ui/body.js';
+```
+
+现在用户可以创建自己的账户和登录了，但是登录和登出，并没有任何作用，接下来我们添加两个功能：
+
+1. 只有登录的用户才能新建task输入框
+2. 显示用户自己创建的task
+
+为了做到这样，我们需要添加两个字段到`tasks`collection中：
+
+1. owner —— 创建某task的用户ID
+2. username —— 创建某task的用户名
+
+让我们修改`imports/ui/body.js`中的代码如下：
+
+```javascript
+// imports/ui/body.js
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { ReactiveDict } from 'meteor/reactive-dict';
+ 
+...some lines skipped...
+    Tasks.insert({
+      text,
+      createdAt: new Date(), // current time
+      owner: Meteor.userId(),
+      username: Meteor.user().username,
+    });
+ 
+    // Clear form
+```
+
+在`imports/ui/body.html`中添加`#if`代码块，用于判断用户是否登录：
+
+```html
+ <!-- imports/ui/body.html -->
+      {{> loginButtons}}
+ 
+      {{#if currentUser}}
+        <form class="new-task">
+          <input type="text" name="text" placeholder="Type to add new tasks" />
+        </form>
+      {{/if}}
+    </header>
+ 
+    <ul>
+```
+
+为了在task中显示添加者的用户名，修改`imports/ui/task.html`中的代码：
+
+```html
+ 
+    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
+ 
+    <span class="text"><strong>{{username}}</strong> - {{text}}</span>
+  </li>
+</template>
+```
+
+到此，你就可以创建和登录了，并且可以按用户来显示task任务和相关属性啦。
+
   [1]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-yi/
   [2]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-yi/
   [3]: http://developer.android.com/tools/device.html#developer-device-options
