@@ -268,6 +268,108 @@ if (Meteor.isServer) {
 
 现在我们已经完成了私有的task功能！
 
+## 三、测试
+
+我们已经为我们的应用程序添加了一些列功能，让我们添加测试功能，以确保我们的程序能像我们期望的那样运行。我们需要通过[Mocha][4]的`Javascript`测试框架来[测试驱动][5]。
+
+```bash
+meteor add practicalmeteor:mocha
+```
+
+我们可以通过调用一些特殊的命令，用“测试模式”来运行我们的应用程序：
+
+```bash
+meteor test --driver-package practicalmeteor:mocha
+```
+
+执行上面的命令，你会在你的浏览器窗口中看到一个空的测试结果。让我们来添加一个简单的测试：
+
+```javascript
+// 新建imports/api/tasks.tests.js文件
+/* eslint-env mocha */
+ 
+import { Meteor } from 'meteor/meteor';
+ 
+if (Meteor.isServer) {
+  describe('Tasks', () => {
+    describe('methods', () => {
+      it('can delete owned task', () => {
+      });
+    });
+  });
+}
+```
+
+在任何测试中，我们都应该确保我们测试运行前，数据库都有预期的。我们`Mocha`可以用`beforeEach`的结构来实现：
+
+```javascript
+// imports/api/tasks.tests.js
+/* eslint-env mocha */
+ 
+import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
+ 
+import { Tasks } from './tasks.js';
+ 
+if (Meteor.isServer) {
+  describe('Tasks', () => {
+    describe('methods', () => {
+      const userId = Random.id();
+      let taskId;
+ 
+      beforeEach(() => {
+        Tasks.remove({});
+        taskId = Tasks.insert({
+          text: 'test task',
+          createdAt: new Date(),
+          owner: userId,
+          username: 'tmeasday',
+        });
+      });
+ 
+      it('can delete owned task', () => {
+      });
+    });
+```
+
+在我们测试前，我们已经创建了一个随机用户ID的task，从而为每个测试都运行不同的task。
+
+现在我们来写个 测试方法来调用`task.remove`方法用于确保这个task已经被删除了。
+
+```javascript
+// imports/api/tasks.tests.js
+import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
+import { assert } from 'meteor/practicalmeteor:chai';
+ 
+import { Tasks } from './tasks.js';
+ 
+...some lines skipped...
+      });
+ 
+      it('can delete owned task', () => {
+        // Find the internal implementation of the task method so we can
+        // test it in isolation
+        const deleteTask = Meteor.server.method_handlers['tasks.remove'];
+ 
+        // Set up a fake method invocation that looks like what the method expects
+        const invocation = { userId };
+ 
+        // Run the method with `this` set to the fake invocation
+        deleteTask.apply(invocation, [taskId]);
+ 
+        // Verify that the method does what we expected
+        assert.equal(Tasks.find().count(), 0);
+      });
+    });
+  });
+```
+
+在Meteor的测试中你还能做到更多，你可以阅读这篇关于[Meteor测试的文章][6]来了解更多。
+
   [1]: https://www.meteor.com
   [2]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-yi/
   [3]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-er/
+  [4]: https://mochajs.org/
+  [5]: http://guide.meteor.com/testing.html#test-driver
+  [6]: http://guide.meteor.com/testing.html
