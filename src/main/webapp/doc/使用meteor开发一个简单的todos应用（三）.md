@@ -98,6 +98,176 @@ Template.task.events({
 
 现在我们所有的输入和按钮功能又可以正常使用啦！
 
+## 二、通过发布和订阅来过滤数据
+
+现在我们已经在方法中提出了所有的敏感代码，我们还需要学习`Meteor`安全的另一部分。到目前为止，我们的数据库一直存在于客户端，意味着在客户端调用`Tasks.find()`方法我们就可以获取`collection`中的所有`task`数据，这是很不安全的。我们需要控制用户需要的数据，而不是所有数据。
+
+像前面移除`insecure`包一样，我们需要移除`autopublish`包，移除之后看看发生了什么：
+
+```bash
+meteor remove autopublish
+```
+
+当应用程序刷新时，`task`列表里面显示为空了，为了做到服务器的哪些数据能够发送到客户端，就需要用到`Meteor`的发布和订阅功能了。首先让我们在`imports/api/tasks.js`文件中为所有`tasks`添加发布功能。
+
+```javascript
+ // imports/api/tasks.js
+export const Tasks = new Mongo.Collection('tasks');
+ 
+if (Meteor.isServer) {
+  // This code only runs on the server
+  Meteor.publish('tasks', function tasksPublication() {
+    return Tasks.find();
+  });
+}
+ 
+Meteor.methods({
+  'tasks.insert'(text) {
+    check(text, String);
+```
+
+然后，在`body`模版创建时，订阅刚才发布的内容：
+
+```javascript
+// imports/ui/body.js
+ 
+Template.body.onCreated(function bodyOnCreated() {
+  this.state = new ReactiveDict();
+  Meteor.subscribe('tasks');
+});
+ 
+Template.body.helpers({
+```
+
+当你修改完这些代码后，会发现应用中的数据又回来了。
+
+### 实现私有的tasks
+
+首先，让我们添加'private'属性的task和一个按钮，这个按钮用来仅仅显示是某个用户的共有或私有任务。
+
+```html
+<!-- imports/ui/task.html -->
+<template name="task">
+  <li class="{{#if checked}}checked{{/if}} {{#if private}}private{{/if}}">
+    <button class="delete">&times;</button>
+
+    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
+
+    {{#if isOwner}}
+      <button class="toggle-private">
+        {{#if private}}
+          Private
+        {{else}}
+          Public
+        {{/if}}
+      </button>
+    {{/if}}
+
+    <span class="text"><strong>{{username}}</strong> - {{text}}</span>
+  </li>
+</template>
+```
+
+同时，我们需要修改下面三个js文件：
+
+```javascript
+// imports/ui/task.js
+ 
+import './task.html';
+ 
+Template.task.helpers({
+  isOwner() {
+    return this.owner === Meteor.userId();
+  },
+});
+ 
+Template.task.events({
+  'click .toggle-checked'() {
+    // Set the checked property to the opposite of its current value
+```
+
+```javascript
+// 在imports/api/tasks.js中定义设置tasks为private的方法
+ 
+    Tasks.update(taskId, { $set: { checked: setChecked } });
+  },
+  'tasks.setPrivate'(taskId, setToPrivate) {
+    check(taskId, String);
+    check(setToPrivate, Boolean);
+ 
+    const task = Tasks.findOne(taskId);
+ 
+    // Make sure only the task owner can make a task private
+    if (task.owner !== this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+ 
+    Tasks.update(taskId, { $set: { private: setToPrivate } });
+  },
+});
+```
+
+```javascript
+// 在imports/ui/task.js中添加事件handler用于调setPrivate方法
+
+  'click .delete'() {
+    Meteor.call('tasks.remove', this._id);
+  },
+  'click .toggle-private'() {
+    Meteor.call('tasks.setPrivate', this._id, !this.private);
+  },
+});
+```
+
+```javascript
+// imports/api/tasks.js
+ 
+if (Meteor.isServer) {
+  // This code only runs on the server
+  // Only publish tasks that are public or belong to the current user
+  Meteor.publish('tasks', function tasksPublication() {
+    return Tasks.find({
+      $or: [
+        { private: { $ne: true } },
+        { owner: this.userId },
+      ],
+    });
+  });
+}
+```
+
+### 其它的安全方法
+
+```javascript
+// 在imports/api/tasks.js中添加其他额外的安全方法
+  'tasks.remove'(taskId) {
+    check(taskId, String);
+ 
+    const task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== this.userId) {
+      // If the task is private, make sure only the owner can delete it
+      throw new Meteor.Error('not-authorized');
+    }
+ 
+    Tasks.remove(taskId);
+  },
+  'tasks.setChecked'(taskId, setChecked) {
+    check(taskId, String);
+    check(setChecked, Boolean);
+ 
+    const task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== this.userId) {
+      // If the task is private, make sure only the owner can check it off
+      throw new Meteor.Error('not-authorized');
+    }
+ 
+    Tasks.update(taskId, { $set: { checked: setChecked } });
+  },
+  'tasks.setPrivate'(taskId, setToPrivate) {
+```
+
+现在我们已经完成了私有的task功能！
+
   [1]: https://www.meteor.com
   [2]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-yi/
   [3]: http://blinkfox.com/shi-yong-meteorkai-fa-yi-ge-jian-dan-de-todosying-yong-er/
