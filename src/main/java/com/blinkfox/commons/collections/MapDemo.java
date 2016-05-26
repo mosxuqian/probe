@@ -7,7 +7,6 @@ import org.apache.commons.collections4.OrderedMap;
 import org.apache.commons.collections4.bidimap.TreeBidiMap;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.collections4.map.LinkedMap;
-
 import java.util.Map;
 
 /**
@@ -16,6 +15,11 @@ import java.util.Map;
  */
 public class MapDemo {
 
+    /**
+     * 构建map初始数据
+     *
+     * @param map
+     */
     private static void buildMap(Map map) {
         map.put("one", "1");
         map.put("two", "2");
@@ -30,6 +34,7 @@ public class MapDemo {
      * @param mapName
      */
     private static void loopMap(IterableMap map, String mapName) {
+        System.out.println("---------------------------");
         // 遍历map
         MapIterator it = map.mapIterator();
         while (it.hasNext()) {
@@ -37,20 +42,24 @@ public class MapDemo {
             Object value = it.getValue();
             System.out.println(mapName + " key:" + key + ", value: " + value);
         }
+        System.out.println("---------------------------");
     }
 
+    /**
+     * 遍历map测试
+     */
     private static void iterableMapTest() {
         IterableMap iterMap = new HashedMap<>();
         buildMap(iterMap);
         loopMap(iterMap, "iterableMap");
     }
 
+    /**
+     * 得到集合里按顺序存放的key之后的某一Key
+     */
     private static void linkedMapTest() {
         OrderedMap<String, Object> orderMap = new LinkedMap<String, Object>();
-        orderMap.put("one", "1");
-        orderMap.put("two", "2");
-        orderMap.put("three", "3");
-        orderMap.put("four", "4");
+        buildMap(orderMap);
 
         // 获取map中相应的值
         System.out.println("LinkedMap firstKey:" + orderMap.firstKey());
@@ -60,12 +69,17 @@ public class MapDemo {
         System.out.println("LinkedMap map Size:" + orderMap.size());
     }
 
+    /**
+     * BidiMap Demo
+     * 通过key得到value
+     * 通过value得到key
+     * 将map里的key和value对调
+     */
     private static void bidiMapTest() {
         BidiMap bidiMap = new TreeBidiMap();
-        bidiMap.put("one", "1");
-        bidiMap.put("two", "2");
-        bidiMap.put("three", "3");
+        buildMap(bidiMap);
         bidiMap.put("san", "3");    // 有相同值的，只有最后一个生效
+        loopMap(bidiMap, "BidiMap");
 
         // 获取map中相应的值
         System.out.println("BidiMap getKey:" + bidiMap.getKey("2"));
@@ -73,6 +87,8 @@ public class MapDemo {
 
         bidiMap.removeValue("3");
         System.out.println("BidiMap getMoreSameKey2:" + bidiMap.getKey("3"));
+        BidiMap inversMap = bidiMap.inverseBidiMap();
+        loopMap(inversMap, "inversMap");
     }
 
     public static void main(String[] args) {
