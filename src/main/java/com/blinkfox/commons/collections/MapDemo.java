@@ -1,12 +1,11 @@
 package com.blinkfox.commons.collections;
 
-import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.IterableMap;
-import org.apache.commons.collections4.MapIterator;
-import org.apache.commons.collections4.OrderedMap;
-import org.apache.commons.collections4.bidimap.TreeBidiMap;
-import org.apache.commons.collections4.map.HashedMap;
-import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.collections.*;
+import org.apache.commons.collections.bidimap.TreeBidiMap;
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.map.MultiValueMap;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,7 +16,6 @@ public class MapDemo {
 
     /**
      * 构建map初始数据
-     *
      * @param map
      */
     private static void buildMap(Map map) {
@@ -28,8 +26,7 @@ public class MapDemo {
     }
 
     /**
-     * 遍历map
-     *
+     * 遍历打印map,使用map.mapIterator()
      * @param map
      * @param mapName
      */
@@ -46,19 +43,10 @@ public class MapDemo {
     }
 
     /**
-     * 遍历map测试
-     */
-    private static void iterableMapTest() {
-        IterableMap iterMap = new HashedMap<>();
-        buildMap(iterMap);
-        loopMap(iterMap, "iterableMap");
-    }
-
-    /**
-     * 得到集合里按顺序存放的key之后的某一Key
+     * 按顺序存放的LinkedMap
      */
     private static void linkedMapTest() {
-        OrderedMap<String, Object> orderMap = new LinkedMap<String, Object>();
+        OrderedMap orderMap = new LinkedMap();
         buildMap(orderMap);
 
         // 获取map中相应的值
@@ -70,31 +58,51 @@ public class MapDemo {
     }
 
     /**
-     * BidiMap Demo
+     * BidiMap,是双向Map
      * 通过key得到value
      * 通过value得到key
-     * 将map里的key和value对调
+     * 注意的是BidiMap,当中不光key不能重复，value也不可以。
      */
     private static void bidiMapTest() {
         BidiMap bidiMap = new TreeBidiMap();
         buildMap(bidiMap);
-        bidiMap.put("san", "3");    // 有相同值的，只有最后一个生效
+        // 有相同值的，只有最后一个生效
+        bidiMap.put("san", "3");
         loopMap(bidiMap, "BidiMap");
 
         // 获取map中相应的值
         System.out.println("BidiMap getKey:" + bidiMap.getKey("2"));
         System.out.println("BidiMap getMoreSameKey:" + bidiMap.getKey("3"));
 
+        // 移除map的value
         bidiMap.removeValue("3");
         System.out.println("BidiMap getMoreSameKey2:" + bidiMap.getKey("3"));
+
+        // 交换map的key和value
         BidiMap inversMap = bidiMap.inverseBidiMap();
         loopMap(inversMap, "inversMap");
     }
 
+    /**
+     * MultiMap 单个key指向多个对象,就是单个key可以对应多个value,
+     * 在put或remove时和普通Map没有区别,但当get时将返回多个value,
+     * 所以返回一个collections,利用MultiMap，我们就可以很方便的往 一个
+     * key上放数量不定的对象，也就实现了一对多,在3.2.1版本中MultiHashMap已被废除,
+     * 请使用MultiValueMap
+    */
+    private static void multiMapTest() {
+        MultiMap multiMap = new MultiValueMap();
+        buildMap(multiMap);
+        multiMap.put("three", "5");
+        List<String> list = (List<String>) multiMap.get("three");
+        // 打印: list:[3, 5]
+        System.out.println("list:" + list);
+    }
+
     public static void main(String[] args) {
-        iterableMapTest();
         linkedMapTest();
         bidiMapTest();
+        multiMapTest();
     }
 
 }
