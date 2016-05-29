@@ -27,6 +27,7 @@ public class MapDemo {
     }
 
     /**
+     * map迭代器
      * 遍历打印map,使用map.mapIterator()
      * @param map
      * @param mapName
