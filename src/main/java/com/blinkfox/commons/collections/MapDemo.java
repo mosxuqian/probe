@@ -2,9 +2,10 @@ package com.blinkfox.commons.collections;
 
 import org.apache.commons.collections.*;
 import org.apache.commons.collections.bidimap.TreeBidiMap;
+import org.apache.commons.collections.map.LazyMap;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.map.MultiValueMap;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,10 +100,37 @@ public class MapDemo {
         System.out.println("list:" + list);
     }
 
+    /**
+     * LazyMap.类似与Hibenrate的懒加载,在声明的时候并不会创建,
+     * 而是在使用(get)的时候,才创建集合的内容,返回Factory的返回值
+     * 实现懒加载,当我们觉得没有必要去初始化一个Map而又希望它可以在必要时自动处理数据可以使用LazyMap
+     * 有LazyList与LazyMap对应
+     */
+    private static void lazyMapTest() {
+        //创建一个工厂，实现create方法
+        Factory factory = new Factory() {
+            @Override
+            public Object create() {
+                // 创建的默认值
+                return "这是LazyMap get()不到时创建的默认值";
+            }
+        };
+
+        Map lazyMap = LazyMap.decorate(new HashMap(), factory);
+        System.out.println("map:" + lazyMap);
+        //当此lazyMap调用get(key)时，如果无此key则返回varFactory里create方法返回的值
+        System.out.println("map:" + lazyMap.get("hello"));
+
+        // 有key对应的值时,返回123
+        lazyMap.put("hello", "123");
+        System.out.println("map:" + lazyMap.get("hello"));
+    }
+
     public static void main(String[] args) {
         linkedMapTest();
         bidiMapTest();
         multiMapTest();
+        lazyMapTest();
     }
 
 }
