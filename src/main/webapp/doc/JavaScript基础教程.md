@@ -28,6 +28,17 @@
 
 `JavaScript`在最初的时候并不是一个完善的语言，因此也导致`JavaScript`遗留了很多令人诟病的问题。在开发稍大规模的应用时会显得力不从心，但是由于`JavaScript`本身是一种非常灵活的语言，因此在它的基础上开发程序库比较容易，因此出现了一大批非常优秀的第三方库，如[jQuery][3]，[ExtJS][4]，[underscorejs][5]，[backbone][6]等等，由于这些第三方库，`JavaScript`变得非常简单。其中`jQuery`的使用非常广泛，它大幅简化了`DOM`和`Ajax`，已经成为了很多网站的标配。`jQuery`虽然基于`JavaScript`，但它提供了另外一种编程范式，也就是逻辑式编程，与`SQL`和正则表达式类似。
 
+### JavaScript能做什么
+
+1. Web前端
+2. 后端开发
+3. Hybrid App
+4. 桌面应用
+5. 神作React和React Native
+6. 游戏
+
+> Atwood's Law: any application that can be written in JavaScript, will eventually be written in JavaScript.(Atwood定律：凡是能用JavaScript写出来的，最终都会用JavaScript写出来。)
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
