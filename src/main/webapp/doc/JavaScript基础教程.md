@@ -30,14 +30,19 @@
 
 ### JavaScript能做什么
 
-1. Web前端
-2. 后端开发
-3. Hybrid App
-4. 桌面应用
-5. 神作React和React Native
-6. 游戏
+这里是[PuYart][7]的关于[`JavaScript`就要统治世界了][8]的文章，介绍JavaScript到底能做什么的一些说明。
+
+1. Web前端(各种前端工具类库、前端框架、动画效果、数据可视化等)
+2. 服务端开发(Node.js)
+3. 移动应用或者`Hybrid App`(Cordova)
+4. 桌面应用(NW.js、Electron)
+5. 游戏([Unity3D][9]、[Cocos2d-js][10]、[Pomelo][11]、)
+6. VR([JavaScript在VR世界的应用][12])
+7. 硬件、嵌入式物联网等([Tessel：用JavaScript做嵌入式开发][13])
+8. 操作系统([NodeOS][14])
 
 > Atwood's Law: any application that can be written in JavaScript, will eventually be written in JavaScript.(Atwood定律：凡是能用JavaScript写出来的，最终都会用JavaScript写出来。)
+
 
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
@@ -45,3 +50,11 @@
   [4]: http://extjs.org.cn/
   [5]: http://underscorejs.org/
   [6]: http://backbonejs.org/
+  [7]: https://segmentfault.com/u/puyart
+  [8]: https://segmentfault.com/a/1190000003767058
+  [9]: http://unity3d.com/cn/
+  [10]: http://www.cocos.com/doc/article/index?type=cocos2d-x&url=/doc/cocos-docs-master/manual/framework/cocos2d-js/catalog/../1-about-cocos2d-js/1-1-a-brief-history/zh.md
+  [11]: http://pomelo.netease.com/
+  [12]: https://www.phodal.com/blog/why-javascript-will-use-vr-world/
+  [13]: http://blog.jobbole.com/46055/
+  [14]: http://node-os.com/
