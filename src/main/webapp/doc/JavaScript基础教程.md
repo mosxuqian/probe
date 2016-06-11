@@ -142,6 +142,58 @@ x++; // 单行（single-line）注释
  */
 ```
 
+## 三、变量和赋值
+
+`JavaScript`中的变量在使用前必须先声明，否则会报错引用错误（Reference Error）：
+
+```javascript
+var foo;  // 声明变量“foo”
+```
+
+### 赋值
+
+你可以在声明变量的同时为其赋值：
+
+```javascript
+var foo = 6;
+```
+
+你也可以给已经存在的变量重新赋值：
+
+```javascript
+foo = 4;  // 更改变量的值
+```
+
+### 复合赋值操作符
+
+有很多复合赋值操作符，例如+=。下面的两个赋值操作等价：
+
+```javascript
+x += 1;
+x = x + 1;
+```
+
+### 标识符和变量名
+
+标识符就是事物的名字，在`JavaScript`中他们扮演不同的语法角色。例如，变量的名称是一个标识符。
+
+大体上，标识符的第一个字符可以是任何`Unicode`字符、美元标志符（$）或下划线（_）。后面可以是任意字符和数字。因此，下面全是合法的标识符：
+
+```javascript
+arg0
+_tmp
+$elem
+π
+```
+
+**注意：首字符不能是数字，如果是数字的话，该如何区分是数字还是变量呢？**
+
+一些标识符是“保留关键字”——他们是语法的一部分，不能用作变量名。从技术上讲，下面三个标识符不是保留字，但也不应该作为变量名：
+
+```javascript
+Infinity NaN undefined
+```
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
