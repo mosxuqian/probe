@@ -280,6 +280,186 @@ str.foo = 3; // try to create property `foo` ⇒ no effect
 str.foo  // unknown property ⇒  undefined
 ```
 
+### 对象
+
+#### 对象的类型
+
+所有非原始值的值都是对象。最常见的几种对象类型是：
+
+1. 简单对象（类型是`Object`）能通过对象字面量创建：
+
+```javascript
+{
+    firstName: ‘Jane’,
+    lastName: ‘Doe’
+}
+```
+
+上面的对象有两个属性：`firstName`属性的值是“Jane”，`lastName`属性的值是“Doe”。
+
+2. 数组（类型是`Array`）能通过数组字面量创建：
+
+```javascript
+[ ‘apple’, ‘banana’, ‘cherry’ ]
+```
+
+上面的数组有三个元素，可以通过数字索引访问。例如“apple”的索引是0。
+
+3. 正则表达式对象（类型是`RegExp`）能通过正则表达式字面量创建。
+
+```javascript
+/^a+b+$/
+```
+
+#### 对象的特征
+
+1. **比较的是引用**：比较的是标识符，每个值有自己的标识符。
+
+```javascript
+{} === {}  // 两个不同的空对象, false
+var obj1 = {};
+var obj2 = obj1;
+obj1 === obj2   // true
+```
+
+2. **默认可以更改**。
+
+```javascript
+var obj = {};
+obj.foo = 123;
+obj.foo //123
+```
+
+所有的数据结构（如数组）都是对象，但并不是所有的对象都是数据结构。例如：正则表达式是对象，但不是数据结构。
+
+### undefined 和 null
+
+`JavaScript`有两个“无值）”：`undefined`和`null`。
+
+`undefined`的意思是“没有值”。未初始化的变量是`undefined`：
+
+```javascript
+var foo;
+foo // undefined
+```
+
+读取不存在的属性时，将返回`undefined`：
+
+```javascript
+  > var obj = {}; // 空对象
+  > obj.foo // undefined
+```
+
+缺省的参数也是`undefined`：
+
+```javascript
+function f(x) {
+    return x;
+}
+f(); //undefined
+```
+
+`null`的意思是“没有对象”。它被用来表示对象的无值（参数，链上的对象等）。
+
+通常情况下你应该把`undefined`和`null`看成是等价的，如果他们代表相同意义的无值的话。检查他们的一种方式是通过严格比较：
+
+```javascript
+if (x === undefined || x === null) {
+    ...
+}
+```
+
+另一种在实际中使用的方法是认为undefined 和 null 都是false：
+
+```javascript
+if (!x) {
+    ...
+}
+```
+
+> **警告**：false，0，NaN 和 “” 都被当作false。
+
+### 包装类型
+
+对象类型的实例`Foo`（包括内建类型，例如Array和其他自定义类型）从对象`Foo.prototype`上获取方法。你可以通过读取这个方法的方式（不是调用）验证这点：
+
+```javascript
+[].push === Array.prototype.push  // true
+```
+
+相反，**原始类型是没有类型的，所以每个原始类型有一个关联类型，称之为包装类型**：
+
+1. 布尔值的包装类型是 Boolean。布尔值从Boolean.prototype上获取方法：
+
+```javascript
+  > true.toString === Boolean.prototype.toString    //true
+```
+
+> 注意：包装类型名字的首字母是大写的B。如果在JavaScript中布尔值的类型可以访问，那么它可能会被转换为布尔对象。
+
+2. 数字值的包装类型是`Number`。
+3. 字符串值的包装类型是`String`。
+
+包装类型也有实例（他们的实例是对象），但不常用。相反，包装类型有其他用处：**如果你将他们作为函数调用，他们可以将值转换为原始类型**。
+
+```javascript
+Number('123') //123
+String(true)  //'true'
+```
+
+### 通过typeof和instanceof将值分类
+
+有两个操作符可以用来将值分类：`typeof`主要用于原始值，`instanceof`主要用于对象。
+
+#### typeof 使用方法如下：
+
+`typeof «value»`
+
+`typeof`返回描述`value`“类型”的一个字符串。例如：
+
+```javascript
+typeof true //'boolean'
+typeof 'abc' //'string'
+typeof {} // 空对象字面量,'object'
+typeof [] // 空数组字面量,'object'
+```
+
+下面列出了`typeof`操作的所有结果：
+
+```
+操作数 结果
+undefined	'undefined'
+null	'object'
+Boolean value	'boolean'
+Number value	'number'
+String value	'string'
+Function	'function'
+All other values	'object'
+```
+
+有两个结果和我们上面说的的原始值与对象是矛盾的：
+
+- 函数的类型是`function`而不是`object`。因为函数（类型为“function”）是对象（类型是对象）的子类型，这不是一个错误。
+- `null`的类型是`object`。这是一个bug，但从没被修复，因为修复后会破坏现有的代码。
+
+#### instanceof使用方法如下：
+
+`«value» instanceof «Constr»`
+
+如果`value`是一个对象，并且`value` 是由构造函数`Constr`创建的（参考：类）。例如：
+
+```javascript
+var b = new Bar();  // 通过构造函数Bar创建对象
+b instanceof Bar    //true
+{} instanceof Object    //true
+[] instanceof Array //true
+```
+
+### 深入阅读
+
+- [探索JavaScript中Null和Undefined的深渊][21]
+
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
@@ -300,3 +480,4 @@ str.foo  // unknown property ⇒  undefined
   [18]: http://blog.jobbole.com/46055/
   [19]: http://node-os.com/
   [20]: http://www.2ality.com/2011/05/semicolon-insertion.html
+  [21]: http://yanhaijing.com/javascript/2014/01/05/exploring-the-abyss-of-null-and-undefined-in-javascript/
