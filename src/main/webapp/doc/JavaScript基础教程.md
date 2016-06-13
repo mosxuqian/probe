@@ -194,6 +194,92 @@ $elem
 Infinity NaN undefined
 ```
 
+## 四、值
+
+`JavaScript`有所有我们期待的编程语言值类型：布尔，数字，字符串，数组等。`JavaScript`中的所有值都有属性。每个属性有一个键（或名字）和一个值。你可以使用点（.）操作符读取属性：
+
+```javascript
+value.propKey
+```
+
+举个例子：字符串`abc`有属性`lenght`（长度）
+
+```javascript
+var str = 'abc';
+console.log(str.length); // 得到3
+```
+
+上面的代码也可以写成下面这样：
+
+```javascript
+'abc'.length // 得到3
+```
+
+点操作符也可以用来给属性赋值：
+
+```javascript
+var obj = {};  // 空对象
+obj.foo = 123; // 创建属性“foo”，设置它为123
+console.log(obj.foo); // 得到123
+```
+
+你也可以通过它（.）调用方法：
+
+```javascript
+'hello'.toUpperCase(); // 得到HELLO
+```
+
+上面，我们在值`hello`上面调用方法`toUpperCase()`。
+
+### 原始类型值和对象
+
+JavaScript定义了不同值之间的区别：
+
+- 原始值包括：`boolean`，`number`，`string`，`null`和`undefined`。
+- 所有其他的值都是对象。实际上对象被定义为——所有不为原始值的值。
+
+两者之间的主要区别在于他们是如何被比较的：每一个对象有一个独一无二的标志，并且仅和自己相等：
+
+```javascript
+var obj1 = {};  // 一个空对象
+var obj2 = {};  // 另一个空对象
+obj1 === obj2   // false
+obj1 === obj1   // true
+```
+
+相反，所有原始值只要编码值相同就被认为是相同的：
+
+```javascript
+var prim1 = 123;
+var prim2 = 123;
+prim1 === prim2 // true
+```
+
+### 原始类型值
+
+下面全是原始类型值（简称：原始值）：
+
+- 布尔类型：true，false
+- 数字类型：1736，1.351
+- 字符串类型: ‘abc’，”abc”
+- 两个“无值（non-values）”：undefined，null
+原始值的特征：
+
+1. **值做比较时,“内容”做比较**。
+
+```javascript
+3 === 3 // true
+'abc' === 'abc' // true
+```
+
+2. **无法更改**：值的属性无法更改，无法添加和移除属性，获取未知属性总返回undefined。
+
+```javascript
+var str = 'abc';
+str.foo = 3; // try to create property `foo` ⇒ no effect
+str.foo  // unknown property ⇒  undefined
+```
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
