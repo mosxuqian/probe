@@ -723,6 +723,138 @@ do {
 - break中断循环
 - continue开始一个新的循环迭代
 
+## 九、函数
+
+定义函数的一种方法是通过函数声明：
+
+```javascript
+function add(param1, param2) {
+    return param1 + param2;
+}
+```
+
+上面的代码定义一个名称叫做`add`的函数，有两个参数`param1`和`param2`，并且返回参数的和。下面是如何调用这个函数：
+
+```javascript
+add(6, 1)   //7
+add('a', 'b')   //'ab'
+```
+
+另一种定义`add()`函数的方法是通过函数表达式：
+
+```javascript
+var add = function (param1, param2) {
+    return param1 + param2;
+};
+```
+
+函数表达式产生一个值，因此可以直接将函数作为参数传递给其他函数：
+
+```javascript
+someOtherFunction(function (p1, p2) { ... });
+```
+
+### 函数声明提升
+
+函数声明会被提升，他们全被移动到当前作用域开始之处。这允许你在函数声明之前调用它们：
+
+```javascript
+function foo() {
+    bar();  // 没问题，bar被提升
+    function bar() {
+        ...
+    }
+}
+```
+
+> **注意**：虽然变量声明也会被提升，但赋值的过程不会被提升：
+
+```javascript
+function foo() {
+    bar();  // 有问题，bar是undefined
+    var bar = function () {
+        // ...
+    };
+}
+```
+
+### 特殊变量参数
+
+**在`JavaScript`中你可以调用任意函数并传递任意数量的参数**——语言绝不会“抱怨”（参数检测）。都可以正常工作，然而，使所有参数可访问需要通过特殊变量`arguments`。`arguments`看起来像数组，但它没有数组的方法（称为类数组 array-like）。
+
+```javascript
+function f() { return arguments }
+var args = f('a', 'b', 'c');
+args.length //3
+args[0]  // 获取索引为0的元素,'a'
+```
+
+### 太多或太少参数
+
+让我们通过下面的函数探索`JavaScript`中传递太多或太少参数时如何处理
+
+```javascript
+function f(x, y) {
+    console.log(x, y);
+}
+```
+
+多出的参数将被忽略（可以通过`arguments`访问）：
+
+```javascript
+f('a', 'b', 'c')    //a b
+```
+
+缺少的参数将会是`undefined`：
+
+```javascript
+f('a')    //a undefined
+f() //undefined undefined
+```
+
+### 可选参数
+
+下面是一个常见模式，给参数设置默认值：
+
+```javascript
+function pair(x, y) {
+    x = x || 0;  // (*)
+    y = y || 0;
+    return [ x, y ];
+}
+```
+
+在`（*）`这行，如果x是真值（除了：`null`，`undefined` 等），	 	操作符返回x。否则，它返回第二个操作数。
+
+```javascript
+pair()  //[ 0, 0 ]
+pair(3) //[ 3, 0 ]
+pair(3, 5)  //[ 3, 5 ]
+```
+
+### 强制数量
+
+如果你想强制参数的数量，你可以检测`arguments.length`：
+
+```javascript
+function pair(x, y) {
+    if (arguments.length !== 2) {
+        throw new Error('Need exactly 2 arguments');
+    }
+    ...
+}
+```
+
+### 将arguments 转换为数组
+
+`arguments`不是一个数组，它仅仅是类数组（array-like）：它有一个`length`属性，并且你可以通过方括号索引方式访问它的元素。然而，你不能移除元素，或在它上面调用任何数组方法。因此，有时你需要将其转换为数组。这就是下面函数的作用。
+
+```javascript
+function toArray(arrayLikeObject) {
+    return [].slice.call(arrayLikeObject);
+}
+```
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
