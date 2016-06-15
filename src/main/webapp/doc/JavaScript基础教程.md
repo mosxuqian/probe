@@ -574,6 +574,73 @@ Math.pow(2, 1024)  // 数字太大了,得到Infinity
 
 `JavaScript`中也有位运算符（例如：&）。
 
+## 七、字符串
+
+字符串可以直接通过字符串字面量创建。这些字面量被单引号或双引号包裹。反斜线（\）转义字符并且产生一些控制字符。例如：
+
+```javascript
+'abc'
+"abc"
+
+'Did she say "Hello"?'
+"Did she say \"Hello\"?"
+
+'That\'s nice!'
+"That's nice!"
+
+'Line 1\nLine 2'  // 换行
+'Backlash: \\'
+```
+
+可以通过方括号访问单个字符：
+
+```javascript
+var str = 'abc';
+str[1]    //'b'
+```
+`length`属性是字符串的字符数量。
+
+```javascript
+'abc'.length  //3
+```
+
+> **提醒**：字符串是不可变的，如果你想改变现有字符串，你需要创建一个新的字符串。
+
+### 字符串运算符
+
+字符串可以通过加号操作符（+）拼接，如果其中一个操作数为字符串，会将另一个操作数也转换为字符串。
+
+```javascript
+var msgCount = 3;
+'You have '+ msgCount + ' messages' //'You have 3 messages'
+```
+
+连续执行拼接操作可以使用`+=`操作符：
+
+```javascript
+var str = '';
+str += 'Multiple ';
+str += 'pieces ';
+str += 'are concatenated.';
+console.log(str); //'Multiple pieces are concatenated.'
+```
+
+### 字符串方法
+
+字符串有许多有用的方法。例如：
+
+```javascript
+'abc'.slice(1)  // 复制子字符串,得到索引1及其之后的字符串，即：'bc'
+'abc'.slice(1, 2)   //得到索引1和2之间的字符串，即：'b'
+
+'\t xyz  '.trim()  // 移除空白字符，即：'xyz'
+
+'mjölnir'.toUpperCase()   //转成大写，即：'MJÖLNIR'
+
+'abc'.indexOf('b')  // 查找第一个b的索引，即：1
+'abc'.indexOf('x')    //没有返回-1
+```
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
