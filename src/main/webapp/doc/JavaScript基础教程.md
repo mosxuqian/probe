@@ -641,6 +641,88 @@ console.log(str); //'Multiple pieces are concatenated.'
 'abc'.indexOf('x')    //没有返回-1
 ```
 
+## 八、语句
+
+### 条件（Conditionals）
+`if`语句通过布尔条件决定执行那个分支：
+
+```javascript
+if (myvar === 0) {
+    // then
+}
+
+if (myvar === 0) {
+    // then
+} else {
+    // else
+}
+
+if (myvar === 0) {
+    // then
+} else if (myvar === 1) {
+    // else-if
+} else if (myvar === 2) {
+    // else-if
+} else {
+    // else
+}
+```
+
+下面的`switch`语句，furit的值决定那个分支被执行。
+
+```javascript
+switch (fruit) {
+    case 'banana':
+        // ...
+        break;
+    case 'apple':
+        // ...
+        break;
+    default:  // 所有其他情况
+        // ...
+}
+```
+
+### 循环（Loops）
+
+for 循环的格式如下：
+
+```javascript
+for(初始化; 当条件成立时循环; 下一步操作)
+```
+
+例子：
+
+```javascript
+for (var i=0; i < arr.length; i++) {
+    console.log(arr[i]);
+}
+```
+
+当条件成立时`while`循环继续循环它的循环体。
+
+```javascript
+// 和上面的for循环相等
+var i = 0;
+while (i < arr.length) {
+    console.log(arr[i]);
+    i++;
+}
+```
+
+当条件成立时，`do-while`循环继续循环。由于条件位于循环体之后，所以循环体总是被至少至少执行一次。
+
+```javascript
+do {
+    // ...
+} while(条件);
+```
+
+在所有的循环中：
+
+- break中断循环
+- continue开始一个新的循环迭代
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
