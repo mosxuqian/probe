@@ -265,14 +265,14 @@ prim1 === prim2 // true
 - 两个“无值（non-values）”：undefined，null
 原始值的特征：
 
-1. **值做比较时,“内容”做比较**。
+- **值做比较时,“内容”做比较**。
 
 ```javascript
 3 === 3 // true
 'abc' === 'abc' // true
 ```
 
-2. **无法更改**：值的属性无法更改，无法添加和移除属性，获取未知属性总返回undefined。
+- **无法更改**：值的属性无法更改，无法添加和移除属性，获取未知属性总返回undefined。
 
 ```javascript
 var str = 'abc';
@@ -286,7 +286,7 @@ str.foo  // unknown property ⇒  undefined
 
 所有非原始值的值都是对象。最常见的几种对象类型是：
 
-1. 简单对象（类型是`Object`）能通过对象字面量创建：
+- 简单对象（类型是`Object`）能通过对象字面量创建：
 
 ```javascript
 {
@@ -297,7 +297,7 @@ str.foo  // unknown property ⇒  undefined
 
 上面的对象有两个属性：`firstName`属性的值是“Jane”，`lastName`属性的值是“Doe”。
 
-2. 数组（类型是`Array`）能通过数组字面量创建：
+- 数组（类型是`Array`）能通过数组字面量创建：
 
 ```javascript
 [ ‘apple’, ‘banana’, ‘cherry’ ]
@@ -305,7 +305,7 @@ str.foo  // unknown property ⇒  undefined
 
 上面的数组有三个元素，可以通过数字索引访问。例如“apple”的索引是0。
 
-3. 正则表达式对象（类型是`RegExp`）能通过正则表达式字面量创建。
+- 正则表达式对象（类型是`RegExp`）能通过正则表达式字面量创建。
 
 ```javascript
 /^a+b+$/
@@ -313,7 +313,7 @@ str.foo  // unknown property ⇒  undefined
 
 #### 对象的特征
 
-1. **比较的是引用**：比较的是标识符，每个值有自己的标识符。
+- **比较的是引用**：比较的是标识符，每个值有自己的标识符。
 
 ```javascript
 {} === {}  // 两个不同的空对象, false
@@ -322,7 +322,7 @@ var obj2 = obj1;
 obj1 === obj2   // true
 ```
 
-2. **默认可以更改**。
+- **默认可以更改**。
 
 ```javascript
 var obj = {};
@@ -389,7 +389,7 @@ if (!x) {
 
 相反，**原始类型是没有类型的，所以每个原始类型有一个关联类型，称之为包装类型**：
 
-1. 布尔值的包装类型是 Boolean。布尔值从Boolean.prototype上获取方法：
+- 布尔值的包装类型是 Boolean。布尔值从Boolean.prototype上获取方法：
 
 ```javascript
   > true.toString === Boolean.prototype.toString    //true
@@ -397,8 +397,8 @@ if (!x) {
 
 > 注意：包装类型名字的首字母是大写的B。如果在JavaScript中布尔值的类型可以访问，那么它可能会被转换为布尔对象。
 
-2. 数字值的包装类型是`Number`。
-3. 字符串值的包装类型是`String`。
+- 数字值的包装类型是`Number`。
+- 字符串值的包装类型是`String`。
 
 包装类型也有实例（他们的实例是对象），但不常用。相反，包装类型有其他用处：**如果你将他们作为函数调用，他们可以将值转换为原始类型**。
 
@@ -459,6 +459,120 @@ b instanceof Bar    //true
 
 - [探索JavaScript中Null和Undefined的深渊][21]
 
+## 五、布尔
+
+布尔类型原始值包括`true`和`false`。下面的操作符会得到布尔值：
+
+- 二元逻辑运算符：&&（与），||（或）
+- 前缀逻辑运算符：!（非）
+- 等值运算符：=== !== == !=
+- 比较运算符（字符串或数字）：> >= < <=
+
+### 真值和假值
+
+每当`JavaScript`希望一个布尔值时（例如：if语句的条件），可以使用任何值。它将被理解（转换）为`true`或`false`。下面的值被理解为`false`：
+
+- undefined, null
+- 布尔: false
+- 数字: 0, NaN
+- 字符串: ‘’
+
+所有其他值被认为`true`。被理解为`false`的值称为假值，被理解为`true`的值称为真值。可以使用`Boolean`作为函数，测试值被理解为什么。
+
+```javascript
+Boolean(undefined)  //false
+Boolean(0)    //false
+Boolean(3)    //true
+```
+
+### 二元逻辑运算符
+
+`JavaScript`中的**二元逻辑运算符是短路运算**——如果第一个操作数可以确定结果，第二个操作数将不被验证（运算）。例如，在下面的代码中，函数`foo()`永远不会被调用。
+
+```javascript
+false && foo()
+true || foo()
+```
+
+此外，**二元逻辑运算符会返回操作数中的一个**，可能是一个布尔值，也可能不是。
+
+- **与**：如果第一个操作数是假值，返回第一个。否则返回第二个操作数。
+
+```javascript
+NaN && 'abc'    //NaN
+123 && 'abc'    //'abc'
+```
+
+- **或**：如果第一个操作数是真值，返回第一个。否则，返回第二个操作数。
+
+```javascript
+'abc' || 123    //'abc'
+'' || 123   //123
+```
+
+### 等值运算符
+
+在`JavaScript`中检测相等，你可以使用严格相等（`===`）和严格不等（`!==`）。或者你也可以使用非严格相等（`==`）和非严格不等（`!=`）。
+
+> **经验规则：总是用严格运算符，假装非严格运算符不存在。严格相等更安全。**
+
+### 深入阅读
+
+- [在JavaScript中什么时候使用==是正确的？][22]
+
+## 六、数字
+
+`JavaScript`中的**所有数字都是浮点型**（虽然大部分的JavaScript引擎内部也使用整数）。至于为什么这样设计，查看这里（[每一个JavaScript开发者应该了解的浮点知识][23]）。
+
+```javascript
+1 === 1.0   //true
+```
+
+特殊数字：
+
+- `NaN` (“不是一个数字 not a number”): 错误值。
+
+```javascript
+Number('xyz')  // 'xyz' 不能被转换为数字得到:NaN
+```
+
+- `Infinity`：也是最大错误值（无穷大）
+
+```javascript
+3 / 0   //Infinity
+Math.pow(2, 1024)  // 数字太大了,得到Infinity
+```
+
+`Infinity`有时很有用，因为它比任何其他数字都大。同样，`-Infinity` 比其他任何数字都小。
+
+- `JavaScript`有两个零，`+0`和`-0`。它（js引擎）通常不让你看到，并简单将两个零都显示为0：
+
+```javascript
++0  //0
+-0  //0
+```
+
+因此最好假装只有一个零（正如我们看到假值时所做的那样：**-0 和 +0 都是假值**）。
+
+### 运算符
+
+`JavaScript`中有下列算数运算符：
+
+```javascript
+加: number1 + number2
+减: number1 - number2
+乘: number1 * number2
+除: number1 / number2
+模: number1 % number2
+自增: ++variable, variable++
+自减: –variable, variable–
+负值: -value
+正值（转换为数字）: +value
+```
+
+全局对象`Math`通过函数提供更多算数运算操作。
+
+`JavaScript`中也有位运算符（例如：&）。
 
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
@@ -481,3 +595,5 @@ b instanceof Bar    //true
   [19]: http://node-os.com/
   [20]: http://www.2ality.com/2011/05/semicolon-insertion.html
   [21]: http://yanhaijing.com/javascript/2014/01/05/exploring-the-abyss-of-null-and-undefined-in-javascript/
+  [22]: http://yanhaijing.com/javascript/2014/04/25/strict-equality-exemptions/
+  [23]: http://yanhaijing.com/javascript/2014/03/14/what-every-javascript-developer-should-know-about-floating-points
