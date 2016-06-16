@@ -855,6 +855,469 @@ function toArray(arrayLikeObject) {
 }
 ```
 
+## 十、异常处理
+
+[异常处理][24]最常见的方式像下面这样：
+
+```javascript
+function throwException() {
+    throw new Error('Problem!');
+}
+
+try {
+    throwException();
+} catch (e) {
+    console.log(e);  // 错误：信息
+    console.log(e.stack);  // 非标准，但大部分浏览器支持
+}
+```
+
+try分支包裹易出错的代码，如果try分支内部抛出异常，catch分支将会执行。
+
+## 十一、严格模式
+
+严格模式开启检测和一些其他措施，使`JavaScript`变成更整洁的语言。推荐使用严格模式。为了开启严格模式，只需在`JavaScript`文件或`script`标签第一行添加如下语句：
+
+```javascript
+'use strict';
+```
+
+你也可以在每个函数上选择性开启严格模式，只需将上面的代码放在函数的开头：
+
+```javascript
+function functionInStrictMode() {
+    'use strict';
+}
+```
+
+下面的两小节看下严格模式的三大好处。
+
+### 明确错误
+
+让我们看一个例子，严格模式给我们明确的错误，否则`JavaScript`总是静默失败：下面的函数`f()` 执行一些非法操作，它试图更改所有字符串都有的只读属性——`length`：
+
+```javascript
+function f() {
+    'abc'.length = 5;
+}
+```
+
+当你调用上面的函数，它静默失败，赋值操作被简单忽略。让我们将`f()`在严格模式下运行：
+
+```javascript
+function f_strict() {
+    'use strict';
+    'abc'.length = 5;
+}
+```
+
+现在浏览器报给我们一些错误：
+
+```javascript
+f_strict()  // TypeError: Cannot assign to read only property 'length' of abc
+```
+
+### 不是方法的函数中的this
+
+在严格模式下，不作为方法的函数中的`this`值是`undefined`：
+
+```javascript
+function f_strict() {
+    'use strict';
+    return this;
+}
+console.log(f_strict() === undefined);  // true
+```
+
+在非严格模式下，`this`的值是被称作全局对象（`global object`）（在浏览器里是`window`）：
+
+```javascript
+function f() {
+    return this;
+}
+console.log(f() === window);  // true
+```
+
+### 不再自动创建全局变量
+
+在非严格模式下，如果你给不存在的变量赋值，`JavaScript`会自动创建一个全局变量：
+
+```javascript
+function f() { foo = 5 }
+f()  // 不会报错
+foo // 5
+```
+在严格模式下，这会产生一个错误：
+
+```javascript
+function f_strict() { 'use strict'; foo2 = 4; }
+f_strict()  // ReferenceError: foo2 is not defined
+```
+
+### 深入阅读
+
+- [揭秘javascript中谜一样的this][25]
+- [JavaScript中的this关键字][26]
+
+## 十二、变量作用域和闭包
+
+在`JavaScript`中，你必须使用变量之前，通过`var`声明变量：
+
+```javascript
+var x;
+x = 3;
+y = 4;  // ReferenceError: y is not defined
+```
+
+你可以用一条`var`语句声明和初始化多个变量：
+
+```javascript
+var x = 1, y = 2, z = 3;
+```
+
+但我建议每个变量使用一条语句。因此，我将上面的语句重写为：
+
+```javascript
+var x = 1;
+var y = 2;
+var z = 3;
+```
+
+由于提升（见下文），最好在函数顶部声明变量。
+
+### 变量和函数作用域
+
+变量的作用域总是整个函数（没有块级作用域）。例如：
+
+```javascript
+function foo() {
+    var x = -3;
+    if (x < 0) {  // (*)
+        var tmp = -x;
+        ...
+    }
+    console.log(tmp);  // 3
+}
+```
+
+我们可以看到tmp变量不仅在（*）所在行的语句块存在，它在整个函数内都存在。
+
+### 变量提升
+
+变量声明会被提升：声明会被移到函数的顶部，但赋值过程不会。举个例子，在下面的函数中`（*）`行位置声明了一个变量。
+
+```javascript
+function foo() {
+    console.log(tmp); // undefined
+    if (false) {
+        var tmp = 3;  // (*)
+    }
+}
+```
+
+在内部，上面的函数被执行像下面这样：
+
+```javascript
+function foo() {
+    var tmp;  // declaration is hoisted
+    console.log(tmp);
+    if (false) {
+        tmp = 3;  // assignment stays put
+    }
+}
+```
+
+### 闭包
+
+每个函数保持和函数体内部变量的连接，甚至离开创建它的作用域之后。例如：
+
+```javascript
+function createIncrementor(start) {
+    return function () {  // (*)
+        return start++;
+    }
+}
+```
+
+在`（*）`行开始的函数在它创建时保留上下文，并在内部保存一个`start`活动值：
+
+```javascript
+var inc = createIncrementor(5);
+inc()   // 5
+inc() // 6
+inc()   // 7
+```
+
+闭包是一个函数加上和其作用域链的链接。因此，`createIncrementor()`返回的是一个闭包。
+
+### IIFE：模拟块级作用域
+
+有时你想模拟一个块，例如你想将变量从全局作用域隔离。完成这个工作的模式叫做 `IIFE`(立即执行函数表达式(`Immediately Invoked Function Expression`))：
+
+```javascript
+(function () {  // 块开始
+    var tmp = ...;  // 非全局变量
+}());  // 块结束
+```
+
+上面你会看到函数表达式被立即执行。外面的括号用来阻止它被解析成函数声明；只有函数表达式能被立即调用。函数体产生一个新的作用域并使`tmp`变为局部变量。
+
+### 闭包实现变量共享
+
+下面是个经典问题，如果你不知道，会让你费尽思量。因此，先浏览下，对问题有个大概的了解。
+
+闭包保持和外部变量的连接，有时可能和你想像的行为不一致：
+
+```javascript
+var result = [];
+for (var i=0; i < 5; i++) {
+    result.push(function () { return i });  // (*)
+}
+console.log(result[1]()); // 5 (不是 1)
+console.log(result[3]()); // 5 (不是 3)
+```
+
+`(*)`行的返回值总是当前的i值，而不是当函数被创建时的i值。当循环结束后，i的值是5，这是为什么数组中的所有函数的返回值总是一样的。如果你想捕获当前变量的快照，你可以使用`IIFE`：
+
+```javascript
+for (var i=0; i < 5; i++) {
+    (function (i2) {
+        result.push(function () { return i2 });
+    }(i));  // 复制当前的i
+}
+```
+
+深入阅读
+
+- [认识javascript中的作用域和上下文][27]
+- [JavaScript的作用域和提升机制][28]
+- [了解JavaScript的执行上下文][29]
+
+## 十三、对象和继承
+
+和所有的值类型一样，对象有属性。事实上，你可以将对象当作一组属性的集合，每个属性都是一对（键和值）。键是字符串，值可以是任意`JavaScript`值。到目前为止，我们仅仅见过键是标识符的属性，因为点操作符处理的键必须为标识符。在这节，你讲见到另一种访问属性的方法，能将任意字符串作为键。
+
+### 单个对象
+在`JavaScript`中，你可以直接创建对象，通过对象字面量：
+
+```javascript
+var jane = {
+    name: 'Jane',
+
+    describe: function () {
+        'use strict';
+        return 'Person named '+this.name;
+    }
+};
+```
+
+上面的对象有两个属性：`name`和`describe`。你能读（“get”）和 写（“set”）属性：
+
+```javascript
+jane.name  // get，'Jane'
+jane.name = 'John';  // set
+jane.newProperty = 'abc';  // 自动创建
+```
+
+属性是函数如`describe`可以被当作方法调用。当调用他们时可以在它们内部通过this引用对象。
+
+```javascript
+jane.describe()  // 调用方法,'Person named John'
+jane.name = 'Jane';
+jane.describe() // 'Person named Jane'
+```
+
+`in`操作符用来检测一个属性是否存在：
+
+```javascript
+'newProperty' in jane   // true
+'foo' in jane   // false
+```
+
+若读取一个不存在的属性，将会得到`undefined`值。因此上面的两个检查也可以像下面这样：
+
+```javascript
+jane.newProperty !== undefined  // true
+jane.foo !== undefined  // false
+```
+
+`delete`操作符用来删除一个属性：
+
+```javascript
+delete jane.newProperty //true
+'newProperty' in jane   //false
+```
+
+### 任意键属性
+
+属性的键可以是任意字符串。到目前为止，我们看到的对象字面量中的和点操作符后的属性关键字。按这种方法你只能使用标识符。如果你想用其他任意字符串作为键名，你必须在对象字面量里加上引号，并使用方括号获取和设置属性。
+
+```javascript
+var obj = { 'not an identifier': 123 };
+obj['not an identifier']    //123
+obj['not an identifier'] = 456;
+```
+
+方括号允许你动态计算属性关键字：
+
+```javascript
+var x = 'name';
+jane[x]; // 'Jane'
+jane['na'+'me']; // 'Jane'
+```
+
+### 引用方法
+
+如果你引用一个方法，它将失去和对象的连接。就其本身而言，函数不是方法，其中的`this`值为`undefined`（严格模式下）。
+
+```javascript
+var func = jane.describe;
+func()  // TypeError: Cannot read property 'name' of undefined
+```
+
+解决办法是使用函数内置的`bind()`方法。它创建一个新函数，其`this`值固定为给定的值。
+
+```javascript
+var func2 = jane.describe.bind(jane);
+func2() // 'Person named Jane'
+```
+
+### 方法内部的函数
+
+每个函数都有一个特殊变量`this`。如果你在方法内部嵌入函数是很不方便的，因为你不能从函数中访问方法的`this`。下面是一个例子，我们调用`forEach`循环一个数组：
+
+```javascript
+var jane = {
+    name: 'Jane',
+    friends: [ 'Tarzan', 'Cheeta' ],
+    logHiToFriends: function () {
+        'use strict';
+        this.friends.forEach(function (friend) {
+            // 这里的“this”是undefined
+            console.log(this.name + ' says hi to ' + friend);
+        });
+    }
+}
+```
+
+调用`logHiToFriends`会产生错误：
+
+```javascript
+jane.logHiToFriends()   // TypeError: Cannot read property 'name' of undefined
+```
+
+有两种方法修复这问题。
+
+- 将`this`存储在不同的变量。
+
+```javascript
+logHiToFriends: function () {
+    'use strict';
+    var that = this;
+    this.friends.forEach(function (friend) {
+        console.log(that.name + ' says hi to ' + friend);
+    });
+}
+```
+
+- forEach的第二个参数允许提供`this`值。
+
+```javascript
+logHiToFriends: function () {
+    'use strict';
+    this.friends.forEach(function (friend) {
+        console.log(this.name + ' says hi to ' + friend);
+    }, this);
+}
+```
+
+在`JavaScript`中函数表达式经常被用作函数参数。时刻小心函数表达式中的`this`。
+
+### 构造函数：对象工厂
+
+除了作为“真正”的函数和方法，函数还在JavaScript中扮演第三种角色：**如果通过new操作符调用，他们会变为构造函数，对象的工厂**。构造函数是对其他语言中的类的粗略模拟。约定俗成，构造函数的第一个字母大写。例如：
+
+```javascript
+// 设置实例数据
+function Point(x, y) {
+    this.x = x;
+    this.y = y;
+}
+// 方法
+Point.prototype.dist = function () {
+    return Math.sqrt(this.x*this.x + this.y*this.y);
+};
+```
+
+我们看到构造函数分为两部分：首先，`Point`函数设置实例数据。其次，`Point.prototype`属性包含对象的方法。前者的数据是每个实例私有的，后面的数据是所有实例共享的。
+
+我们通过new操作符调用`Point`：
+
+```javascript
+var p = new Point(3, 5);
+p.x //3
+p.dist();    //5.830951894845301
+```
+
+p是`Point`的一个实例：
+
+```javascript
+p instanceof Point  //true
+typeof p    //'object'
+```
+
+### 深入阅读
+
+- [Javascript继承 原型的陷阱][30]
+- [Javascript 封装问题][31]
+
+## 十四、数组
+
+数组是数组元素的序列，能通过整数索引方法数组元素，数组索引从0开始。
+
+### 数组字面量
+数组字面量创建数组很方便：
+
+```javascript
+> var arr = [ 'a', 'b', 'c' ];
+```
+
+上面的数组有三个元素：分别是字符串“a”，“b”， “c”。你可以通过整数索引访问它们：
+
+```javascript
+arr[0]  //'a'
+arr[0] = 'x';
+arr
+// [ 'x', 'b', 'c' ]
+```
+
+`length`属性总表示一个数组有多少项元素。
+
+```javascript
+arr.length    //3
+```
+
+除此之外它也可以用来从数组上移除尾部元素：
+
+```javascript
+arr.length = 2;
+arr // [ 'x', 'b' ]
+```
+
+`in`操作符也可以在数组上工作。
+
+```javascript
+1 in arr // arr在索引为1处是否有元素？,true
+5 in arr // arr在索引为5处是否有元素？false
+```
+
+值得注意的是数组是对象，因此可以有对象属性：
+
+```javascript
+arr.foo = 123;
+arr.foo   // 123
+```
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
@@ -878,3 +1341,11 @@ function toArray(arrayLikeObject) {
   [21]: http://yanhaijing.com/javascript/2014/01/05/exploring-the-abyss-of-null-and-undefined-in-javascript/
   [22]: http://yanhaijing.com/javascript/2014/04/25/strict-equality-exemptions/
   [23]: http://yanhaijing.com/javascript/2014/03/14/what-every-javascript-developer-should-know-about-floating-points
+  [24]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
+  [25]: http://yanhaijing.com/javascript/2013/12/28/demystifying-this-in-javascript
+  [26]: http://yanhaijing.com/javascript/2014/04/30/javascript-this-keyword
+  [27]: http://yanhaijing.com/javascript/2013/08/30/understanding-scope-and-context-in-javascript
+  [28]: http://yanhaijing.com/javascript/2014/04/30/JavaScript-Scoping-and-Hoisting
+  [29]: http://yanhaijing.com/javascript/2014/04/29/what-is-the-execution-context-in-javascript
+  [30]: http://yanhaijing.com/javascript/2013/08/23/javascript-inheritance-how-to-shoot-yourself-in-the-foot-with-prototypes
+  [31]: http://yanhaijing.com/javascript/2013/08/30/encapsulation-of-javascript
