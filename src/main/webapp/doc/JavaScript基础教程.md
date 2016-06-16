@@ -1384,6 +1384,39 @@ arr.join()  // 'x,b,c'
 
 - [有趣的javascript原生数组函数][32]
 
+## 十五、正则表达式
+
+`JavaScript`内建支持正则表达式。他们被双斜线分隔：
+
+```javascript
+/^abc$/
+/[A-Za-z0-9]+/
+```
+
+### 方法 test()：测试是否匹配
+
+```javascript
+/^a+b+$/.test('aaab')   // true
+/^a+b+$/.test('aaa')    // false
+```
+
+### 方法 exec()：匹配和捕获组
+
+```javascript
+/a(b+)a/.exec('_abbba_aba_')    // [ 'abbba', 'bbb' ]
+```
+
+返回的数组第一项（索引为0）是完整匹配，捕获的第一个分组在第二项（索引为1），等。有一种方法可以反复调用获取所有匹配。
+
+### 方法 replace()：搜索并替换
+
+```javascript
+'<a> <bbb>'.replace(/<(.*?)>/g, '[$1]') // '[a] [bbb]'
+```
+
+`replace`的第一个参数必须是正则表达式，并且开启全局搜索（`/g`标记），否则仅第一个匹配项会被替换。有一种方法使用一个函数来计算替换项。
+
+
 
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
