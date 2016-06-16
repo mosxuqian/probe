@@ -1318,6 +1318,73 @@ arr.foo = 123;
 arr.foo   // 123
 ```
 
+### 数组方法
+
+数组有许多方法。举些例子：
+
+```javascript
+var arr = [ 'a', 'b', 'c' ];
+
+arr.slice(1, 2)  // 复制元素，[ 'b' ]
+arr.slice(1)    // [ 'b', 'c' ]
+
+arr.push('x')  // 在末尾添加一个元素，4
+arr // [ 'a', 'b', 'c', 'x' ]
+
+arr.pop()  // 移除最后一个元素，'x'
+arr   // [ 'a', 'b', 'c' ]
+
+arr.shift()  // 移除第一个元素，'a'
+arr // [ 'b', 'c' ]
+
+arr.unshift('x')  // 在前面添加一个元素，3
+arr // [ 'x', 'b', 'c' ]
+
+arr.indexOf('b')  // 查找给定项在数组中的索引，若不存在返回-1，
+// 1
+arr.indexOf('y')  // -1
+
+arr.join('-')  // 将元素拼接为一个字符串，'x-b-c'
+arr.join('')    // 'xbc'
+arr.join()  // 'x,b,c'
+```
+
+### 遍历数组
+
+有几种方法可以遍历数组元素。其中两个最重要的是`forEach`和`map`。
+
+`forEach`遍历整个数组，并将当前元素和它的索引传递给一个函数：
+
+```javascript
+[ 'a', 'b', 'c' ].forEach(function (elem, index) {  // (*)
+    console.log(index + '. ' + elem);
+});
+```
+
+上面代码的输出
+
+```javascript
+0. a
+1. b
+2. c
+```
+
+注意`（*）`行的函数参数是可省略的。例如：它可以只有一个参数`elem`。
+
+`map`创建一个新数组，通过给每个存在数组元素应用一个函数：
+
+```javascript
+[1,2,3].map(function (x) {
+    return x*x
+});
+// [ 1, 4, 9 ]
+```
+
+### 深入阅读
+
+- [有趣的javascript原生数组函数][32]
+
+
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
@@ -1349,3 +1416,4 @@ arr.foo   // 123
   [29]: http://yanhaijing.com/javascript/2014/04/29/what-is-the-execution-context-in-javascript
   [30]: http://yanhaijing.com/javascript/2013/08/23/javascript-inheritance-how-to-shoot-yourself-in-the-foot-with-prototypes
   [31]: http://yanhaijing.com/javascript/2013/08/30/encapsulation-of-javascript
+  [32]: http://yanhaijing.com/javascript/2014/01/17/fun-with-javascript-native-array-functions
