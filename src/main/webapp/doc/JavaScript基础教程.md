@@ -1436,6 +1436,19 @@ Math.cos(Math.PI)  // 预定义常量π，-1
 [JSON][35]：一个对象，功能是转换和生成`JSON`数据。
 [console.*][36]方法：浏览器的具体方法，不是语言成分的部分，但他们也可以在[Node.js][37]中工作。
 
+## 十八、下一步学什么？
+
+在你学会了这篇文章的基础教程后，你可以转到大部分章节末尾提到的高级教程。此外，我建议你看下面的资源：
+
+- Style guides: I have written [a guide to style guides][38]
+- [Underscore.js][39]: 一个弥补JavaScript标准库缺少的功能的库
+- [JSbooks – free JavaScript books][40]
+- [Frontend rescue: how to keep up to date on frontend technologies][41]
+- [http://yanhaijing.com][42] 当然还有我的博客也非常不错哦
+- [http://yanhaijing.com/es5][43] 如果你想成为高手，我建议阅读`ecmascript`规范
+- [给javascript初学者的24条最佳实践][44]
+- [我希望我知道的七个JavaScript技巧][45]
+
 
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
@@ -1474,3 +1487,11 @@ Math.cos(Math.PI)  // 预定义常量π，-1
   [35]: http://www.2ality.com/2011/08/json-api.html
   [36]: https://developer.mozilla.org/en-US/docs/Web/API/console
   [37]: https://nodejs.org/
+  [38]: http://www.2ality.com/2013/07/meta-style-guide.html
+  [39]: http://underscorejs.org/
+  [40]: http://jsbooks.revolunet.com/
+  [41]: http://uptodate.frontendrescue.org/
+  [42]: http://yanhaijing.com/
+  [43]: http://yanhaijing.com/es5
+  [44]: http://yanhaijing.com/javascript/2013/12/11/24-JavaScript-best-practices-for-beginners
+  [45]: http://yanhaijing.com/javascript/2014/04/23/seven-javascript-quirks-i-wish-id-known-about
