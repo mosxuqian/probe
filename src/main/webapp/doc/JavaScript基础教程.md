@@ -1416,7 +1416,17 @@ arr.join()  // 'x,b,c'
 
 `replace`的第一个参数必须是正则表达式，并且开启全局搜索（`/g`标记），否则仅第一个匹配项会被替换。有一种方法使用一个函数来计算替换项。
 
+## 数学
 
+[Math][33]是一个有算数功能的对象。例如：
+
+```javascript
+Math.abs(-2) // 2
+Math.pow(3, 2) // 3^2 = 9
+Math.max(2, -1, 5) //5
+Math.round(1.9) // 2
+Math.cos(Math.PI)  // 预定义常量π，-1
+```
 
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
@@ -1450,3 +1460,4 @@ arr.join()  // 'x,b,c'
   [30]: http://yanhaijing.com/javascript/2013/08/23/javascript-inheritance-how-to-shoot-yourself-in-the-foot-with-prototypes
   [31]: http://yanhaijing.com/javascript/2013/08/30/encapsulation-of-javascript
   [32]: http://yanhaijing.com/javascript/2014/01/17/fun-with-javascript-native-array-functions
+  [33]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math
