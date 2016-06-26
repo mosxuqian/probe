@@ -1,6 +1,7 @@
 package com.blinkfox.patterns.decorator;
 
 /**
+ * 装饰模式的客户端场景类
  * Created by blinkfox on 16-6-26.
  */
 public class Client {
@@ -14,6 +15,7 @@ public class Client {
         // 第二修饰
         component = new ConcreteDecorator2(component);
 
+        // 修饰后运行
         component.operate();
     }
 

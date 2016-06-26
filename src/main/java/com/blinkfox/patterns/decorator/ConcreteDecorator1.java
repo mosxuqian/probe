@@ -6,6 +6,10 @@ package com.blinkfox.patterns.decorator;
  */
 public class ConcreteDecorator1 extends Decorator {
 
+    /**
+     * 通过构造函数传递被修饰者
+     * @param component
+     */
     public ConcreteDecorator1(Component component) {
         super(component);
     }

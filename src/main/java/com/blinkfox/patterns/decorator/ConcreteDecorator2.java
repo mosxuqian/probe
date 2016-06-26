@@ -1,12 +1,13 @@
 package com.blinkfox.patterns.decorator;
 
 /**
+ * 具体的装饰类2
  * Created by blinkfox on 16-6-26.
  */
 public class ConcreteDecorator2 extends Decorator {
+
     /**
      * 通过构造函数传递被修饰者
-     *
      * @param component
      */
     public ConcreteDecorator2(Component component) {
