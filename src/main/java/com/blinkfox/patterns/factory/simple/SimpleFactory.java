@@ -15,7 +15,7 @@ public class SimpleFactory {
      * @param <T>
      * @return
      */
-    public <T extends Product> T createProduct(Class<T> c) {
+    public static  <T extends Product> T createProduct(Class<T> c) {
         Product product = null;
         try {
             product = (Product) Class.forName(c.getName()).newInstance();

@@ -11,13 +11,11 @@ import com.blinkfox.patterns.factory.Product;
 public class SimpleClient {
 
     public static void main(String[] args) {
-        SimpleFactory simpleFactory = new SimpleFactory();
-
-        Product product1 = simpleFactory.createProduct(ConcreteProduct1.class);
+        Product product1 = SimpleFactory.createProduct(ConcreteProduct1.class);
         product1.method1();
         product1.method2();
 
-        Product product2 = simpleFactory.createProduct(ConcreteProduct2.class);
+        Product product2 = SimpleFactory.createProduct(ConcreteProduct2.class);
         product2.method1();
         product2.method2();
     }
