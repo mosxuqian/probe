@@ -1,12 +1,12 @@
-package com.blinkfox.patterns.factory.normal;
+package com.blinkfox.patterns.factory.simple;
 
 import com.blinkfox.patterns.factory.Product;
 
 /**
- * 具体生产产品的工厂类
+ * 简单工厂模式中的工厂类
  * Created by blinkfox on 16-6-29.
  */
-public class ConcreteFactory extends Factory {
+public class SimpleFactory {
 
     /**
      * 运用了Java中的泛型和反射技术,生成某种具体的产品
@@ -15,7 +15,6 @@ public class ConcreteFactory extends Factory {
      * @param <T>
      * @return
      */
-    @Override
     public <T extends Product> T createProduct(Class<T> c) {
         Product product = null;
         try {
