@@ -1,4 +1,4 @@
-package com.blinkfox.patterns.factory.normal;
+package com.blinkfox.patterns.factory;
 
 /**
  * 抽象产品类

@@ -1,5 +1,7 @@
 package com.blinkfox.patterns.factory.normal;
 
+import com.blinkfox.patterns.factory.Product;
+
 /**
  * 具体生产产品的工厂类
  * Created by blinkfox on 16-6-29.

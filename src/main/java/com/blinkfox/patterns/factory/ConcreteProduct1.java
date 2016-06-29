@@ -1,4 +1,6 @@
-package com.blinkfox.patterns.factory.normal;
+package com.blinkfox.patterns.factory;
+
+import com.blinkfox.patterns.factory.Product;
 
 /**
  * 具体产品类1
