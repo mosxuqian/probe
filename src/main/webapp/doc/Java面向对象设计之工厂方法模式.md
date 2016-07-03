@@ -327,6 +327,83 @@ public class MultiClient {
 }
 ```
 
+### 2. 工厂方法的单例模式
+
+单例模式的核心要求就是在内存中只有一个对象，通过工厂方法模式也可以只在内存中生成一个对象，从而实现单例的功能。
+
+下面是单例类，其中定义了一个private的无参构造函数，目的是不允许通过new的方式创建对象，代码如下：
+
+```java
+/**
+ * 工厂方法模式中的单例类
+ * Created by blinkfox on 16-7-4.
+ */
+public class Singleton {
+
+    /**
+     * 私有化构造方法，不允许new产生一个对象
+     */
+    private Singleton() {}
+
+    /**
+     * 工厂方法模式中的单例模式业务方法
+     */
+    public void doSomething() {
+        System.out.println("工厂方法模式中的单例模式方法。。。");
+    }
+
+}
+```
+
+以上单例类中不能通过正常的渠道建立一个对象，那单例的工厂类中如何建立一个单例对象呢？答案是通过反射方式创建，单例工厂类的代码如下：
+
+```java
+/**
+ * 生成单例的工厂类
+ * Created by blinkfox on 16-7-4.
+ */
+public class SingletonFactory {
+
+    private static Singleton singleton;
+
+    static {
+        try {
+            Class c = Class.forName(Singleton.class.getName());
+            // 获得无参构造
+            Constructor constructor = c.getDeclaredConstructor();
+            // 设置无参构造是可访问的
+            constructor.setAccessible(true);
+            // 产生一个实例对象
+            singleton = (Singleton) constructor.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("生成单例的工厂类方法中生成单例出错");zuihou
+        }
+    }
+
+    public static Singleton getSingleton() {
+        return singleton;
+    }
+}
+```
+
+最后是工厂方法单例模式的客户端场景类：
+
+```java
+/**
+ * 工厂方法单例模式客户端场景类
+ * Created by blinkfox on 16-7-4.
+ */
+public class SingleClient {
+
+    public static void main(String[] args) {
+        Singleton singleton = SingletonFactory.getSingleton();
+        singleton.doSomething();
+    }
+
+}
+```
+
 ## 六、总结
 
   [1]: http://static.blinkfox.com/FactoryMethod.jpg
