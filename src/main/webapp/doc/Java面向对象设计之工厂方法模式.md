@@ -1,4 +1,4 @@
-# Java面向对象设计之
+# Java面向对象设计之工厂方法模式
 
 标签： Java 设计模式
 
@@ -242,6 +242,90 @@ public class SimpleClient {
 运行结果没有发生变化，但是类图简单了，调用者也比较简单，简单工厂模式是工厂方法模式的弱化，也叫做静态工厂模式。其缺点是工厂类的扩展比较困难，不符合“开闭原则”，但它仍然是一个非常实用的设计模式。
 
 ### 2. 多工厂类工厂方法模式
+
+当我们在一个比较复杂的项目时，经常会遇到初始化一个对象很耗费精力的情况，所有的产品类都放到一个工厂方法中进行初始化会使代码结构不清晰。为了让结构清晰，我们就为每类产品定义一个创造者，然后由调用者自己去选择与哪个工厂方法关联。多工厂模式的通用代码如下：
+
+多工厂模式的抽象工厂类：
+
+```java
+/**
+ * 生成多个产品的抽象工厂类
+ * Created by blinkfox on 16-7-2.
+ */
+public abstract class MultiFactory {
+
+    /**
+     * 生成某种产品的方法
+     * @return
+     */
+    public abstract Product createProduct();
+
+}
+```
+
+第一种产品的创建工厂实现：
+
+```java
+/**
+ * 生成产品1的具体工厂类1
+ * Created by blinkfox on 16-7-2.
+ */
+public class ConcreteFactory1 extends MultiFactory {
+
+    /**
+     * 生成产品1的方法
+     * @return
+     */
+    @Override
+    public Product createProduct() {
+        return new ConcreteProduct1();
+    }
+
+}
+```
+
+第二种产品的创建工厂实现：
+
+```java
+/**
+ * 生成产品2的具体工厂类2
+ * Created by blinkfox on 16-7-2.
+ */
+public class ConcreteFactory2 extends MultiFactory {
+
+    /**
+     * 生成产品2的方法
+     * @return
+     */
+    @Override
+    public Product createProduct() {
+        return new ConcreteProduct2();
+    }
+
+}
+```
+
+多工厂模式的客户端场景类
+
+```java
+/**
+ * 多工厂方法模式客户端场景类
+ * Created by blinkfox on 16-7-2.
+ */
+public class MultiClient {
+
+    public static void main(String[] args) {
+        Product concreteProduct1 = (new ConcreteFactory1()).createProduct();
+        concreteProduct1.method1();
+        concreteProduct1.method2();
+
+        Product concreteProduct2 = (new ConcreteFactory2()).createProduct();
+        concreteProduct1.method1();
+        concreteProduct1.method2();
+    }
+
+}
+```
 
 ## 六、总结
 
