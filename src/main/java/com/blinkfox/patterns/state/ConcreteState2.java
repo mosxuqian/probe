@@ -21,4 +21,5 @@ public class ConcreteState2 implements IState {
     public void handle2() {
         System.out.println("执行了具体状态角色类2中的方法2...");
     }
+
 }
