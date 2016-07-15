@@ -37,12 +37,4 @@ public abstract class Subject {
         }
     }
 
-    /* getter和setter方法 */
-    public List<Observer> getObservers() {
-        return observers;
-    }
-
-    public void setObservers(List<Observer> observers) {
-        this.observers = observers;
-    }
 }
