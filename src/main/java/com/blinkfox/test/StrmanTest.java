@@ -39,6 +39,31 @@ public class StrmanTest {
         boolean s7 = Strman.contains("foo bar", "foo");
         boolean s8 = Strman.contains("foo bar", "FOO", false);
         System.out.println("contains:" + s7 + ", " + s8); // result => "true, true"
+
+        // containsAll 判断一个字符串是否包含某字符串数组中的所有元素
+        boolean s9 = Strman.containsAll("foo bar", new String[]{"foo", "bar"});
+        boolean s10 = Strman.containsAll("foo bar", new String[]{"FOO", "bar"}, false);
+        System.out.println("containsAll:" + s9 + ", " + s10); // result => "true, true"
+
+        // containsAny 判断一个字符串是否包含某字符串数组中的任意一个元素
+        boolean s11 = Strman.containsAny("foo bar", new String[]{"FOO", "BAR", "Test"}, false);
+        System.out.println("containsAny:" + s11); // result => "true"
+
+        // countSubstr 判断一个字符串包含某字符串的个数
+        long s12 = Strman.countSubstr("aaaAAAaaa", "aaa");
+        long s13 = Strman.countSubstr("aaaAAAaaa", "aaa", false, false);
+        System.out.println("countSubstr:" + s12 + ", " + s13); // result => "2, 3"
+
+        // endsWith 判断一个字符串是否以某个字符串结尾
+        boolean s14 = Strman.endsWith("foo bar", "bar");
+        boolean s15 = Strman.endsWith("foo bar", "BAR", false);
+        System.out.println("endsWith:" + s14 + ", " + s15); // result => "true, true"
+
+        // ensureLeft 确保一个字符串以某个字符串开头,如果不是,则在前面追加该字符串,并将字符串结果返回
+        String s16 = Strman.ensureLeft("foobar", "foo");
+        String s17 = Strman.ensureLeft("bar", "foo");
+        String s18 = Strman.ensureLeft("foobar", "FOO", false);
+        System.out.println("ensureLeft:" + s16 + ", " + s17 + ", " + s18); // result => "foobar, foobar, foobar"
     }
 
 }
