@@ -15,6 +15,10 @@ public class StrmanTest {
         String s1 = Strman.append("f", "o", "o", "b", "a", "r");
         System.out.println("append:" + s1); // result => "foobar"
 
+        // prepend 在一个字符串前追加任意个数的字符串
+        String s1pre = Strman.prepend("r", "f", "o", "o", "b", "a");
+        System.out.println("prepend:" + s1pre); // result => "foobar"
+
         // appendArray 在一个字符串后先后追加一个字符串数组中的元素
         String s2 = Strman.appendArray("f", new String[]{"o", "o", "b", "a", "r"});
         System.out.println("append:" + s2); //  result => "foobar"
@@ -90,6 +94,82 @@ public class StrmanTest {
         // decEncode 将字符串转成十进制编码（5位）
         String s23 = Strman.decEncode("A");
         System.out.println("decEncode:" + s23); // result => "00065"
+
+        // first 得到从字符串开始到索引n的字符串
+        String s24 = Strman.first("foobar", 3);
+        System.out.println("first:" + s24); // result => "foo"
+
+        // last 得到从字符串结尾倒数索引n的字符串
+        String s24l = Strman.last("foobar", 3);
+        System.out.println("last:" + s24l); // result => "bar"
+
+        // head 得到字符串的第一个字符
+        String s25 = Strman.head("foobar");
+        System.out.println("head:" + s25); // result => "f"
+
+        // hexDecode 将字符串字符转成十六进制编码（4位）
+        String s26 = Strman.hexDecode("0041");
+        System.out.println("hexDecode:" + s26); // result => "A"
+
+        // hexEncode 将十六进制编码（4位）转成字符串字符
+        String s27 = Strman.hexEncode("A");
+        System.out.println("hexEncode:" + s27); // result => "0041"
+
+        // inequal 测试两个字符串是否相等
+        boolean s28 = Strman.inequal("a", "b");
+        System.out.println("inequal:" + s28); // result => "true"
+
+        // insert 将子字符串插入到字符串某索引位置处
+        String s29 = Strman.insert("fbar", "oo", 1);
+        System.out.println("insert:" + s29); // result => "foobar"
+
+        // leftPad 将字符串从左补齐直到总长度为n为止
+        String s30 = Strman.leftPad("1", "0", 5);
+        System.out.println("leftPad:" + s30); // result => "00001"
+
+        // rightPad 将字符串从右补齐直到总长度为n为止
+        String s30r = Strman.rightPad("1", "0", 5);
+        System.out.println("rightPad:" + s30r); // result => "10000"
+
+        // lastIndexOf 此方法返回在指定值的最后一个发生的调用字符串对象中的索引，从偏移量中向后搜索
+        int s31 = Strman.lastIndexOf("foobarfoobar", "F", false);
+        System.out.println("lastIndexOf:" + s31); // result => "6"
+
+        // leftTrim 移除字符串最左边的所有空格
+        String s32 = Strman.leftTrim("   strman   ");
+        System.out.println("leftTrim:" + s32); // result => "strman   "
+
+        // rightTrim 移除字符串最右边的所有空格
+        String s32r = Strman.rightTrim("   strman   ");
+        System.out.println("rightTrim:" + s32r); // result => "   strman"
+
+        // removeEmptyStrings 移除字符串数组中的空字符串
+        String[] s33 = Strman.removeEmptyStrings(new String[]{"aa", "", "   ", "bb", "cc", null});
+        System.out.println("removeEmptyStrings:" + Arrays.toString(s33)); // result => "[aa, bb, cc]"
+
+        // removeLeft 得到去掉前缀（如果存在的话）后的新字符串
+        String s34 = Strman.removeLeft("foobar", "foo");
+        System.out.println("removeLeft:" + s34); // result => "bar"
+
+        // removeRight 得到去掉后缀（如果存在的话）后的新字符串
+        String s34r = Strman.removeRight("foobar", "bar");
+        System.out.println("removeRight:" + s34r); // result => "foo"
+
+        // removeNonWords 得到去掉不是字符的字符串
+        String s35 = Strman.removeNonWords("foo&bar-");
+        System.out.println("removeNonWords:" + s35); // result => "foobar"
+
+        // removeSpaces 移除所有空格
+        String s36 = Strman.removeSpaces("   str  man   ");
+        System.out.println("removeSpaces:" + s36); // result => "   strman"
+
+        // repeat 得到给定字符串和重复次数的新字符串
+        String s37 = Strman.repeat("1", 3);
+        System.out.println("repeat:" + s37); // result => "111"
+
+        // reverse 得到反转后的字符串
+        String s38 = Strman.reverse("foobar");
+        System.out.println("reverse:" + s38); // result => "raboof"
     }
 
 }
