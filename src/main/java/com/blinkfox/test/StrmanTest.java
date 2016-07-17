@@ -64,6 +64,32 @@ public class StrmanTest {
         String s17 = Strman.ensureLeft("bar", "foo");
         String s18 = Strman.ensureLeft("foobar", "FOO", false);
         System.out.println("ensureLeft:" + s16 + ", " + s17 + ", " + s18); // result => "foobar, foobar, foobar"
+
+        // ensureRight 确保一个字符串以某个字符串开头,如果不是,则在前面追加该字符串,并将字符串结果返回
+        String s16r = Strman.ensureRight("foobar", "bar");
+        String s17r = Strman.ensureRight("foo", "bar");
+        String s18r = Strman.ensureRight("fooBAR", "bar", false);
+        System.out.println("ensureRight:" + s16r + ", " + s17r + ", " + s18r); // result => "foobar, foobar, fooBAR"
+
+        // base64Encode 将字符串转成Base64编码的字符串
+        String s19 = Strman.base64Encode("strman");
+        System.out.println("base64Encode:" + s19); // result => "c3RybWFu"
+
+        // binDecode 将二进制编码（16位）转成字符串字符
+        String s20 = Strman.binDecode("0000000001000001");
+        System.out.println("binDecode:" + s20); // result => "A"
+
+        // binEncode 将字符串字符转成二进制编码（16位）
+        String s21 = Strman.binEncode("A");
+        System.out.println("binEncode:" + s21); // result => "0000000001000001"
+
+        // decDecode 将十进制编码（5位）转成字符串字符
+        String s22 = Strman.decDecode("00065");
+        System.out.println("decDecode:" + s22); // result => "A"
+
+        // decEncode 将字符串转成十进制编码（5位）
+        String s23 = Strman.decEncode("A");
+        System.out.println("decEncode:" + s23); // result => "00065"
     }
 
 }
