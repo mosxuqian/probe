@@ -170,6 +170,63 @@ public class StrmanTest {
         // reverse 得到反转后的字符串
         String s38 = Strman.reverse("foobar");
         System.out.println("reverse:" + s38); // result => "raboof"
+
+        // safeTruncate 安全的截断字符串，不切一个字的一半,它总是返回最后一个完整的单词
+        String s39 = Strman.safeTruncate("A Javascript string manipulation library.", 19, "...");
+        System.out.println("safeTruncate:" + s39); // result => "A Javascript..."
+
+        // truncate 不太安全的截断字符串
+        String s40 = Strman.truncate("A Javascript string manipulation library.", 19, "...");
+        System.out.println("truncate:" + s40); // result => "A Javascript str..."
+
+        // htmlDecode 将html字符反转义
+        String s41 = Strman.htmlDecode("&SHcy;");
+        System.out.println("htmlDecode:" + s41); // result => "Ш"
+
+        // htmlEncode 将html字符转义
+        String s42 = Strman.htmlEncode("Ш");
+        System.out.println("htmlEncode:" + s42); // result => "&SHcy;"
+
+        // shuffle 将给定字符串转成随机字符顺序的字符串
+        String s43 = Strman.shuffle("shekhar");
+        System.out.println("shuffle:" + s43); // result => "rhsheak"
+
+        // slugify 将字符串分段(用"-"分段)
+        String s44 = Strman.slugify("foo bar");
+        System.out.println("slugify:" + s44); // result => "foo-bar"
+
+        // transliterate 删除所有非有效字符,如:á => a
+        String s45 = Strman.transliterate("fóõ bár");
+        System.out.println("transliterate:" + s45); // result => "foo bar"
+
+        // surround 给定的“前缀”和“后缀”来包裹一个字符串
+        String s46 = Strman.surround("div", "<", ">");
+        System.out.println("surround:" + s46); // result => "<div>"
+
+        // tail 得到去掉第一个字符后的字符串
+        String s47 = Strman.tail("foobar");
+        System.out.println("tail:" + s47); // result => "oobar"
+
+        // toCamelCase 转成驼峰式的字符串
+        String s48 = Strman.toCamelCase("Camel Case");
+        String s48_2 = Strman.toCamelCase("camel-case");
+        System.out.println("tail:" + s48 + ", " + s48_2); // result => "camelCase, camelCase"
+
+        // toStudlyCase 转成Studly式的字符串
+        String s49 = Strman.toStudlyCase("hello world");
+        System.out.println("toStudlyCase:" + s49); // result => "HelloWorld"
+
+        // toDecamelize 转成Decamelize式的字符串
+        String s50 = Strman.toDecamelize("helloWorld", null);
+        System.out.println("toDecamelize:" + s50); // result => "hello world"
+
+        // toKebabCase 转成Kebab式的字符串
+        String s51 = Strman.toKebabCase("hello World");
+        System.out.println("toKebabCase:" + s51); // result => "hello-world"
+
+        // toSnakeCase 转成Snake式的字符串
+        String s52 = Strman.toSnakeCase("hello world");
+        System.out.println("toSnakeCase:" + s52); // result => "hello_world"
     }
 
 }
