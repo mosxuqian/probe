@@ -202,5 +202,9 @@ delete from table_A;
   [1]: https://mariadb.org/
   [2]: http://static.blinkfox.com/mariadb20160716.png
   [3]: http://brew.sh/
+<<<<<<< HEAD
   [4]: https://developer.apple.com/xcode/ide/cn/
 
+=======
+  [4]: https://developer.apple.com/xcode/ide/cn/
+>>>>>>> origin/master
