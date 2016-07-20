@@ -15,7 +15,19 @@
 
     银行卡号: <input class="credit-card" width="100px" type="text" placeholder="请输入您的银行卡号"/><br>
 
-    银行卡号: <input class="phone" width="100px" type="text" placeholder="请输入您的电话号码"/>
+    电话号码: <input class="phone" width="100px" type="text" placeholder="请输入您的电话号码"/><br>
+
+    日期: <input class="date" width="100px" type="text" placeholder="请输入日期"/><br>
+
+    月份: <input class="month" width="100px" type="text" placeholder="请输入月份"/><br>
+
+    金额(万元): <input class="money" width="100px" type="text" placeholder="中国金额将，万元隔开"/><br>
+
+    自定义块: <input class="custom-block" width="100px" type="text" placeholder="自定义块数"/><br>
+
+    自定义分隔符: <input class="custom-delimiter" width="100px" type="text" placeholder="自定义分隔符"/><br>
+
+    自定义前缀: <input class="custom-prefix" width="100px" type="text" placeholder="自定义前缀"/><br>
 
     <script src="../../assets/plugins/cleave/cleave.min.js"></script>
     <script src="../../assets/plugins/cleave/cleave-phone.cn.js"></script>
@@ -30,6 +42,33 @@
         new Cleave('.phone', {
             phone: true,
             phoneRegionCode: 'cn'
+        });
+        new Cleave('.date', {
+            date: true,
+            datePattern: ['Y', 'm', 'd']
+        });
+        new Cleave('.month', {
+            date: true,
+            datePattern: ['m', 'y']
+        });
+        new Cleave('.money', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'wan'
+        });
+        new Cleave('.custom-block', {
+            blocks: [4, 3, 3, 4],
+            uppercase: true
+        });
+        new Cleave('.custom-delimiter', {
+            delimiter: '·',
+            blocks: [3, 3, 3, 3],
+            uppercase: true
+        });
+        new Cleave('.custom-prefix', {
+            prefix: 'PREFIX',
+            delimiter: '-',
+            blocks: [6, 4, 4, 4],
+            uppercase: true
         });
     }());
 </script>
