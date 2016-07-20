@@ -13,9 +13,12 @@
 </head>
 <body>
 
-    银行卡号: <input class="credit-card" width="100px" type="text" placeholder="请输入您的银行卡号"/>
+    银行卡号: <input class="credit-card" width="100px" type="text" placeholder="请输入您的银行卡号"/><br>
+
+    银行卡号: <input class="phone" width="100px" type="text" placeholder="请输入您的电话号码"/>
 
     <script src="../../assets/plugins/cleave/cleave.min.js"></script>
+    <script src="../../assets/plugins/cleave/cleave-phone.cn.js"></script>
     <script>
     (function () {
         new Cleave('.credit-card', {
@@ -23,6 +26,10 @@
             onCreditCardTypeChanged: function (type) {
                 console.log('开始输入银行卡号了...');
             }
+        });
+        new Cleave('.phone', {
+            phone: true,
+            phoneRegionCode: 'cn'
         });
     }());
 </script>
