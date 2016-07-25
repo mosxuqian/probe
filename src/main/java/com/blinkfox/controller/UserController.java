@@ -4,6 +4,8 @@ import com.alibaba.druid.util.StringUtils;
 import com.blinkfox.model.User;
 import com.jfinal.core.Controller;
 
+import java.util.List;
+
 /**
  * 用户信息相关的控制器
  * Created by blinkfox on 16/7/24.
@@ -33,6 +35,15 @@ public class UserController extends Controller {
         }
 
         renderJson(user);
+    }
+
+    /**
+     * 获取所有用户信息
+     */
+    public void getAllUsers() {
+        List<User> users = User.userDao.queryAllUsers();
+        setAttr("users", users);
+        render("/app/test/users.html");
     }
 
 }

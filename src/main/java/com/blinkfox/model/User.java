@@ -21,4 +21,12 @@ public class User extends Model<User> {
         return (users != null && users.size() > 0) ? users.get(0) : null;
     }
 
+    /**
+     * 获取所有用户信息
+     * @return
+     */
+    public List<User> queryAllUsers() {
+        return userDao.find("select name, nick_name, email, age from user");
+    }
+
 }
