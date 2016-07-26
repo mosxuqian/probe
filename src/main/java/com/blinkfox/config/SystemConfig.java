@@ -2,6 +2,7 @@ package com.blinkfox.config;
 
 import com.blinkfox.controller.IndexController;
 import com.blinkfox.controller.UserController;
+import com.blinkfox.handler.FakeStaticHandler;
 import com.blinkfox.model.User;
 import com.jfinal.config.*;
 import com.jfinal.ext.handler.ContextPathHandler;
@@ -56,6 +57,7 @@ public class SystemConfig extends JFinalConfig {
     public void configHandler(Handlers me) {
         // 配置项目基础路径
         me.add(new ContextPathHandler("base"));
+        me.add(new FakeStaticHandler());
     }
 
 }

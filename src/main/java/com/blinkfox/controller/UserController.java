@@ -3,7 +3,6 @@ package com.blinkfox.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.blinkfox.model.User;
 import com.jfinal.core.Controller;
-
 import java.util.List;
 
 /**
@@ -44,6 +43,17 @@ public class UserController extends Controller {
         List<User> users = User.userDao.queryAllUsers();
         setAttr("users", users);
         render("/app/test/users.html");
+    }
+
+    /**
+     * 下载文件的方法
+     */
+    public void testFile() {
+        renderFile("/doc/blinkfox.txt");
+    }
+
+    public void testNull() {
+        renderNull();
     }
 
 }
