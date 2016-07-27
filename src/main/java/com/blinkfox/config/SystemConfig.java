@@ -3,6 +3,8 @@ package com.blinkfox.config;
 import com.blinkfox.controller.IndexController;
 import com.blinkfox.controller.UserController;
 import com.blinkfox.handler.FakeStaticHandler;
+import com.blinkfox.interceptor.GlobalActionTestInter;
+import com.blinkfox.interceptor.GlobalServiceTestInter;
 import com.blinkfox.model.User;
 import com.jfinal.config.*;
 import com.jfinal.ext.handler.ContextPathHandler;
@@ -50,7 +52,14 @@ public class SystemConfig extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors me) {
+        // 添加控制层全局拦截器
+        me.addGlobalActionInterceptor(new GlobalActionTestInter());
 
+        // 添加业务层全局拦截器
+        me.addGlobalServiceInterceptor(new GlobalServiceTestInter());
+
+        // 为兼容老版本保留的方法,功能与addGlobalActionInterceptor完全一样
+        // me.add(new GlobalActionTestInter());
     }
 
     @Override

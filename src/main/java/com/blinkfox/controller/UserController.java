@@ -1,7 +1,12 @@
 package com.blinkfox.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.blinkfox.interceptor.AaaInter;
+import com.blinkfox.interceptor.BbbInter;
+import com.blinkfox.interceptor.DemoInterceptor;
 import com.blinkfox.model.User;
+import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import java.util.List;
 
@@ -9,9 +14,13 @@ import java.util.List;
  * 用户信息相关的控制器
  * Created by blinkfox on 16/7/24.
  */
+@Before({DemoInterceptor.class, AaaInter.class})
 public class UserController extends Controller {
 
+    @Clear()
+    @Before({BbbInter.class})
     public void index() {
+        System.out.println("Hello UserController");
         renderText("Hello UserController!");
     }
 
@@ -39,6 +48,7 @@ public class UserController extends Controller {
     /**
      * 获取所有用户信息
      */
+    @Clear({AaaInter.class})
     public void getAllUsers() {
         List<User> users = User.userDao.queryAllUsers();
         setAttr("users", users);
