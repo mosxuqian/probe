@@ -8,7 +8,11 @@ import com.blinkfox.model.User;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Page;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户信息相关的控制器
@@ -64,6 +68,28 @@ public class UserController extends Controller {
 
     public void testNull() {
         renderNull();
+    }
+
+    /**
+     *
+     */
+    public void userRecord() {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        User.userDao.findById(2).set("name", "lisi").set("nick_name", "李思").update();
+
+        User user1 = User.userDao.findByIdLoadColumns(2, "name, nick_name, email, age");
+        String nickName = user1.getStr("nick_name");
+        int age = user1.getInt("age");
+
+        Page<User> users = User.userDao.paginate(1, 3, "select *", "from user where age > ?", 15);
+
+        map.put("user1", user1);
+        map.put("nickName", nickName);
+        map.put("age", age);
+        map.put("users", users);
+
+        renderJson(map);
     }
 
 }
