@@ -1,7 +1,6 @@
 package com.blinkfox.handler;
 
 import com.jfinal.handler.Handler;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +13,7 @@ public class FakeStaticHandler extends Handler {
     @Override
     public void handle(String target, HttpServletRequest request,
              HttpServletResponse response, boolean[] isHandled) {
-        String[] typeArr = {".html", ".txt"};
+        String[] typeArr = {".html", ".txt", "pdf"};
         for (int i = 0; i<typeArr.length; i++){
             int index = target.lastIndexOf(typeArr[i]);
             if (index != -1) {

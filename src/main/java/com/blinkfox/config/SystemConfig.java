@@ -10,7 +10,6 @@ import com.jfinal.config.*;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
-import com.jfinal.plugin.ehcache.EhCachePlugin;
 
 /**
  * JFinal的配置类
@@ -46,7 +45,7 @@ public class SystemConfig extends JFinalConfig {
         // 配置ActiveRecord插件
         ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
         me.add(arp);
-        me.add(new EhCachePlugin());
+        // me.add(new EhCachePlugin());
 
         // 映射数据库表为user，id是主键(默认为'id'可不写)，实体类User
         arp.addMapping("user", "id", User.class);

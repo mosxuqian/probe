@@ -9,7 +9,6 @@ import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
