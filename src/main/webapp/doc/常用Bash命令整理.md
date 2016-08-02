@@ -153,3 +153,18 @@ tail -f /var/log/messages
 # --retry选项表示持续尝试打开某个文件，当你想打开一个稍后才会创建或即使不可用的文件
 tail -f /tmp/debug.log --retry
 ```
+
+### 6.file - 查看文件类型
+
+`file`命令用于接收一个文件作为参数并执行某些测试，已确定正确的文件类型。
+
+```bash
+# 查看文件类型
+file /etc/inittab
+
+# 可以MIME类型的格式显示文件类型的信息
+file -i  /etc/inittab
+
+# 使用-N 选项，输出的队列可以以在文件名之后无空白填充的形式显示
+file -N *
+```
