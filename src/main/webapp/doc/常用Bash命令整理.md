@@ -135,3 +135,21 @@ head -n 5 /etc/inittab
 # 打印文件的前N个字节的数据
 head -c 10 /etc/inittab
 ```
+
+### 5.tail - 显示文件尾部
+
+`tail`命令和`head`命令相反，它打印指定输入的结尾部分的内容。默认情况下，它打印指定输入的最后10行内容。
+
+使用`-n`选项可以指定打印文件的最后N行：
+
+```bash
+# 指定打印文件的后10行
+tail -n 10 /etc/inittab
+tail -10 /etc/inittab
+
+# 即时打印文件中新写入的行
+tail -f /var/log/messages
+
+# --retry选项表示持续尝试打开某个文件，当你想打开一个稍后才会创建或即使不可用的文件
+tail -f /tmp/debug.log --retry
+```
