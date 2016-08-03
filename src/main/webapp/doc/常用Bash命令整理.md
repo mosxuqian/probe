@@ -168,3 +168,28 @@ file -i  /etc/inittab
 # 使用-N 选项，输出的队列可以以在文件名之后无空白填充的形式显示
 file -N *
 ```
+
+### 7.wc - 查看文件统计信息
+
+`wc`命令用于查看文件的行数、单词数和字符数等信息。语法类似如下所示：
+
+```bash
+wc filename
+X Y Z /etc/inittab
+```
+
+其中X表示行数，Y表示单词数，Z表示字节数，filename表示文件名。
+
+```bash
+# -l选项，可以只统计文件的行数信息
+wc -l /etc/inittab
+
+# -w选项，可以只统计文件的单词数信息
+wc -w /etc/inittab
+
+# -c选项，可以只统计文件的字节数信息
+wc -c /etc/inittab
+
+# -L选项，可以只统计文件中最长的行的长度
+wc -L /etc/inittab
+```
