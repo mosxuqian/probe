@@ -1,8 +1,6 @@
-# 常用Bash命令整理
+# 常用Bash命令整理（一）：查看文件和目录
 
 标签：Linux
-
-## 一、查看文件和目录
 
 ### 1. ls - 列出文件名和目录
 
@@ -192,4 +190,81 @@ wc -c /etc/inittab
 
 # -L选项，可以只统计文件中最长的行的长度
 wc -L /etc/inittab
+```
+
+### 8.find - 查找文件或目录
+
+`find`命令用于根据你指定的参数搜索和定位文件和目录的列表。`find`命令可以在多种情况下使用，比如你可以通过权限、用户、用户组、文件类型、日期、大小和其他可能的条件来查找文件。
+
+`find`命令常用使用和说明如下：
+
+```bash
+# 查找指定目录下的某个文件
+find /etc/ -name inittab
+
+# 在当前目录下查找名称为 inittab 的文件
+find . -name inittab
+
+# 在当前目录下，文件不区分大小写是example的所有文件
+find . -iname example
+
+# 找出当前目录下所有以 sh 结尾的文件
+find . -type f -name "*.sh"
+
+# 找出当前目录下，文件权限是 777 的所有文件
+find . -type f -perm 777
+
+# 找出当前目录下，文件权限不是 777 的所有文件
+find . -type f ! -perm 777
+
+# 找出当前目录下所有只读文件
+find . -type f ! -perm /a+w
+
+# 找出你帐号主目录下的所有可执行文件
+find ~ -type f -perm /a+w
+
+# 找出 /tmp 目录下的.log文件并将其删除：
+find /tmp/ -type f -name "*.log" -exec rm -f {} \;
+
+# 找出当前目录下的所有空文件
+find . -type f -empty
+
+# 找出当前目录下的所有空目录
+find . -type d -empty
+
+# 找出 /tmp 目录下的所有隐藏文件
+find /tmp/ -type f -name ".*"
+
+# 找出 /tmp 目录下，所有者是 root 的文件和目录
+find /tmp/ -user root
+
+# 找出 /tmp 目录下，用户组是 developer 的文件和目录
+find /tmp/ -group root
+
+# 找出你账号的主目录下，3 天前修改的文件
+find ~ -type f -mtime 3
+
+# 找出你账号的主目录下，30 天以前修改的所有文件
+find ~ -type f -mtime +30
+
+# 找出你账号的主目录下，3 天以内修改的所有文件
+find ~ -type f -mtime -3
+
+# 找出你账号的主目录下，30 天以前，60 天以内修改的所有文件
+find ~ -type f -mtime +30 -mtime -60
+
+# 找出 /etc 目录下，一小时以内变更过的文件
+find /etc -type f -cmin -60
+
+# 找出 /etc 目录下，一小时以内访问过的文件
+find /etc -type f -amin -60
+
+# 找出你账号主目录下，大小是50MB的所有文件
+find ~ -type f -size 50MB
+
+# 找出你账号主目录下，大于50MB小于100MB的所有文件
+find ~ -type f -size +50MB -size -100MB
+
+# 找出你账号主目录下，大于100MB的文件并将其删除
+find ~ -type f -size +100MB -exec rm -rf {} \;
 ```
