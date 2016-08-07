@@ -109,3 +109,35 @@ ln -s /home/blinkfox/src/library.so /home/blinkfox/lib
 # 创建目录的软链接
 ln -s /home/blinkfox/src source
 ```
+
+### 5. mv - 移动文件或目录
+
+`mv`命令用于将文件和目录从一个位置移到另外一个位置。除了移动文件，`mv`命令还可用于修改文件或目录的名字。
+
+mv 命令的基本语法如下所示：
+
+```bash
+mv SOURCE... DIRECTORY
+```
+
+常用命令如下：
+
+```bash
+# 将当前目录下的文件 source.txt 移到目录 /tmp 下
+mv source.txt /tmp
+
+# 将目录 dir1、dir2 移到目录 dir_dist 下
+mv dir1 dir2 dir_dist
+
+# 将当前目录下的 old.txt 文件更名为 new.txt
+mv old.txt new.txt
+
+# 使用 -i 选项，在重写覆盖目标文件或目录之前给出提示信息
+mv -i old.txt new.txt
+
+# 将当前目录下的所有文件移动到目录 /tmp 下
+mv * /tmp/
+
+# 使用 -i 选项，从 dir1 中移动那些在目标目录中不存在的文件到目标目录
+mv -u dir1/* dir2/
+```
