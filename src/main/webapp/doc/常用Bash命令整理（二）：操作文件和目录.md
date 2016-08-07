@@ -97,3 +97,15 @@ cp -p filename /path/to/new/location/myfile
 # 即将一个目录及其下的所有文件和子目录都复制到另一个目录
 cp -R * /home/blinkfox/backup
 ```
+
+### 4.ln - 链接文件或目录
+
+`ln`命令用于创建软链接或硬链接。使用 -s 选项，可以创建一个软链接：
+
+```bash
+# 在目录 lib 下创建一个软链接 library.so，链接到 /home/blinkfox/src/library.so
+ln -s /home/blinkfox/src/library.so /home/blinkfox/lib
+
+# 创建目录的软链接
+ln -s /home/blinkfox/src source
+```
