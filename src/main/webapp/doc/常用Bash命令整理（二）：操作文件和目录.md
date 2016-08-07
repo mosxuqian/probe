@@ -38,3 +38,25 @@ touch -c -t YYMMDDHHMM filename
 # 如果想使用文件 myeffyl 的时间戳更新文件 effyl 的时间戳，可以使用 -r 选项
 touch -r myeffyl effyl
 ```
+
+### 2.mkdir - 创建目录
+
+`mkdir`命令用于创建一个新目录。最基本的`mkdir`命令的使用方法如下所示：
+
+```bash
+# 在当前目录下创建一个给定的目录名
+mkdir <dirname>
+
+# 在 backup 中的相对路径创建一个名为 old 的目录
+mkdir backup/old
+
+# 在 backup 中的绝对路径中创建一个名为 old 的目录
+mkdir /home/blinkfox/backup/old
+
+# 使用 -p 选项，会自动创建所有还不存在的父目录
+mkdir -p backup/old
+
+# 使用 -m 选项，可以设置将要创建目录的权限
+# 如：创建一个任何人都有读写访问权限的目录
+mkdir -p -m 777 backup/old
+```
