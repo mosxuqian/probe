@@ -1,4 +1,4 @@
-# 常用Bash命令整理（二）：文本处理
+# 常用Bash命令整理（三）：文本处理
 
 ### 1. sort - 文本排序
 
@@ -51,4 +51,39 @@ uniq -s 3 example.txt
 
 # 使用 -f 选项，避免 uniq 命令比较第一列的内容，只比较后面的字符是否重复
 uniq -f 1 example.txt
+```
+
+### 3.tr - 替换或删除字符
+
+`tr`命令主要用于删除文件中控制字符或进行字符转换。使用`tr`时要转换两个字符串：字符串 1 用于查询，字符串 2 用于处理各种转换。`tr`刚执行时，字符串 1 中的字符被映射到字符串 2 中的字符，然后转换操作开始。
+
+`tr`命令的语法如下所示：
+
+```bash
+tr [OPTION]... SET1 [SET2]
+```
+
+常用命令示例：
+
+```bash
+# 若要将大括号转换为小括号
+tr '{}' '()' < textfile > newfile
+
+# 若要将大括号转换成方括号
+tr '{}' '\[]' < textfile > newfile
+
+# 若要将小写字符转换成大写，请输入：
+tr 'a-z' 'A-Z' < textfile > newfile
+
+# 若要创建一个文件中的单词列表
+tr -cs '[:lower:][:upper:]' '[\n*]' < textfile > newfile
+
+# 若要从某个文件中删除所有空字符
+tr -d '\0' < textfile > newfile
+
+# 若要用单独的换行替换每一序列的一个或多个换行，请输入：
+tr -s '\n' < textfile > newfile
+
+# 要以单个“#”字符替换 <space> 字符类中的每个字符序列
+tr -s '[:space:]' '[#*]'
 ```
