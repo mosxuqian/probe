@@ -1,4 +1,4 @@
-# 常用Bash命令整理（三）：文本处理
+# 常用Bash命令整理（二）：文本处理
 
 ### 1. sort - 文本排序
 
@@ -86,4 +86,41 @@ tr -s '\n' < textfile > newfile
 
 # 要以单个“#”字符替换 <space> 字符类中的每个字符序列
 tr -s '[:space:]' '[#*]'
+```
+
+### 4.grep - 查找字符串
+
+`grep`命令用于搜索文本或指定的文件中与指定的字符串或模式相匹配的行。默认情况下，`grep`命令只显示匹配的行。
+
+`grep`命令的语法如下所示：
+
+```bash
+grep [OPTION]... PATTERN [FILE]...
+grep [OPTION]... [-e PATTERN | -f FILE] [FILE]...
+```
+
+```bash
+# `grep`命令查找文件/etc/passwd 中帐号 blinkfox 的信息
+grep blinkfox /etc/passwd
+
+# 使用 -i 选项，强制 grep 命令忽略搜索关键字的大小写
+grep -i blinkfox /etc/passwd
+
+# 使用 -r 选项，可以递归搜索指定目录下的所有文件
+grep -r blinkfox /etc/
+
+# 使用 -w 选项，只匹配包含指定单词的行
+grep -w blinkfox /etc/
+
+# 使用 -c 选项，报告文件或文本中模式被匹配的次数
+grep -c blinkfox /etc/passwd
+
+# 使用 -n 选项，显示每一个匹配的行的行号
+grep -n blinkfox /etc/passwd
+
+# 使用 -v 选项，可以输出除匹配指定模式的行以外的其他所有行
+grep -v blinkfox /etc/passwd
+
+# 使用 --color 选项，在输出中将匹配的字符串以彩色的形式标出
+grep --color blinkfox /etc/passwd
 ```
