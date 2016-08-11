@@ -124,3 +124,27 @@ grep -v blinkfox /etc/passwd
 # 使用 --color 选项，在输出中将匹配的字符串以彩色的形式标出
 grep --color blinkfox /etc/passwd
 ```
+
+### 5.diff - 比较两个文件
+
+`diff`命令用于比较两个文件，并找出它们之间的不同。`diff`命令的语法如下所示：
+
+```bash
+diff [OPTION]... from-file to-file
+```
+
+常用使用方式如下：
+
+```bash
+# 比较两个文件
+diff nsswitch.conf nsswitch.conf.org
+
+# 使用 -w 选项，比较时忽略空格
+diff -w nsswitch.conf nsswitch.conf.org
+
+# 使用 -y 选项，以并排的格式输出两个文件的比较结果
+diff -y nsswitch.conf nsswitch.conf.org
+
+使用 -c 选项，以上下对比的格式输出两个文件的比较结果
+diff -c nsswitch.conf nsswitch.conf.org
+```
