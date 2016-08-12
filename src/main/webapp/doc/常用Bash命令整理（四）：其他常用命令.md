@@ -16,3 +16,11 @@ hostname blinkfox-system
 # 使用 -F 选项，从指定的文件中读取主机名
 hostname -F /root/hostname.txt
 ```
+
+### 2. uptime - 查看系统运行时间
+
+`uptime`命令用于打印系统的运行时间等信息。使用如下：
+
+```bash
+uptime
+```
