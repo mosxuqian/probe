@@ -40,9 +40,20 @@
 
 <script type="text/javascript" src="../../assets/plugins/lightGallery/js/lightgallery.min.js"></script>
 <script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-fullscreen.min.js"></script>
+<script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-thumbnail.min.js"></script>
+<script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-autoplay.min.js"></script>
+<script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-hash.min.js"></script>
+<script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-pager.min.js"></script>
+<script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-share.min.js"></script>
+<script type="text/javascript" src="../../assets/plugins/lightGallery/js/plugins/lg-zoom.min.js"></script>
 <script type="text/javascript">
 function initLoad() {
-    lightGallery(document.getElementById('lightGallery'));
+    var lg = document.getElementById('lightGallery');
+    lightGallery(lg, {
+        mode: 'lg-slide',
+        cssEasing: 'ease',
+        speed: 500
+    });
 }
 </script>
 </body>
