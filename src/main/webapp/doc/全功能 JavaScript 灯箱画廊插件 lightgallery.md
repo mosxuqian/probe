@@ -4,6 +4,8 @@
 
 > [lightgallery.js][1] 是一个全功能、轻量级、无依赖的灯箱画廊显示库。
 
+![lightgallery][2]
+
 ### 二、主要特性
 
 - 全响应式兼容
@@ -36,7 +38,7 @@ lightgallery 支持所有主要的浏览器包括IE 9及以上。
 
 #### 1. Bower 安装
 
-你可以使用 [Bower][2] 包管理工具安装`lightgallery`：
+你可以使用 [Bower][3] 包管理工具安装`lightgallery`：
 
 ```bash
 bower install lightgallery.js --save
@@ -44,7 +46,7 @@ bower install lightgallery.js --save
 
 #### 2. npm
 
-你也能在 [npm][3] 上找到 `lightgallery`：
+你也能在 [npm][4] 上找到 `lightgallery`：
 
 ```bash
 npm install lightgallery.js
@@ -52,7 +54,7 @@ npm install lightgallery.js
 
 #### 3. Github 下载
 
-你也可以直接从 GitHub 下载[lightgallery][4]
+你也可以直接从 GitHub 下载[lightgallery][5]
 
 ### 五、基础示例
 
@@ -178,22 +180,23 @@ function initLoad() {
 
 ### 六、学习和参考资源
 
-- [API Reference][5]
-- [Events][6]
-- [Methods][7]
-- [Data Attributes][8]
-- [Dynamic variables][9]
-- [Sass variables][10]
-- [Module API][11]
+- [API Reference][6]
+- [Events][7]
+- [Methods][8]
+- [Data Attributes][9]
+- [Dynamic variables][10]
+- [Sass variables][11]
+- [Module API][12]
 
   [1]: https://sachinchoolur.github.io/lightgallery.js/
-  [2]: https://bower.io/
-  [3]: https://www.npmjs.com/
-  [4]: https://github.com/sachinchoolur/lightgallery.js
-  [5]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html
-  [6]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#events
-  [7]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#methods
-  [8]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#attributes
-  [9]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#dynamic
-  [10]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#sass
-  [11]: https://sachinchoolur.github.io/lightgallery.js/docs/plugin-api.html
+  [2]: http://static.blinkfox.com/lg.png
+  [3]: https://bower.io/
+  [4]: https://www.npmjs.com/
+  [5]: https://github.com/sachinchoolur/lightgallery.js
+  [6]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html
+  [7]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#events
+  [8]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#methods
+  [9]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#attributes
+  [10]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#dynamic
+  [11]: https://sachinchoolur.github.io/lightgallery.js/docs/api.html#sass
+  [12]: https://sachinchoolur.github.io/lightgallery.js/docs/plugin-api.html
