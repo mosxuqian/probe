@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AOS 异步使用的示例</title>
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../../assets/plugins/aos/aos.css" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/test/aos_test.css" />
+</head>
+<body onload="initLoad();">
+
+    <div id="aos_async" class="aos-all"></div>
+
+<script type="text/javascript" src="../../assets/plugins/aos/aos.js"></script>
+<script type="text/javascript">
+    function initLoad() {
+        AOS.init();
+    }
+
+    // 0.5秒执行一次
+    setInterval(addItem, 500);
+
+    var itemsCounter = 1;
+    var container = document.getElementById('aos_async');
+
+    /**
+     * 动态生成的div元素
+     */
+    function addItem () {
+        if (itemsCounter > 42) return;
+        var item = document.createElement('div');
+        item.classList.add('aos-item');
+        item.setAttribute('data-aos', 'fade-up');
+        item.innerHTML = '<div class="aos-item__inner"><h3>' + itemsCounter + '</h3></div>';
+        container.appendChild(item);
+        itemsCounter++;
+    }
+</script>
+</body>
+</html>
