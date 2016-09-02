@@ -294,6 +294,85 @@ body {
 </html>
 ```
 
+### 四、动画样式
+
+以下是AOS已经提供了的多种动画：
+
+#### 1. Fade animations:
+
+- fade-up
+- fade-down
+- fade-left
+- fade-right
+- fade-up-right
+- fade-up-left
+- fade-down-right
+- fade-down-left
+
+#### 2. Flip animations:
+
+- flip-up
+- flip-down
+- flip-left
+- flip-right
+
+#### 3. Slide animations:
+
+- slide-up
+- slide-down
+- slide-left
+- slide-right
+
+#### 4. Zoom animations:
+
+- zoom-in
+- zoom-in-up
+- zoom-in-down
+- zoom-in-left
+- zoom-in-right
+- zoom-out
+- zoom-out-up
+- zoom-out-down
+- zoom-out-left
+- zoom-out-right
+
+#### 5. Anchor placement:
+
+- top-bottom
+- top-center
+- top-top
+- center-bottom
+- center-center
+- center-top
+- bottom-bottom
+- bottom-center
+- bottom-top
+
+### 五、Easing 函数
+
+你可以选择以下任意一个时间函数来做出很好的做动画元素：
+
+- linear
+- ease
+- ease-in
+- ease-out
+- ease-in-out
+- ease-in-back
+- ease-out-back
+- ease-in-out-back
+- ease-in-sine
+- ease-out-sine
+- ease-in-out-sine
+- ease-in-quad
+- ease-out-quad
+- ease-in-out-quad
+- ease-in-cubic
+- ease-out-cubic
+- ease-in-out-cubic
+- ease-in-quart
+- ease-out-quart
+- ease-in-out-quart
+
   [1]: http://michalsnik.github.io/aos/
   [2]: http://static.blinkfox.com/aos1.png
   [3]: https://bower.io/
