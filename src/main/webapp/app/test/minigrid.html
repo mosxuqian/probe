@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>minigrid.js的使用示例</title>
+    <style type="text/css" rel="stylesheet">
+        .cards {
+            position: relative;
+        }
+        .cards .card {
+            position: absolute;
+        }
+        .cards .card img {
+            width: 213px;
+            height: 137px;
+        }
+    </style>
+</head>
+<body onload="initLoad();">
+
+    <div class="cards">
+        <div class="card">
+            <img src="../../assets/images/a.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/b.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/c.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/d.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/e.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/f.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/g.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/a.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/c.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/a.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/b.jpg">
+        </div>
+        <div class="card">
+            <img src="../../assets/images/c.jpg">
+        </div>
+    </div>
+
+<script type="text/javascript" src="../../assets/plugins/minigrid/minigrid.min.js"></script>
+<script type="text/javascript">
+function initLoad() {
+    var grid = new Minigrid({
+        container: '.cards',
+        item: '.card',
+        gutter: 6
+    });
+    grid.mount();
+}
+</script>
+</body>
+</html>
