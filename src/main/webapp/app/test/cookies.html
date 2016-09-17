@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookies.js的使用示例</title>
+</head>
+<body onload="initLoad();">
+
+<script type="text/javascript" src="../../assets/plugins/cookies/cookies.min.js"></script>
+<script type="text/javascript">
+    function initLoad() {
+        cookies({name: '张三'});
+        var name = cookies('name');
+        console.log('name1' + name);
+
+        cookies({name: null});
+        var name = cookies('name');
+        console.log('name2:' + name);
+
+        cookies({name: '张三', age: 25});
+        console.log('name3:' + cookies('name') + ',age:' + cookies('age'));
+
+        var userData = {name: '张三', age: 25, addr: '四川省成都市'};
+        cookies({user: userData});
+
+        cookies({name: '李思'}, {
+            expires: 100 * 24 * 3600,
+            domain: false,
+            path: '/',
+            secure: https ? true : false
+        });
+    }
+</script>
+</body>
+</html>
