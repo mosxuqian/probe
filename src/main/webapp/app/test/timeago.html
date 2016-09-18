@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>timeago.js的使用示例</title>
+</head>
+<body onload="initLoad();">
+
+    <div class="a timeago"></div>
+
+<script type="text/javascript" src="../../assets/plugins/timeago/timeago.min.js"></script>
+<script type="text/javascript">
+    function initLoad() {
+        var t = new timeago('zh_CN').format(new Date().getTime() - 11 * 1000 * 60 * 60);
+        console.log('t:' + t);
+
+        var t2 = new timeago('zh_CN').format('2016-09-07');
+        console.log('t2:' + t2);
+    }
+</script>
+</body>
+</html>
