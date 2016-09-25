@@ -6,3 +6,29 @@ JavaScript是一个绝冠全球的编程语言，可用于 Web 开发、移动�
 
 本文中的示例代码，通过了在Google Chrome 30最新版（V8 3.20.17.15）上的测试。
 
+### 1. 首次为变量赋值时务必使用`var`关键字
+
+变量没有声明而直接赋值得话，默认会作为一个新的全局变量，要尽量避免使用全局变量。
+
+### 2. 使用`===`取代`==`
+
+`==`和`!=`操作符会在需要的情况下自动转换数据类型。但`===`和`!==`不会，它们会同时比较值和数据类型，这也使得它们要比`==`和`!=`快。
+
+```javascript
+[10] === 10    // is false
+[10] == 10    // is true
+'10' == 10     // is true
+'10' === 10    // is false
+ [] == 0     // is true
+ [] ===  0     // is false
+ '' == false   // is true but true == "a" is false
+ '' === false  // is false
+```
+
+### 3. underfined、null、0、false、NaN、空字符串的逻辑结果均为false
+
+### 4. 行尾使用分号
+
+实践中最好还是使用分号，忘了写也没事，大部分情况下JavaScript解释器都会自动添加。对于为何要使用分号，可参考文章[JavaScript中关于分号的真相][1]。
+
+[1]: http://davidwalsh.name/javascript-semicolons
