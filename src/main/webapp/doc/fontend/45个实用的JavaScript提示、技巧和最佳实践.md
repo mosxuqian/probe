@@ -244,5 +244,90 @@ function doSomething(arg1) {
 }
 ```
 
+### 23. 使得map()函数方法对数据循环
+
+```javascript
+var squares = [1,2,3,4].map(function (val) {  
+    return val * val;  
+}); 
+// squares will be equal to [1, 4, 9, 16]
+```
+
+### 24. 保留指定小数位数
+
+```javascript
+var num =2.443242342;
+num = num.toFixed(4);  // num will be equal to 2.4432
+```
+
+注意，`toFixed()`函数返回的是字符串，而不是数字。
+
+### 25. 浮点计算的问题
+
+```javascript
+0.1 + 0.2 === 0.3 // is false 
+9007199254740992 + 1 // is equal to 9007199254740992
+9007199254740992 + 2 // is equal to 9007199254740994
+```
+
+为什么呢？因为`0.1+0.2`等于`0.30000000000000004`。JavaScript的数字都遵循`IEEE 754`标准构建，在内部都是64位浮点小数表示，具体可以参见[JavaScript中的数字是如何编码的][3].
+
+可以通过使用`toFixed()`和`toPrecision()`来解决这个问题。
+
+### 26. 通过for-in循环检查对象的属性
+
+下面这样的用法，可以防止迭代的时候进入到对象的原型属性中。
+
+```javascript
+for (var name in object) {  
+    if (object.hasOwnProperty(name)) { 
+        // do something with name
+    }  
+}
+```
+
+### 27. 逗号操作符
+
+```javascript
+var a = 0; 
+var b = ( a++, 99 ); 
+console.log(a);  // a will be equal to 1 
+console.log(b);  // b is equal to 99
+```
+
+### 28. 临时存储用于计算和查询的变量
+
+在jQuery选择器中，可以临时存储整个DOM元素。
+
+```
+var navright = document.querySelector('#right'); 
+var navleft = document.querySelector('#left'); 
+var navup = document.querySelector('#up'); 
+var navdown = document.querySelector('#down');
+```
+
+### 29. 提前检查传入isFinite()的参数
+
+```javascript
+isFinite(0/0) ; // false
+isFinite("foo"); // false
+isFinite("10"); // true
+isFinite(10);   // true
+isFinite(undefined);  // false
+isFinite();   // false
+isFinite(null);  // true，这点当特别注意
+```
+
+### 30. 避免在数组中使用负数做索引
+
+```javascript
+var numbersArray = [1,2,3,4,5];
+var from = numbersArray.indexOf("foo") ; // from is equal to -1
+numbersArray.splice(from,2); // will return [5]
+```
+
+注意传给`splice`的索引参数不要是负数，当是负数时，会从数组结尾处删除元素。
+
 [1]: http://davidwalsh.name/javascript-semicolons
 [2]: http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling/962890#962890
+[3]: http://www.2ality.com/2012/04/number-encoding.html
