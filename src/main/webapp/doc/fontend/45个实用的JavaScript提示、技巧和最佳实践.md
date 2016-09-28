@@ -436,7 +436,7 @@ function clone(object) {
 clone(Array).prototype ;  // []
 ```
 
-39、HTML字段转换函数
+### 39. HTML字段转换函数
 
 ```javascript
 function escapeHTML(text) {
@@ -447,7 +447,7 @@ function escapeHTML(text) {
 }
 ```
 
-40、不要在循环内部使用try-catch-finally
+### 40. 不要在循环内部使用try-catch-finally
 
 `try-catch-finally`中`catch`部分在执行时会将异常赋给一个变量，这个变量会被构建成一个运行时作用域内的新的变量。
 
@@ -479,7 +479,88 @@ catch (e) {
 }
 ```
 
+### 41. 使用XMLHttpRequests时注意设置超时
+
+`XMLHttpRequests`在执行时，当长时间没有响应（如出现网络问题等）时，应该中止掉连接，可以通过`setTimeout()`来完成这个工作：
+
+```javascript
+var xhr = new XMLHttpRequest (); 
+xhr.onreadystatechange = function () {  
+    if (this.readyState == 4) {  
+        clearTimeout(timeout);  
+        // do something with response data 
+    }  
+}  
+var timeout = setTimeout( function () {  
+    xhr.abort(); // call error callback  
+}, 60*1000 /* timeout after a minute */ ); 
+xhr.open('GET', url, true);  
+xhr.send();
+```
+
+同时需要注意的是，不要同时发起多个`XMLHttpRequests`请求。
+
+### 42. 处理WebSocket的超时
+
+通常情况下，`WebSocket`连接创建后，如果30秒内没有任何活动，服务器端会对连接进行超时处理，防火墙也可以对单位周期没有活动的连接进行超时处理。
+
+为了防止这种情况的发生，可以每隔一定时间，往服务器发送一条空的消息。可以通过下面这两个函数来实现这个需求，一个用于使连接保持活动状态，另一个专门用于结束这个状态。
+
+```javascript
+var timerID = 0; 
+function keepAlive() { 
+    var timeout = 15000;  
+    if (webSocket.readyState == webSocket.OPEN) {  
+        webSocket.send('');  
+    }  
+    timerId = setTimeout(keepAlive, timeout);  
+}  
+function cancelKeepAlive() {  
+    if (timerId) {  
+        cancelTimeout(timerId);  
+    }  
+}
+```
+
+`keepAlive()`函数可以放在WebSocket连接的`onOpen()`方法的最后面，`cancelKeepAlive()`放在`onClose()`方法的最末尾。
+
+### 43. 始终铭记原始操作符比函数调用快，使用[VanillaJS][4]
+
+比如，一般不要这样：
+
+```javascript
+var min = Math.min(a,b); 
+A.push(v);
+```
+
+可以这样来代替：
+
+```javascript
+var min = a < b ? a : b; 
+A[A.length] = v;
+```
+
+### 44. 开发时注意代码结构，上线前检查并压缩JavaScript代码
+
+别忘了在写代码时使用一个代码美化工具。使用`JSLint`(一个语法检查工具)并且在上线前压缩代码（比如使用JSMin）。注：现在代码压缩一般推荐[UglifyJS][5]
+
+### 45. JavaScript博大精深，这里有些不错的学习资源
+
+
+[Code Academy资源：http://www.codecademy.com/tracks/javascript][6]
+[Marjin Haverbekex编写的Eloquent JavaScript：http://eloquentjavascript.net/][7]
+[John Resig编写的Advanced JavaScript：http://ejohn.org/apps/learn/][8]
+
+原文: [45 Useful JavaScript Tips, Tricks and Best Practices][9]
+参考: [JavaScript 开发的45个经典技巧][10]
 
 [1]: http://davidwalsh.name/javascript-semicolons
 [2]: http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling/962890#962890
 [3]: http://www.2ality.com/2012/04/number-encoding.html
+[4]: http://vanilla-js.com/
+[5]: https://github.com/mishoo/UglifyJS2
+[6]: http://www.codecademy.com/tracks/javascript
+[7]: http://eloquentjavascript.net/
+[8]: http://ejohn.org/apps/learn/
+[9]: https://modernweb.com/2013/12/23/45-useful-javascript-tips-tricks-and-best-practices/
+[10]: http://www.codeceo.com/article/javascript-45-tips.html
