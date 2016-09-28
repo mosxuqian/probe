@@ -328,6 +328,158 @@ numbersArray.splice(from,2); // will return [5]
 
 注意传给`splice`的索引参数不要是负数，当是负数时，会从数组结尾处删除元素。
 
+### 31. 用JSON来序列化与反序列化
+
+```javascript
+var person = {name :'Saad', age : 26, department : {ID : 15, name : "R&D"} };
+var stringFromPerson = JSON.stringify(person);
+/* stringFromPerson 结果为 "{"name":"Saad","age":26,"department":{"ID":15,"name":"R&D"}}"   */
+var personFromString = JSON.parse(stringFromPerson);
+/* personFromString 的值与 person 对象相同  */
+```
+
+### 32. 不要使用eval()或者函数构造器
+
+`eval()`和函数构造器（Function consturctor）的开销较大，每次调用，JavaScript引擎都要将源代码转换为可执行的代码。
+
+```javascript
+var func1 = new Function(functionCode);
+var func2 = eval(functionCode);
+```
+
+### 33. 避免使用with()
+
+使用`with()`可以把变量加入到全局作用域中，因此，如果有其它的同名变量，一来容易混淆，二来值也会被覆盖。
+
+### 34. 不要对数组使用for-in
+
+避免：
+
+```javascript
+var sum = 0;  
+for (var i in arrayNumbers) {  
+    sum += arrayNumbers[i];  
+}
+```
+
+而是：
+
+```javascript
+var sum = 0;  
+for (var i = 0, len = arrayNumbers.length; i < len; i++) {  
+    sum += arrayNumbers[i];  
+}
+```
+
+另外一个好处是，`i`和`len`两个变量是在`for`循环的第一个声明中，二者只会初始化一次，这要比下面这种写法快：
+
+```javascript
+for (var i = 0; i < arrayNumbers.length; i++)
+```
+
+### 35. 传给setInterval()和setTimeout()时使用函数而不是字符串
+
+如果传给`setTimeout()`和`setInterval()`一个字符串，他们将会用类似于`eval`方式进行转换，这肯定会要慢些，因此不要使用：
+
+```javascript
+setInterval('doSomethingPeriodically()', 1000);  
+setTimeout('doSomethingAfterFiveSeconds()', 5000);
+```
+
+而是用：
+
+```
+setInterval(doSomethingPeriodically, 1000);  
+setTimeout(doSomethingAfterFiveSeconds, 5000);
+```
+
+### 36. 使用switch/case代替一大叠的if/else
+
+当判断有超过两个分支的时候使用`switch/case`要更快一些，而且也更优雅，更利于代码的组织，当然，如果有超过10个分支，就不要使用`switch/case`了。
+
+### 37. 在switch/case中使用数字区间
+
+其实，`switch/case`中的`case`条件，还可以这样写：
+
+```javascript
+function getCategory(age) {  
+    var category = "";  
+    switch (true) {  
+        case isNaN(age):  
+            category = "not an age";  
+            break;  
+        case (age >= 50):  
+            category = "Old";  
+            break;  
+        case (age <= 20):  
+            category = "Baby";  
+            break;  
+        default:  
+            category = "Young";  
+            break;  
+    };  
+    return category;  
+}  
+getCategory(5);  // 将返回 "Baby"
+```
+
+### 38. 使用对象作为对象的原型
+
+下面这样，便可以给定对象作为参数，来创建以此为原型的新对象：
+
+```javascript
+function clone(object) {  
+    function OneShotConstructor(){}; 
+    OneShotConstructor.prototype = object;  
+    return new OneShotConstructor(); 
+} 
+clone(Array).prototype ;  // []
+```
+
+39、HTML字段转换函数
+
+```javascript
+function escapeHTML(text) {
+    var replacements= {"<": "<", ">": ">","&": "&", "\"": """};
+    return text.replace(/[<>&"]/g, function(character) {
+        return replacements[character];
+    });
+}
+```
+
+40、不要在循环内部使用try-catch-finally
+
+`try-catch-finally`中`catch`部分在执行时会将异常赋给一个变量，这个变量会被构建成一个运行时作用域内的新的变量。
+
+切忌：
+
+```javascript
+var object = ['foo', 'bar'], i;
+for (i = 0, len = object.length; i <len; i++) {
+    try {
+        // do something that throws an exception
+    }
+    catch (e) {
+        // handle exception
+    }
+}
+```
+
+而应该：
+
+```javascript
+var object = ['foo', 'bar'], i;  
+try { 
+    for (i = 0, len = object.length; i <len; i++) {  
+        // do something that throws an exception 
+    } 
+} 
+catch (e) {   
+    // handle exception  
+}
+```
+
+
 [1]: http://davidwalsh.name/javascript-semicolons
 [2]: http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling/962890#962890
 [3]: http://www.2ality.com/2012/04/number-encoding.html
