@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>avalon2 course1 demo</title>
+    <style>
+        .ms-controller {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <div class="ms-controller" ms-controller="test">
+        <input type="text" ms-duplex="@name">
+        <p>{{@name}}</p>
+    </div>
+
+<script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
+<script>
+    var testVm = avalon.define({
+        $id: 'test',
+        name: '张三'
+    });
+</script>
+</body>
+</html>
