@@ -14,13 +14,17 @@
     <div class="ms-controller" ms-controller="test">
         <input type="text" ms-duplex="@name">
         <p>{{@name}}</p>
+        <ul>
+            <li ms-for="(i, el) in @arr">{{i}}--{{el}}</li>
+        </ul>
     </div>
 
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
 <script>
     var testVm = avalon.define({
         $id: 'test',
-        name: '张三'
+        name: '张三',
+        arr: ['ABC', '123', 'aaa']
     });
 </script>
 </body>
