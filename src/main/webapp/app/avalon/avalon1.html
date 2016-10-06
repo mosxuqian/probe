@@ -15,7 +15,9 @@
         <input type="text" ms-duplex="@name">
         <p>{{@name}}</p>
         <ul>
-            <li ms-for="(i, el) in @arr">{{i}}--{{el}}</li>
+            <li ms-for="(i, el) in @arr">{{i}}--{{el}} &nbsp;
+                <span ms-click="@arr.remove(el)">点我删除</span>
+            </li>
         </ul>
     </div>
 
