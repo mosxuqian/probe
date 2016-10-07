@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>avalon2 course1 demo</title>
     <style>
-        .ms-controller {
-            display:none;
+        .ms-controller{
+            visibility: hidden;
         }
     </style>
 </head>
@@ -25,7 +25,7 @@
         <p>{{@aaa+@bbb  | uppercase}} 选择器必须放在表达值的后端</p>
     </div>
 
-    <div ms-controller="AAA">
+    <div class="ms-controller" ms-controller="AAA">
         <div>{{@name}} : {{@color}}</div>
         <div ms-controller="BBB">
             <div>{{@name}} : {{@color}}</div>
@@ -36,6 +36,19 @@
                 <div>{{@name}} : {{@color}}</div>
             </div>
         </div>
+    </div>
+
+    <div class="ms-controller" ms-controller="test_ms_attr">
+        <span ms-attr="@obj">直接引用对象</span>
+        <img ms-attr="{src: @path}" />
+        <ul>
+            <li ms-for="el in @arr"><a ms-attr="{href:'http://www.ccc.xxx/ddd/'+ el.img}">下载</a></li>
+        </ul>
+        <span :attr="{width: @width, height: @height}">使用对象字面量</span><br/>
+        <span :attr="@array">直接引用数组</span><br/>
+        <span :attr="[@obj, @toggle && @active ]" :click="@toggle = !@toggle">
+            选择性添加多余属性或重写已有属性
+        </span>
     </div>
 
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
@@ -61,12 +74,22 @@
     avalon.define({
         $id: "CCC",
         name: "dragon" //不存在color
-
     });
     avalon.define({
         $id: "DDD",
         name: "sirenia" //不存在color
+    });
 
+    avalon.define({
+        $id: 'test_ms_attr',
+        obj: {title: '普通 ', algin: 'left'},
+        active: {title: '激活'},
+        width: 111,
+        height: 222,
+        arr: [{img: 'aaa'}, {img: 'bbb'}, {img: 'ccc'}],
+        path: '../../assets/images/a.jpg',
+        toggle: false,
+        array: [{width: 1}, {height: 2}]
     });
 </script>
 </body>
