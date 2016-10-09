@@ -51,6 +51,13 @@
         </span>
     </div>
 
+    <div class="ms-controller" ms-controller="test_ms_css">
+        <div ms-css="@obj">直接引用对象</div>
+        <div :css="{width: @width, height: @height,background: 'pink'}">使用对象字面量</div>
+        <div :css="@array">直接引用数组</div>
+        <div :css="[@obj, @toggle && @active ]" :click="@toggle = !@toggle">选择性添加多余属性或重写已有属性</div>
+    </div>
+
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
 <script>
     var testVm = avalon.define({
@@ -90,6 +97,21 @@
         path: '../../assets/images/a.jpg',
         toggle: false,
         array: [{width: 1}, {height: 2}]
+    });
+
+    avalon.define({
+        $id: 'test_ms_css',
+        obj: {
+            backgroundColor: '#3bb0d0',
+            width:300,
+            height:50,
+            'text-align': 'center'
+        }, //属性名带-,必须用引号括起
+        active: {color: 'red'},
+        width:  300,
+        height: 60,
+        toggle: true,
+        array: [{width:100},{height:50},{border: '1px solid #5cb85c'}]
     });
 </script>
 </body>
