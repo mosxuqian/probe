@@ -66,6 +66,15 @@
         <div :css="[@obj, @toggle && @active ]" :click="@toggle = !@toggle">选择性添加多余属性或重写已有属性</div>
     </div>
 
+    <div class="ms-controller" ms-controller="test_ms_class">
+        <span :class="@aaa">直接引用字符串</span>
+        <span :class="@ccc">直接引用数组</span>
+        <span :class="[@aaa, @bbb]">使用数组字面量</span>
+        <span :class="['aaa', 'bbb',(@toggle? 'ccc':'ddd')]">选择性添加类名</span>
+        <span :class="[@toggle && 'aaa']">选择性添加类名</span>
+        <span :class="[ @ddd + 4]">动态生成类名</span>
+    </div>
+
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
 <script>
     var testVm = avalon.define({
@@ -120,6 +129,16 @@
         height: 60,
         toggle: true,
         array: [{width:100},{height:50},{border: '1px solid #5cb85c'}]
+    });
+
+    avalon.define({
+        $id: 'test_ms_class',
+        aaa: "aaa bbb ccc",
+        bbb: 'ddd',
+        ccc: ['xxx', 'yyy', 'zzz'],
+        ddd: 'eee',
+        toggle: true,
+        toggle2: false
     });
 </script>
 </body>
