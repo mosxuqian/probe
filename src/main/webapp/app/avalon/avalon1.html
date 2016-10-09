@@ -23,6 +23,10 @@
         <p>{{@aaa+@bbb}} 这个性能好些</p>
         <div ms-skip='true' >{{@aaa}}</div>
         <p>{{@aaa+@bbb  | uppercase}} 选择器必须放在表达值的后端</p>
+
+        ms-text使用示例:
+        <span ms-text="@aaa">不使用过滤器</span>
+        <span ms-text="@aaa | uppercase">使用过滤器</span>
     </div>
 
     <div class="ms-controller" ms-controller="AAA">
