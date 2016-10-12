@@ -139,6 +139,23 @@
         <button ms-click="@submit" type="button">点我</button>
     </fieldset>
 
+    <div class="ms-controller" ms-controller="test_ms_duplex">
+        <input ms-duplex="@aaa | debounce(300)" />{{@aaa}}<br />
+        <input ms-duplex="@bbb" type="password" />{{@bbb}}<br />
+        <textarea ms-duplex="@ccc"></textarea>{{@ccc}}<br />
+        <div contenteditable="true" ms-duplex="@aaa | debounce(300)"/></div><br />
+        <input value="11" ms-duplex-number="@ddd" :on-input="@format1" />
+    </div>
+
+    <div class="ms-controller" ms-controller="test_ms_rules">
+        <form ms-validate="@validate">
+            <p><input ms-duplex="@aaa" placeholder="username" ms-rules='{required:true,chs:true}' >{{@aaa}}</p>
+            <p><input type="password" id="pw" placeholder="password" ms-rules='{required:true}' ms-duplex="@bbb" /></p>
+            <p><input type="password" ms-rules="{required:true,equalto:'pw'}" placeholder="再填一次" ms-duplex="@ccc | change" /></p>
+            <p><input type="submit" value="submit"/></p>
+        </form>
+    </div>
+
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
 <script>
     var testVm = avalon.define({
@@ -308,6 +325,38 @@
                 setTimeout(function() {
                     alert(JSON.stringify(data));
                 });
+            }
+        }
+    });
+
+    var vmDuplex = avalon.define({
+        $id: 'test_ms_duplex',
+        aaa: 'aaa',
+        bbb: 'bbb',
+        ccc: 'ccc',
+        ddd: 2322,
+        format1: function(e) {
+            vmDuplex.ddd = e.target.value.replace(/\D/g,'');
+        }
+    });
+
+    avalon.define({
+        $id: 'test_ms_rules',
+        aaa: 'aaa',
+        bbb: 'bbb',
+        ccc: 'ccc',
+        validate: {
+            onError: function(reasons) {
+                reasons.forEach(function(reasons) {
+                    console.log(reasons.getMessage());
+                });
+            },
+            onValidateAll: function(reasons) {
+                if (reasons.length) {
+                    console.log('有表单没有通过');
+                } else {
+                    console.log('全部通过');
+                }
             }
         }
     });
