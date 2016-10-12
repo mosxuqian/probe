@@ -120,154 +120,198 @@
         <ul>
             <li :for="(k, v) in @bbb">{{k}}--{{v}}</li>
         </ul>
-        <div ms-for="(key,el) in @styles">
+        <div :for="(key,el) in @styles">
             <label>{{ key }}::{{ el }}</label>
             <input type="text" ms-duplex="@styles[key]" >
             <!--不能ms-duplex="el"-->
         </div>
     </div>
 
-    <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
-    <script>
-        var testVm = avalon.define({
-            $id: 'test',
-            name: '张三',
-            arr: ['ABC', '123', 'aaa'],
-            aaa: 'aaa',
-            bbb: 'bbb'
-        });
+    <fieldset class="ms-controller" ms-controller="test_ms_on">
+        <legend>有关事件回调传参</legend>
+        <div ms-mouseenter="@callback" ms-mouseleave="@callback">{{@status}}<br/>
+            <input ms-on-input="@check"/>{{@field}}
+        </div>
+        <div ms-click="@argsClick($event, 100, @firstName)">点我</div>
+        <div ms-for="el in @array" >
+            <p ms-click="@loopClick(el, $event)">{{el}}</p>
+        </div>
+        <button ms-click="@submit" type="button">点我</button>
+    </fieldset>
 
-        avalon.define({
-            $id: "AAA",
-            name: "liger",
-            color: "green"
-        });
-        avalon.define({
-            $id: "BBB",
-            name: "sphinx",
-            color: "red"
-        });
-        avalon.define({
-            $id: "CCC",
-            name: "dragon" //不存在color
-        });
-        avalon.define({
-            $id: "DDD",
-            name: "sirenia" //不存在color
-        });
+<script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
+<script>
+    var testVm = avalon.define({
+        $id: 'test',
+        name: '张三',
+        arr: ['ABC', '123', 'aaa'],
+        aaa: 'aaa',
+        bbb: 'bbb'
+    });
 
-        avalon.define({
-            $id: 'test_ms_attr',
-            obj: {
-                title: '普通 ',
-                algin: 'left'
-            },
-            active: {
-                title: '激活'
-            },
-            width: 111,
-            height: 222,
-            arr: [{
-                img: 'aaa'
-            }, {
-                img: 'bbb'
-            }, {
-                img: 'ccc'
-            }],
-            path: '../../assets/images/a.jpg',
-            toggle: false,
-            array: [{
-                width: 1
-            }, {
-                height: 2
-            }]
-        });
+    avalon.define({
+        $id: "AAA",
+        name: "liger",
+        color: "green"
+    });
+    avalon.define({
+        $id: "BBB",
+        name: "sphinx",
+        color: "red"
+    });
+    avalon.define({
+        $id: "CCC",
+        name: "dragon" //不存在color
+    });
+    avalon.define({
+        $id: "DDD",
+        name: "sirenia" //不存在color
+    });
 
-        avalon.define({
-            $id: 'test_ms_css',
-            obj: {
-                backgroundColor: '#3bb0d0',
-                width: 300,
-                height: 50,
-                'text-align': 'center'
-            }, //属性名带-,必须用引号括起
-            active: {
-                color: 'red'
-            },
+    avalon.define({
+        $id: 'test_ms_attr',
+        obj: {
+            title: '普通 ',
+            algin: 'left'
+        },
+        active: {
+            title: '激活'
+        },
+        width: 111,
+        height: 222,
+        arr: [{
+            img: 'aaa'
+        }, {
+            img: 'bbb'
+        }, {
+            img: 'ccc'
+        }],
+        path: '../../assets/images/a.jpg',
+        toggle: false,
+        array: [{
+            width: 1
+        }, {
+            height: 2
+        }]
+    });
+
+    avalon.define({
+        $id: 'test_ms_css',
+        obj: {
+            backgroundColor: '#3bb0d0',
             width: 300,
-            height: 60,
-            toggle: true,
-            array: [{
-                width: 100
-            }, {
-                height: 50
-            }, {
-                border: '1px solid #5cb85c'
-            }]
-        });
+            height: 50,
+            'text-align': 'center'
+        }, //属性名带-,必须用引号括起
+        active: {
+            color: 'red'
+        },
+        width: 300,
+        height: 60,
+        toggle: true,
+        array: [{
+            width: 100
+        }, {
+            height: 50
+        }, {
+            border: '1px solid #5cb85c'
+        }]
+    });
 
-        avalon.define({
-            $id: 'test_ms_class',
-            aaa: "aaa bbb ccc",
-            bbb: 'ddd',
-            ccc: ['xxx', 'yyy', 'zzz'],
-            ddd: 'eee',
-            toggle: true,
-            toggle2: false
-        });
+    avalon.define({
+        $id: 'test_ms_class',
+        aaa: "aaa bbb ccc",
+        bbb: 'ddd',
+        ccc: ['xxx', 'yyy', 'zzz'],
+        ddd: 'eee',
+        toggle: true,
+        toggle2: false
+    });
 
-        avalon.define({
-            $id: 'test_ms_active',
-            aaa: "aaa bbb ccc",
-            bbb: 'ddd',
-            ccc: ['xxx', 'yyy', 'zzz'],
-            ddd: 'eee',
-            toggle: true,
-            toggle2: false
-        });
+    avalon.define({
+        $id: 'test_ms_active',
+        aaa: "aaa bbb ccc",
+        bbb: 'ddd',
+        ccc: ['xxx', 'yyy', 'zzz'],
+        ddd: 'eee',
+        toggle: true,
+        toggle2: false
+    });
 
-        avalon.define({
-            $id: 'test_ms_hover',
-            aaa: "aaa bbb ccc",
-            bbb: 'ddd',
-            ccc: ['xxx', 'yyy', 'zzz'],
-            ddd: 'eee',
-            toggle: true,
-            toggle2: false
-        });
+    avalon.define({
+        $id: 'test_ms_hover',
+        aaa: "aaa bbb ccc",
+        bbb: 'ddd',
+        ccc: ['xxx', 'yyy', 'zzz'],
+        ddd: 'eee',
+        toggle: true,
+        toggle2: false
+    });
 
-        avalon.define({
-            $id: 'test_ms_if',
-            aaa: {},
-            show: function(aaa, bbb, ccc) {
-                var obj = aaa[bbb];
-                if (obj) {
-                    return obj[ccc];
-                }
-                return '';
+    avalon.define({
+        $id: 'test_ms_if',
+        aaa: {},
+        show: function(aaa, bbb, ccc) {
+            var obj = aaa[bbb];
+            if (obj) {
+                return obj[ccc];
             }
-        });
+            return '';
+        }
+    });
 
-        avalon.define({
-            $id: 'test_ms_visible',
-            aaa: '这是被隐藏的内容',
-            toggle: false
-        });
+    avalon.define({
+        $id: 'test_ms_visible',
+        aaa: '这是被隐藏的内容',
+        toggle: false
+    });
 
-        avalon.define({
-            $id: 'test_ms_for',
-            aaa: ['张三', '李四', '王五'],
-            bbb: {name: 'blinkfox', age: 26, sex: 'male'},
-            styles: {
-                width: 200,
-                height: 200,
-                borderWidth: 1,
-                borderColor: 'red',
-                borderStyle: 'solid',
-                backgroundColor: 'gray'
+    avalon.define({
+        $id: 'test_ms_for',
+        aaa: ['张三', '李四', '王五'],
+        bbb: {
+            name: 'blinkfox',
+            age: 26,
+            sex: 'male'
+        },
+        styles: {
+            width: 200,
+            height: 200,
+            borderWidth: 1,
+            borderColor: 'red',
+            borderStyle: 'solid',
+            backgroundColor: 'gray'
+        }
+    });
+
+    var vmOn = avalon.define({
+        $id: 'test_ms_on',
+        firstName: '司徒',
+        array: ['aaa', 'bbb', 'ccc'],
+        argsClick: function(e, a, b) {
+            alert([].slice.call(arguments).join(' '));
+        },
+        loopClick: function(a ,e) {
+            alert(a + ' ' + e.type);
+        },
+        status: '',
+        callback: function(e) {
+            vmOn.status = e.type;
+        },
+        field: '',
+        check: function(e) {
+            vmOn.field = e.target.value + ' ' + e.type;
+        },
+        submit: function() {
+            var data = vmOn.$model;
+            if (window.JSON) {
+                setTimeout(function() {
+                    alert(JSON.stringify(data));
+                });
             }
-        });
-    </script>
+        }
+    });
+</script>
 </body>
 
 </html>
