@@ -75,6 +75,24 @@
         <span :class="[ @ddd + 4]">动态生成类名</span>
     </div>
 
+    <div class="ms-controller" ms-controller="test_ms_active">
+        <span :active="@aaa">直接引用字符串</span>
+        <span :active="@ccc">直接引用数组</span>
+        <span :active="[@aaa, @bbb]">使用数组字面量</span>
+        <span :active="['aaa', 'bbb',(@toggle? 'ccc':'ddd')]">选择性添加类名</span>
+        <span :active="[@toggle && 'aaa']">选择性添加类名</span>
+        <span :active="[ @ddd + 4]">动态生成类名</span>
+    </div>
+
+    <div class="ms-controller" ms-controller="test_ms_hover">
+        <span :hover="@aaa">直接引用字符串</span>
+        <span :hover="@ccc">直接引用数组</span>
+        <span :hover="[@aaa, @bbb,'kkk']">使用对象字面量</span>
+        <span :hover="['aaa', 'bbb',(@toggle? 'ccc':'ddd')]">选择性添加类名</span>
+        <span :hover="[@toggle && 'aaa']">选择性添加类名</span>
+        <span :hover="[ @ddd + 4]">动态生成类名</span>
+    </div>
+
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
 <script>
     var testVm = avalon.define({
@@ -133,6 +151,26 @@
 
     avalon.define({
         $id: 'test_ms_class',
+        aaa: "aaa bbb ccc",
+        bbb: 'ddd',
+        ccc: ['xxx', 'yyy', 'zzz'],
+        ddd: 'eee',
+        toggle: true,
+        toggle2: false
+    });
+
+    avalon.define({
+        $id: 'test_ms_active',
+        aaa: "aaa bbb ccc",
+        bbb: 'ddd',
+        ccc: ['xxx', 'yyy', 'zzz'],
+        ddd: 'eee',
+        toggle: true,
+        toggle2: false
+    });
+
+    avalon.define({
+        $id: 'test_ms_hover',
         aaa: "aaa bbb ccc",
         bbb: 'ddd',
         ccc: ['xxx', 'yyy', 'zzz'],
