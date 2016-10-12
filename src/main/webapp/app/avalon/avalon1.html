@@ -99,6 +99,34 @@
         </div>
     </div>
 
+    <div class="ms-controller" ms-controller="test_ms_visible">
+        <p><button type="button" :click='@toggle = !@toggle'>点我</span></p>
+        <div :visible="@toggle">{{@aaa}}</div>
+    </div>
+
+    <div class="ms-controller" ms-controller="test_ms_for">
+        <ul>
+            <li :for="el in @aaa">{{el}}</li>
+        </ul>
+        <ul>
+            <li :for="(a, el) in @aaa">{{a}}---{{el}}</li>
+        </ul>
+        <ul>
+            <li :for="(a, el) in @aaa | limitBy(2) as items">limitBy:{{a}}---{{el}}</li>
+        </ul>
+        <ul>
+            <li :for="el in @bbb">{{el}}</li>
+        </ul>
+        <ul>
+            <li :for="(k, v) in @bbb">{{k}}--{{v}}</li>
+        </ul>
+        <div ms-for="(key,el) in @styles">
+            <label>{{ key }}::{{ el }}</label>
+            <input type="text" ms-duplex="@styles[key]" >
+            <!--不能ms-duplex="el"-->
+        </div>
+    </div>
+
     <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
     <script>
         var testVm = avalon.define({
@@ -217,6 +245,26 @@
                     return obj[ccc];
                 }
                 return '';
+            }
+        });
+
+        avalon.define({
+            $id: 'test_ms_visible',
+            aaa: '这是被隐藏的内容',
+            toggle: false
+        });
+
+        avalon.define({
+            $id: 'test_ms_for',
+            aaa: ['张三', '李四', '王五'],
+            bbb: {name: 'blinkfox', age: 26, sex: 'male'},
+            styles: {
+                width: 200,
+                height: 200,
+                borderWidth: 1,
+                borderColor: 'red',
+                borderStyle: 'solid',
+                backgroundColor: 'gray'
             }
         });
     </script>
