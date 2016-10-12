@@ -149,11 +149,42 @@
 
     <div class="ms-controller" ms-controller="test_ms_rules">
         <form ms-validate="@validate">
-            <p><input ms-duplex="@aaa" placeholder="username" ms-rules='{required:true,chs:true}' >{{@aaa}}</p>
+            <p><input ms-duplex="@aaa | truncate(10, '...')" placeholder="username" ms-rules='{required:true,chs:true}' >{{@aaa}}</p>
             <p><input type="password" id="pw" placeholder="password" ms-rules='{required:true}' ms-duplex="@bbb" /></p>
             <p><input type="password" ms-rules="{required:true,equalto:'pw'}" placeholder="再填一次" ms-duplex="@ccc | change" /></p>
             <p><input type="submit" value="submit"/></p>
         </form>
+    </div>
+
+    <div class="ms-controller" ms-controller='limitBy'>
+        <select ms-duplex-number='@num'>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+        <ul>
+            <li ms-for='el in @array | limitBy(@num)'>{{el}}</li>
+        </ul>
+        <ul>
+            <li ms-for='el in @object | limitBy(@num)'>{{el}}</li>
+        </ul>
+    </div>
+
+    <div class="ms-controller" ms-controller='orderBy'>
+        <select ms-duplex='@order'>
+            <option>a</option>
+            <option>b</option>
+        </select>
+        <select ms-duplex-number='@dir'>
+            <option>1</option>
+            <option>-1</option>
+        </select>
+        <table border='1' width='200'>
+            <tr ms-for="el in @array | orderBy(@order, @dir)">
+                <td ms-for='elem in el'>{{elem}}</td>
+            </tr>
+        </table>
     </div>
 
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
@@ -359,6 +390,20 @@
                 }
             }
         }
+    });
+
+    avalon.define({
+        $id: "limitBy",
+        array: [1, 2, 3, 4, 5, 6],
+        object: {a: 1, b: 2, c: 3, d: 4, e: 5},
+        num: 3
+    });
+
+    avalon.define({
+        $id: "orderBy",
+        array: [{a: 1, b: 33},{a: 2, b: 22}, {a: 3, b: 11}],
+        order: 'a',
+        dir: -1
     });
 </script>
 </body>
