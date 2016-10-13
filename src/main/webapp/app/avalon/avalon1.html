@@ -187,6 +187,15 @@
         </table>
     </div>
 
+    <div class="ms-controller" ms-controller="test_ms_duplex_xxx">
+        <div ms-controller="test">
+        复选框1<input type="checkbox" value="1" ms-duplex="@aaa">
+        复选框2<input type="checkbox" value="2" ms-duplex="@aaa">
+        复选框3<input type="checkbox" value="3" ms-duplex="@aaa">
+        <p>{{@aaa}}</p>
+  </div>
+    </div>
+
 <script type="text/javascript" src="../../assets/plugins/avalon/avalon.js"></script>
 <script>
     var testVm = avalon.define({
@@ -404,6 +413,11 @@
         array: [{a: 1, b: 33},{a: 2, b: 22}, {a: 3, b: 11}],
         order: 'a',
         dir: -1
+    });
+
+    avalon.define({
+        $id: 'test_ms_duplex_xxx',
+        aaa: ['1', '2']
     });
 </script>
 </body>
