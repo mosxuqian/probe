@@ -85,5 +85,82 @@ Spring 发展到现在已经不仅仅是 Spring 框架本身的内容，Spring �
 - Spring LDAP：简化使用 LDAP 开发
 - Spring Session：提供一个 API 及实现来管理用户会话信息
 
+## 二、Spring 项目快速搭建
+
+这里我们使用目前 Java 主流的项目构建工具[Maven][3]来搭建项目。
+
+### （一）Maven 介绍
+
+Apache Maven 是一个基于项目对象模型（Project Object Model，POM）的软件项目管理工具。Maven 可用来管理项目的依赖、编译、打包、文档等信息。使用 Maven 来管理项目时，项目依赖的 jar 包将不再包含在项目内，而是集中放置在用户目录下的 .m2 文件夹下。关于 Maven 的详细安装介绍可参考[这里][4]。
+
+### （二）创建项目
+
+在创建项目之前，须确保你的计算机上已经安装好有 Java 和 Maven 环境。然后，打开终端通过以下简单的命令就可以在你的当前目录下创建一个 Jave web 的项目结构：
+
+```bash
+mvn archetype:generate -DgroupId=com.blinkfox -DartifactId=springdemo -DpackageName=com.blinkfox.springdemo -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+```
+
+其中`-DgroupId=com.blinkfox`是组织名，`-DartifactId=springdemo`是该组织下的项目名称，`-DarchetypeArtifactId=maven-archetype-webapp`代表创建一个简单的 webapp 项目。
+
+创建项目的时候，Maven会自动下载一些需要用到的 jar 包和 Maven 插件。如果顺利创建成功的话，就会在你的当前目录下看到名为 springdemo 的项目，其中包含`src`的文件夹和`pom.xml`文件。且在你的终端会看到如下输出：
+
+![Maven创建项目成功][5]
+
+### （三）添加 Spring 依赖
+
+接下来需要通过修改 pom.xml 来添加 Spring 的依赖，添加编译插件，且将编译级别设置为1.7，pom.xml文件的修改如下：
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.blinkfox</groupId>
+    <artifactId>springdemo</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>springdemo Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <java.version>1.7</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.3.3.RELEASE</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>springdemo</finalName>
+        <!-- 指定maven的默认操作为 -->
+        <defaultGoal>compile</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+
   [1]: https://spring.io/
   [2]: http://static.blinkfox.com/spring_moudle.png
+  [3]: http://maven.apache.org/
+  [4]: http://blinkfox.com/linux-debianxia-mavende-an-zhuang-he-shi-yong/
+  [5]: http://static.blinkfox.com/maven_build_project.png
