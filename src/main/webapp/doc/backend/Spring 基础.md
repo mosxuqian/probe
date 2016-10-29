@@ -171,7 +171,7 @@ Spring 的所有功能设计和实现都是基于此四大原则。
 
 ### （一）依赖注入
 
-#### 1. 核心说明
+#### 1. 重点说明
 
 我们经常说的控制反转（Inversion of Control，IoC）和依赖注入（dependency injection，DI）在 Spring 环境下是等同的概念，控制反转是通过依赖注入实现的。所谓依赖注入指的是容器负责创建对象和维护对象间的依赖关系，而不是通过对象本身负责自己的创建和解决自己的依赖。
 
@@ -221,7 +221,7 @@ public class FunctionService {
 > **代码解释**：
 > 1. 使用 @Service 注解声明当前 FunctionService 类是 Spring 管理的一个 Bean。其中，使用 @Component、@Service、@Repository、@Controller 是等效的，可根据需要选用。
 
-（1）使用功能类的 Bean。
+（2）使用功能类的 Bean。
 
 ```java
 package com.blinkfox.service.impl;
@@ -249,6 +249,181 @@ public class UseFunctionService {
 > **代码解释**：
 > 1. 使用 @Service 注解声明当前 UseFunctionService 类是 Spring 管理的一个 Bean。
 > 2. 使用 @Autowired 将 FunctionService 的实体 Bean 注入到 UseFunctionService 中，让 UseFunctionService 具备 FunctionService 的功能，此处使用 JSR-330 的 @Inject 注解或者 JSR-250 的 @Resource 注解是等效的。
+
+（3）配置类。
+
+```java
+package com.blinkfox.config;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Created by blinkfox on 2016/10/27.
+ */
+@Configuration
+@ComponentScan("com.blinkfox.service.impl")
+public class DiConfig {
+}
+```
+
+> **代码解释**：
+> 1. 使用 @Configuration 注解声明当前类是一个配置类。
+> 2. 使用 @ComponentScan 将 自动扫描包名下所有使用的 @Component、@Service、@Repository、@Controller 类，并注册为 Bean。
+
+（4）运行。
+
+```java
+package com.blinkfox.maintest;
+
+import com.blinkfox.config.DiConfig;
+import com.blinkfox.service.impl.UseFunctionService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+/**
+ * Created by blinkfox on 2016/10/27.
+ */
+public class FunctionMain {
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(DiConfig.class);
+        UseFunctionService useFunctionService = context.getBean(UseFunctionService.class);
+        System.out.println(useFunctionService.sayHello("Spring"));
+        context.close();
+    }
+
+}
+```
+
+> **代码解释**：
+> 1. 使用 AnnotationConfigApplicationContext 作为 Spring 容器，接收使用一个配置类作为参数。
+> 2. 获得声明配置的 UseFunctionService 的 Bean。
+
+### （二）Java 配置
+
+#### 1. 重点说明
+
+Java 配置是 Spring4.x 推荐的配置方式，可以完全替代 xml 配置；Java 配置也是 Spring Boot 推荐的配置方式。
+
+Java 配置是通过 @Configuration 和 @Bean 来实现的。
+
+- @Configuration 声明当前类是一个配置类，相当于一个Spring配置的 xml 文件。
+- @Bean 注解在方法上，声明当前方法的返回值是一个 Bean。
+
+何时使用 Java 配置或者注解配置呢？我们主要的原则是：全局配置使用 Java 配置（如数据库相关配置、MVC相关配置），业务 Bean 的配置使用注解配置（@Service、@Component、@Repository、@Controller）。
+
+#### 2. Java配置代码示例
+
+（1）编写功能类的 Bean
+
+```java
+package com.blinkfox.service.impl;
+
+/**
+ * Created by blinkfox on 2016/10/27.
+ */
+// 1
+public class JavaConfigService {
+
+    public String sayHello(String word) {
+        return "Hello " + word + "!";
+    }
+
+}
+```
+
+> **代码解释**：
+> 1. 此处没有使用 @Service 声明 Bean。
+
+（2）使用功能类的 Bean
+
+```java
+package com.blinkfox.service.impl;
+
+/**
+ * Created by blinkfox on 2016/10/27.
+ */
+// 1
+public class UseJavaConfigService {
+    // 2
+    private JavaConfigService javaConfigService;
+
+    public void setJavaConfigService(JavaConfigService javaConfigService) {
+        this.javaConfigService = javaConfigService;
+    }
+
+    public String sayHello(String word) {
+        return javaConfigService.sayHello(word);
+    }
+
+}
+```
+
+> **代码解释**：
+> 1. 此处没有使用 @Service 声明 Bean。
+> 2. 此处没有使用 @Autowired 注解注入 Bean。
+
+（3）Java 配置类
+
+```java
+package com.blinkfox.config;
+
+import com.blinkfox.service.impl.JavaConfigService;
+import com.blinkfox.service.impl.UseJavaConfigService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Created by blinkfox on 2016/10/27.
+ */
+@Configuration // 1
+public class JavaConfig {
+
+    @Bean  // 2
+    public JavaConfigService javaConfigService() {
+        return new JavaConfigService();
+    }
+
+    @Bean
+    public UseJavaConfigService useJavaConfigService() {
+        UseJavaConfigService useJavaConfigService = new UseJavaConfigService();
+        useJavaConfigService.setJavaConfigService(javaConfigService()); // 3
+        return useJavaConfigService;
+    }
+
+}
+```
+
+> **代码解释**：
+> 1. 使用 @Configuration 注解表明当前类是一个配置类，这意味着这个类型里可能有0个或者多个 @Bean 注解，此处没有使用包扫描，是因为所有的 Bean 都在此类中定义了。
+> 2. 使用 @Bean 注解声明当前方法 JavaConfigService 的返回值是一个 Bean，Bean的名称是方法名。
+> 3. 注入 FunctionService 的 Bean 时候直接调用 javaConfigService()。
+
+（4）运行
+
+```java
+package com.blinkfox.maintest;
+
+import com.blinkfox.config.JavaConfig;
+import com.blinkfox.service.impl.UseJavaConfigService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+/**
+ * Created by blinkfox on 2016/10/27.
+ */
+public class JavaConfigMain {
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(JavaConfig.class);
+        UseJavaConfigService useJavaConfigService = context.getBean(UseJavaConfigService.class);
+        System.out.println(useJavaConfigService.sayHello("Spring Java Config"));
+        context.close();
+    }
+
+}
+```
 
   [1]: https://spring.io/
   [2]: http://static.blinkfox.com/spring_moudle.png
