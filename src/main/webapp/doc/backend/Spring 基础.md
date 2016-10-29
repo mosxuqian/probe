@@ -425,6 +425,213 @@ public class JavaConfigMain {
 }
 ```
 
+### （三）AOP
+
+#### 1. 重点说明
+
+AOP：面向切面编程，是面向对象编程（OOP）的补充。
+
+Spring 的 AOP 的存在目的是为了解耦。AOP 可以让一组类共享相同的行为。在 OOP 中只能通过继承和实现接口来共享相同的行为，从而使代码的耦合度增强，且类继承只能为单继承，阻碍更多行为添加到一组类上，AOP 弥补了 OOP 的不足。
+
+Spring 支持 AspectJ 的注解式切面编程。
+
+- 使用 @AspectJ 声明是一个切面。
+- 使用 @After、@Before、Around 定义通知（advice）类型，可直接将拦截规则（切点）作为参数。
+- 其中 @After、@Before、Around 参数的拦截规则为切点（PointCut），为了使切点复用，可使用 @PointCut 专门定义拦截规则，然后在 @After、@Before、Around 的参数中调用。
+- 其中符合条件的每一个拦截处为连接点（JoinPoint）。
+
+Spring本身在事务处理（@Transcational）和数据缓存（@Cacheable）等都使用注解拦截。下面示例将演示基于注解和方法规则的拦截方式，演示一种模拟记录操作的日志系统的实现。
+
+#### 2. 注解拦截代码示例
+
+（1）添加 Spring aop 支持及 AspectJ 依赖。
+
+```java
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-aop</artifactId>
+	<version>4.3.3.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>org.aspectj</groupId>
+	<artifactId>aspectjrt</artifactId>
+	<version>1.8.9</version>
+</dependency>
+<dependency>
+	<groupId>org.aspectj</groupId>
+	<artifactId>aspectjweaver</artifactId>
+	<version>1.8.9</version>
+</dependency>
+```
+（2）编写拦截规则的注解。
+
+```java
+package com.blinkfox.annotation;
+
+import java.lang.annotation.*;
+
+/**
+ * Created by blinkfox on 2016/10/29.
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface LogAction {
+
+    String name() default "这是默认的操作名称";
+
+}
+```
+
+> **代码解释**：
+> 注解本身是没有功能的，就和 xml 一样。注解和 xml 都是一种元数据，元数据即解释数据的数据，这就是所谓的配置。注解的功能来自用这个注解的地方。
+
+（3）编写使用注解的被拦截类。
+
+```java
+package com.blinkfox.service.impl;
+
+import com.blinkfox.annotation.LogAction;
+import org.springframework.stereotype.Service;
+
+/**
+ * Created by blinkfox on 2016/10/29.
+ */
+@Service
+public class DemoAnnotationService {
+
+    @LogAction(name = "注解式拦截的 add 操作")
+    public void add() {
+
+    }
+
+}
+```
+
+（4）编写使用方法规则被拦截规类。
+
+```java
+package com.blinkfox.service.impl;
+
+import org.springframework.stereotype.Service;
+
+/**
+ * Created by blinkfox on 2016/10/29.
+ */
+@Service
+public class DemoMethodService {
+
+    public void add() {
+
+    }
+
+}
+```
+
+（5）编写切面。
+
+```java
+package com.blinkfox.aop;
+
+import com.blinkfox.annotation.LogAction;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
+
+/**
+ * Created by blinkfox on 2016/10/29.
+ */
+@Aspect // 1
+@Component // 2
+public class LogAspect {
+
+    @Pointcut("@annotation(com.blinkfox.annotation.LogAction)") // 3
+    public void annotationPointCut() {
+
+    }
+
+    @After("annotationPointCut()") // 4
+    public void after(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        LogAction logAction = method.getAnnotation(LogAction.class);
+        System.out.println("---注解式拦截:" + logAction.name()); // 5
+    }
+
+    @After("execution(* com.blinkfox.service.impl.DemoMethodService.*(..))") // 6
+    public void before(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        System.out.println("---方法规则式拦截:" + method.getName());
+    }
+
+}
+```
+
+> **代码解释**：
+> 1. 通过 @Aspect 注解声明一个切面。
+> 2. 通过 @Component 让此切面成为 Spring 容器管理的Bean。
+> 3. 通过 @PointCut 注解声明切点。
+> 4. 通过 @After 注解声明一个通知类型，并使用 @PointCut定义的切点。
+> 5. 通过可获得注解上的属性，然后做日志记录相关的操作，下面相同。
+> 6. 通过 @Before 注解声明一个通知类型，此通知直接使用拦截规则作为参数。
+
+（6）配置类。
+
+```java
+package com.blinkfox.config;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
+/**
+ * Created by blinkfox on 2016/10/29.
+ */
+@Configuration
+@ComponentScan("com.blinkfox")
+@EnableAspectJAutoProxy
+public class AopConfig {
+
+}
+```
+
+> **代码解释**：
+> 1. 使用 @EnableAspectJAutoProxy 注解开启 Spring 对 AspectJ的支持。
+
+（6）运行。
+
+```java
+package com.blinkfox.maintest;
+
+import com.blinkfox.config.AopConfig;
+import com.blinkfox.service.impl.DemoAnnotationService;
+import com.blinkfox.service.impl.DemoMethodService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+/**
+ * Created by blinkfox on 2016/10/29.
+ */
+public class AopMain {
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(AopConfig.class);
+        DemoAnnotationService demoAnnotationService = context.getBean(DemoAnnotationService.class);
+        DemoMethodService demoMethodService = context.getBean(DemoMethodService.class);
+        demoAnnotationService.add();
+        demoMethodService.add();
+        context.close();
+    }
+
+}
+```
+
   [1]: https://spring.io/
   [2]: http://static.blinkfox.com/spring_moudle.png
   [3]: http://maven.apache.org/
