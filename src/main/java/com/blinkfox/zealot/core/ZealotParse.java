@@ -2,7 +2,7 @@ package com.blinkfox.zealot.core;
 
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.bean.StringHelper;
+import com.blinkfox.zealot.helpers.StringHelper;
 import com.blinkfox.zealot.config.ZealotConfig;
 import com.blinkfox.zealot.consts.ZealotConst;
 import ognl.OgnlContext;

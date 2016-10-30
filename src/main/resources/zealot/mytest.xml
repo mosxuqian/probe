@@ -7,7 +7,7 @@
         <andLike field="book_name" value="bookName"></andLike>
         <andEqual match="id != null and id != ''" field="id" value="id"></andEqual>
         <andLike match="bookIsbn!=null and bookIsbn!=''" field="book_isbn" value="bookIsbn"></andLike>
-        <andNumBetween match="money > 0" field="money" value="money"></andNumBetween>
+        <andNumBetween match="money > 0" field="money" start="0" end="money"></andNumBetween>
         order by id desc 
     </zealot>
     

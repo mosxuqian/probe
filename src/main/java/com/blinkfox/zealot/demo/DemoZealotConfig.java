@@ -15,7 +15,7 @@ public class DemoZealotConfig extends ZealotConfig {
      */
     @Override
     public void config() {
-        context.put(MY_TEST, "com/thunisoft/blinkdemo/xml/mytest.xml");
+        context.put(MY_TEST, "/zealot/mytest.xml");
     }
 
 }

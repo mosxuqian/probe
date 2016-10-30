@@ -2,8 +2,9 @@ package com.blinkfox.zealot.core;
 
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.bean.StringHelper;
-import com.blinkfox.zealot.bean.ZealotHelper;
+import com.blinkfox.zealot.helpers.BuildSqlInfoHelper;
+import com.blinkfox.zealot.helpers.StringHelper;
+import com.blinkfox.zealot.helpers.ZealotHelper;
 import com.blinkfox.zealot.consts.ZealotConst;
 import com.blinkfox.zealot.helpers.OgnlHelper;
 import org.dom4j.Node;
@@ -33,12 +34,12 @@ public class EqualHandler implements IConditHandler {
         Node matchNode = (Node) node.selectSingleNode(ZealotConst.ATTR_MATCH);
         String matchText = ZealotHelper.getNodeText(matchNode);
         if (StringHelper.isBlank(matchText)) {
-            sqlInfo = ZealotHelper.buildEqualSql(source, fieldText, valueText);
+            sqlInfo = BuildSqlInfoHelper.buildEqualSql(source, fieldText, valueText);
         } else {
 			/* 如果match匹配成功，则生成数据库sql条件和参数 */
             Boolean isTrue = (Boolean) OgnlHelper.parseWithOgnl(matchText, source);
             if (isTrue) {
-                sqlInfo = ZealotHelper.buildEqualSql(source, fieldText, valueText);
+                sqlInfo = BuildSqlInfoHelper.buildEqualSql(source, fieldText, valueText);
             }
         }
 

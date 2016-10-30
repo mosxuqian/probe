@@ -23,6 +23,7 @@ public class Dom4jHelper {
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(xmlPath);
             if (is != null) {
                 document = reader.read(is);
+                System.out.println("------进入document解析方法");
             }
         } catch (DocumentException e) {
             System.out.println("读取xml文件失败，xmlPath是：" + xmlPath);

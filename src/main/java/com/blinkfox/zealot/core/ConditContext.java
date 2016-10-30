@@ -10,10 +10,9 @@ import com.blinkfox.zealot.consts.ZealotConst;
  */
 public class ConditContext {
 
-    private static final String AND_PREFIX = " and ";
-    private static final String OR_PREFIX = " or ";
-    private static final String EQUAL_SUFFIX = " = ? ";
-    private static final String LIEK_SUFFIX = " like ? ";
+    /* 查询条件的前缀 */
+    private static final String AND_PREFIX = " AND ";
+    private static final String OR_PREFIX = " OR ";
 
     private static IConditHandler newEqualHandler() {
         return new EqualHandler();
@@ -31,22 +30,20 @@ public class ConditContext {
      */
     public static SqlInfo buildSqlInfo(BuildSource source, String type) {
         if (ZealotConst.EQUAL.equals(type)) {
-            source.setSuffix(EQUAL_SUFFIX);
             return newEqualHandler().buildSqlInfo(source);
         } else if (ZealotConst.AND_EQUAL.equals(type)) {
-            source.setPrefix(AND_PREFIX).setSuffix(EQUAL_SUFFIX);
+            source.setPrefix(AND_PREFIX);
             return newEqualHandler().buildSqlInfo(source);
         } else if (ZealotConst.OR_EQUAL.equals(type)) {
-            source.setPrefix(OR_PREFIX).setSuffix(EQUAL_SUFFIX);
+            source.setPrefix(OR_PREFIX);
             return newEqualHandler().buildSqlInfo(source);
         } else if (ZealotConst.LIKE.equals(type)) {
-            source.setSuffix(LIEK_SUFFIX);
             return newLikeHandler().buildSqlInfo(source);
         } else if (ZealotConst.AND_LIKE.equals(type)) {
-            source.setPrefix(AND_PREFIX).setSuffix(LIEK_SUFFIX);
+            source.setPrefix(AND_PREFIX);
             return newLikeHandler().buildSqlInfo(source);
         } else if (ZealotConst.OR_LIKE.equals(type)) {
-            source.setPrefix(OR_PREFIX).setSuffix(LIEK_SUFFIX);
+            source.setPrefix(OR_PREFIX);
             return newLikeHandler().buildSqlInfo(source);
         } else {
             return source.getSqlInfo();

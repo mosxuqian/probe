@@ -15,9 +15,7 @@ public class BuildSource {
     private OgnlContext context; // OGNL上下文
     private Map<String, Object> paramMap; // 参数
 
-    private String prefix; // 前缀
-    private String suffix; // 后缀
-
+    private String prefix = ""; // 前缀
 
     public BuildSource() {
         super();
@@ -65,13 +63,6 @@ public class BuildSource {
     }
     public BuildSource setPrefix(String prefix) {
         this.prefix = prefix;
-        return this;
-    }
-    public String getSuffix() {
-        return suffix;
-    }
-    public BuildSource setSuffix(String suffix) {
-        this.suffix = suffix;
         return this;
     }
 

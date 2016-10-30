@@ -1,4 +1,4 @@
-package com.blinkfox.zealot.bean;
+package com.blinkfox.zealot.helpers;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +37,15 @@ public class StringHelper {
             }
         }
         return true;
+    }
+
+    /**
+     * 判断字符串是否为空
+     * @param str
+     * @return
+     */
+    public static boolean isNotBlank(String str) {
+        return !isBlank(str);
     }
 
 }

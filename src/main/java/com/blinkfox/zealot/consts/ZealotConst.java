@@ -25,5 +25,13 @@ public class ZealotConst {
     public static final String ATTR_MATCH = "attribute::match";
     public static final String ATTR_FIELD = "attribute::field";
     public static final String ATTR_VALUE = "attribute::value";
+    public static final String ATTR_START = "attribute::start";
+    public static final String ATTR_ENT = "attribute::end";
 
+    /* 查询后缀常量 */
+    public static final String EQUAL_SUFFIX = " = ? ";
+    public static final String LIEK_SUFFIX = " LIKE ? ";
+    public static final String GT_SUFFIX = " >= ? ";
+    public static final String LT_SUFFIX = " <= ? ";
+    public static final String BT_AND_SUFFIX = " BETWEEN ? AND ? ";
 }
