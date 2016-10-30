@@ -1,7 +1,8 @@
-package com.blinkfox.zealot.core;
+package com.blinkfox.zealot.core.concrete;
 
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
+import com.blinkfox.zealot.core.IConditHandler;
 import com.blinkfox.zealot.helpers.BuildSqlInfoHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
 import com.blinkfox.zealot.helpers.ZealotHelper;

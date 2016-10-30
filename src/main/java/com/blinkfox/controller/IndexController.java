@@ -24,7 +24,8 @@ public class IndexController extends Controller {
         paramMap.put("bookName", "深入浅出MyBatis技术原理与实战");
         paramMap.put("bookIsbn", "9787121295942");
         // paramMap.put("author", "杨开振");
-        paramMap.put("money", "58.70");
+        paramMap.put("startMoney", "20.50");
+        paramMap.put("endMmoney", "58.70");
         paramMap.put("offset", 2);
         paramMap.put("pageSize", 15);
         SqlInfo sqlInfo = ZealotParse.getSqlInfo(DemoZealotConfig.MY_TEST,

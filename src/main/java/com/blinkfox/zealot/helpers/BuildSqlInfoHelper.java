@@ -63,39 +63,11 @@ public class BuildSqlInfoHelper {
      * 构建数字查询的sql信息
      * @param source
      * @param fieldText
-     * @param startNum
-     * @param endNum
-     * @return
-     */
-    public static SqlInfo buildNumSql(BuildSource source, String fieldText,
-            Double startNum, Double endNum) {
-        init(source);
-
-        /* 根据开始文本和结束文本判断执行是大于、小于还是区间的查询sql和参数的生成 */
-        if (startNum != null && endNum == null) {
-            join.append(source.getPrefix()).append(fieldText).append(ZealotConst.GT_SUFFIX);
-            params.add(OgnlHelper.parseWithOgnl(String.valueOf(startNum), source));
-        } else if (startNum == null && endNum != null) {
-            join.append(source.getPrefix()).append(fieldText).append(ZealotConst.LT_SUFFIX);
-            params.add(OgnlHelper.parseWithOgnl(String.valueOf(endNum), source));
-        } else if (startNum != null && endNum != null) {
-            join.append(source.getPrefix()).append(fieldText).append(ZealotConst.BT_AND_SUFFIX);
-            params.add(OgnlHelper.parseWithOgnl(String.valueOf(startNum), source));
-            params.add(OgnlHelper.parseWithOgnl(String.valueOf(endNum), source));
-        }
-
-        return sqlInfo.setJoin(join).setParams(params);
-    }
-
-    /**
-     * 构建数字查询的sql信息
-     * @param source
-     * @param fieldText
      * @param startText
      * @param endText
      * @return
      */
-    public static SqlInfo buildDateTimeStrSql(BuildSource source, String fieldText,
+    public static SqlInfo buildBetweenSql(BuildSource source, String fieldText,
             String startText, String endText) {
         init(source);
 

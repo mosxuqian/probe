@@ -4,10 +4,10 @@
     <!-- 根据条件查询图书信息 -->
     <zealot id="queryBookCondPaging">
         select * from book where
-        <andLike field="book_name" value="bookName"></andLike>
+        <like field="book_name" value="bookName"></like>
         <andEqual match="id != null and id != ''" field="id" value="id"></andEqual>
         <andLike match="bookIsbn!=null and bookIsbn!=''" field="book_isbn" value="bookIsbn"></andLike>
-        <andNumBetween match="money > 0" field="money" start="0" end="money"></andNumBetween>
+        <andNumBetween match="startMoney > 0 || endMoney > 0" field="money" start="startMoney" end="endMmoney"></andNumBetween>
         order by id desc 
     </zealot>
     

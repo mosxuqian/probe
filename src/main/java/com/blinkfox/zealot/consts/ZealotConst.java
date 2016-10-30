@@ -20,6 +20,9 @@ public class ZealotConst {
     public static final String NUM_BETWEEN = "numBetween";
     public static final String AND_NUM_BETWEEN = "andNumBetween";
     public static final String OR_NUM_BETWEEN = "orNumBetween";
+    public static final String DT_BETWEEN = "dateTimeBetween";
+    public static final String AND_DT_BETWEEN = "andDateTimeBetween";
+    public static final String OR_DT_BETWEEN = "orDateTimeBetween";
 
     /* 属性节点类型 */
     public static final String ATTR_MATCH = "attribute::match";
