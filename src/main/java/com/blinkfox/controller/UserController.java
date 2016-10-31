@@ -5,6 +5,9 @@ import com.blinkfox.interceptor.AaaInter;
 import com.blinkfox.interceptor.BbbInter;
 import com.blinkfox.interceptor.DemoInterceptor;
 import com.blinkfox.model.User;
+import com.blinkfox.zealot.bean.SqlInfo;
+import com.blinkfox.zealot.core.ZealotParse;
+import com.blinkfox.zealot.demo.DemoZealotConfig;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
@@ -89,6 +92,20 @@ public class UserController extends Controller {
         map.put("users", users);
 
         renderJson(map);
+    }
+
+    public void userZealot() {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("nickName", "张");
+        paramMap.put("email", "san");
+        paramMap.put("startAge", 23);
+        paramMap.put("endAge", 28);
+        SqlInfo sqlInfo = ZealotParse.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserInfo", paramMap);
+        String sql = sqlInfo.getSql();
+        Object[] params = sqlInfo.getParamsArr();
+
+        List<User> users = User.userDao.find(sql, params);
+        renderJson(users);
     }
 
 }

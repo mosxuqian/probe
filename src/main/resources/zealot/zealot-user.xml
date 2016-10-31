@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zealots>
+    
+    <!-- 根据动态条件查询用户信息 -->
+    <zealot id="queryUserInfo">
+        select * from user where
+        <like field="nickname" value="nickName"></like>
+        <andLike match="email != null and email != ''" field="email" value="email"></andLike>
+        <andNumBetween match="startAge > 0 || endAge > 0" field="age" start="startAge" end="endAge"></andNumBetween>
+        order by id desc 
+    </zealot>
+    
+</zealots>

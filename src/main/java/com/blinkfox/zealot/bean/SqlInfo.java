@@ -1,5 +1,7 @@
 package com.blinkfox.zealot.bean;
 
+import com.blinkfox.zealot.helpers.StringHelper;
+
 import java.util.List;
 
 /**
@@ -33,7 +35,7 @@ public class SqlInfo {
 
     /*getter和setter方法*/
     public String getSql() {
-        return join == null ? "" : join.toString();
+        return join == null ? "" : StringHelper.replaceBlank(join.toString());
     }
 
     public StringBuffer getJoin() {

@@ -9,6 +9,7 @@ import com.blinkfox.zealot.config.ZealotConfig;
 public class DemoZealotConfig extends ZealotConfig {
 
     public static final String MY_TEST = "mytest";
+    public static final String USER_SPACE = "user_space";
 
     /**
      * 配置访问的Key和对应的路径xml
@@ -16,6 +17,7 @@ public class DemoZealotConfig extends ZealotConfig {
     @Override
     public void config() {
         context.put(MY_TEST, "/zealot/mytest.xml");
+        context.put(USER_SPACE, "/zealot/zealot-user.xml");
     }
 
 }
