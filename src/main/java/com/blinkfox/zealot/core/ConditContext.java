@@ -4,6 +4,7 @@ import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.consts.ZealotConst;
 import com.blinkfox.zealot.core.concrete.EqualHandler;
+import com.blinkfox.zealot.core.concrete.InHandler;
 import com.blinkfox.zealot.core.concrete.LikeHandler;
 import com.blinkfox.zealot.core.concrete.BetweenHandler;
 
@@ -18,7 +19,7 @@ public class ConditContext {
     private static final String OR_PREFIX = " OR ";
 
     /**
-     * 生成 EqualHandler 的方法
+     * 生成 EqualHandler 对象的方法
      * @return
      */
     private static IConditHandler newEqualHandler() {
@@ -26,7 +27,7 @@ public class ConditContext {
     }
 
     /**
-     * 生成 LikeHandler 的方法
+     * 生成 LikeHandler 对象的方法
      * @return
      */
     private static IConditHandler newLikeHandler() {
@@ -34,11 +35,19 @@ public class ConditContext {
     }
 
     /**
-     * 生成 BetweenHandler 的方法
+     * 生成 BetweenHandler 对象的方法
      * @return
      */
     private static IConditHandler newBetweenHandler() {
         return new BetweenHandler();
+    }
+
+    /**
+     * 生成 InHandler 对象的方法
+     * @return
+     */
+    private static IConditHandler newInHandler() {
+        return new InHandler();
     }
 
     /**
@@ -72,6 +81,14 @@ public class ConditContext {
         } else if (ZealotConst.OR_BETWEEN.equals(type)) {
             source.setPrefix(OR_PREFIX);
             return newBetweenHandler().buildSqlInfo(source);
+        } else if (ZealotConst.IN.equals(type)) {
+            return newInHandler().buildSqlInfo(source);
+        } else if (ZealotConst.AND_IN.equals(type)) {
+            source.setPrefix(AND_PREFIX);
+            return newInHandler().buildSqlInfo(source);
+        } else if (ZealotConst.OR_IN.equals(type)) {
+            source.setPrefix(OR_PREFIX);
+            return newInHandler().buildSqlInfo(source);
         } else {
             return source.getSqlInfo();
         }

@@ -102,6 +102,7 @@ public class UserController extends Controller {
         paramMap.put("endAge", 28);
         paramMap.put("startBirthday", "1990-01-01 00:00:00");
         paramMap.put("endBirthday", "1991-01-01 23:59:59");
+        paramMap.put("sexs", new Integer[]{0, 1});
         SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserInfo", paramMap);
         String sql = sqlInfo.getSql();
         Object[] params = sqlInfo.getParamsArr();

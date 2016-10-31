@@ -20,6 +20,9 @@ public class ZealotConst {
     public static final String BETWEEN = "between";
     public static final String AND_BETWEEN = "andBetween";
     public static final String OR_BETWEEN = "orBetween";
+    public static final String IN = "in";
+    public static final String AND_IN = "andIn";
+    public static final String OR_IN = "orIn";
 
     /* 属性节点类型 */
     public static final String ATTR_MATCH = "attribute::match";
@@ -34,4 +37,5 @@ public class ZealotConst {
     public static final String GT_SUFFIX = " >= ? ";
     public static final String LT_SUFFIX = " <= ? ";
     public static final String BT_AND_SUFFIX = " BETWEEN ? AND ? ";
+    public static final String IN_SUFFIX = " in ";
 }

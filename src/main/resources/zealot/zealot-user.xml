@@ -8,6 +8,7 @@
         <andLike match="email != null and email != ''" field="email" value="email"></andLike>
         <andBetween match="startAge > 0 || endAge > 0" field="age" start="startAge" end="endAge"></andBetween>
         <andBetween match="startBirthday != null || endBirthday != ''" field="birthday" start="startBirthday" end="endBirthday"></andBetween>
+        <andIn match="sexs != null || sexs.size() > 0" field="sex" value="sexs"></andIn>
         order by id desc 
     </zealot>
     
