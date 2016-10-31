@@ -1,6 +1,7 @@
 package com.blinkfox.test;
 
 import org.mvel2.MVEL;
+import org.mvel2.templates.TemplateRuntime;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ public class MvelTest {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("foobar", 100);
         vars.put("foo", "");
+        vars.put("123", "123");
 
         Boolean result1 = (Boolean) MVEL.eval("foobar > 99", vars);
         System.out.println("----result1:" + result1);
@@ -22,7 +24,13 @@ public class MvelTest {
         System.out.println("----result2:" + result2);
 
         Boolean result3 = (Boolean) MVEL.eval("foo == null", vars);
-        System.out.println("----result2:" + result3);
+        System.out.println("----result3:" + result3);
+
+        Boolean result4 = (Boolean) MVEL.eval("foo == null || '123' == 123", vars);
+        System.out.println("----result4:" + result4);
+
+        String result5 = (String) TemplateRuntime.eval("The value is @{foobar}", vars);
+        System.out.println("----result5:" + result5);
     }
 
 }
