@@ -1,7 +1,7 @@
 package com.blinkfox.controller;
 
 import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.core.ZealotParse;
+import com.blinkfox.zealot.core.Zealot;
 import com.blinkfox.zealot.demo.DemoZealotConfig;
 import com.jfinal.core.Controller;
 
@@ -28,7 +28,7 @@ public class IndexController extends Controller {
         paramMap.put("endMmoney", "58.70");
         paramMap.put("offset", 2);
         paramMap.put("pageSize", 15);
-        SqlInfo sqlInfo = ZealotParse.getSqlInfo(DemoZealotConfig.MY_TEST,
+        SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.MY_TEST,
                 "queryBookCondPaging", paramMap);
         renderJson(sqlInfo);
     }

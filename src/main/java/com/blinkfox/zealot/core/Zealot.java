@@ -2,7 +2,6 @@ package com.blinkfox.zealot.core;
 
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.helpers.StringHelper;
 import com.blinkfox.zealot.config.ZealotConfig;
 import com.blinkfox.zealot.consts.ZealotConst;
 import ognl.OgnlContext;
@@ -16,7 +15,7 @@ import java.util.Map;
  * Zealot的核心解析类
  * Created by blinkfox on 2016/10/30.
  */
-public class ZealotParse {
+public class Zealot {
 
     public static SqlInfo getSqlInfo(String spaceKey, String zealotId, Map<String, Object> paramMap) {
         Document doc = ZealotConfig.getZealots().get(spaceKey);
@@ -31,7 +30,6 @@ public class ZealotParse {
         }
 
         return buildSqlInfo(node, zealotId, paramMap);
-        //return buildSqlInfo(zealot, paramMap);
     }
 
     /**
@@ -68,11 +66,7 @@ public class ZealotParse {
             }
         }
 
-        String sql = sqlInfo.getSql();
-        params = sqlInfo.getParams();
-        sql = StringHelper.replaceBlank(sql);
-        System.out.println("-------最终sql为:" + sql);
-        return sqlInfo.setParams(params);
+        return sqlInfo;
     }
 
 }

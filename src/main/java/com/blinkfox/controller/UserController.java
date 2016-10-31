@@ -6,7 +6,7 @@ import com.blinkfox.interceptor.BbbInter;
 import com.blinkfox.interceptor.DemoInterceptor;
 import com.blinkfox.model.User;
 import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.core.ZealotParse;
+import com.blinkfox.zealot.core.Zealot;
 import com.blinkfox.zealot.demo.DemoZealotConfig;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
@@ -100,7 +100,9 @@ public class UserController extends Controller {
         paramMap.put("email", "san");
         paramMap.put("startAge", 23);
         paramMap.put("endAge", 28);
-        SqlInfo sqlInfo = ZealotParse.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserInfo", paramMap);
+        paramMap.put("startBirthday", "1990-01-01 00:00:00");
+        paramMap.put("endBirthday", "1991-01-01 23:59:59");
+        SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserInfo", paramMap);
         String sql = sqlInfo.getSql();
         Object[] params = sqlInfo.getParamsArr();
 

@@ -3,10 +3,9 @@ package com.blinkfox.zealot.core;
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.consts.ZealotConst;
-import com.blinkfox.zealot.core.concrete.DateTimeHandler;
 import com.blinkfox.zealot.core.concrete.EqualHandler;
 import com.blinkfox.zealot.core.concrete.LikeHandler;
-import com.blinkfox.zealot.core.concrete.NumberHandler;
+import com.blinkfox.zealot.core.concrete.BetweenHandler;
 
 /**
  * 构建动态条件查询的上下文协调类
@@ -26,12 +25,8 @@ public class ConditContext {
         return new LikeHandler();
     }
 
-    private static IConditHandler newNumHandler() {
-        return new NumberHandler();
-    }
-
-    private static IConditHandler newDateTimeHandler() {
-        return new DateTimeHandler();
+    private static IConditHandler newBetweenHandler() {
+        return new BetweenHandler();
     }
 
     /**
@@ -57,22 +52,14 @@ public class ConditContext {
         } else if (ZealotConst.OR_LIKE.equals(type)) {
             source.setPrefix(OR_PREFIX);
             return newLikeHandler().buildSqlInfo(source);
-        } else if (ZealotConst.NUM_BETWEEN.equals(type)) {
-            return newNumHandler().buildSqlInfo(source);
-        } else if (ZealotConst.AND_NUM_BETWEEN.equals(type)) {
+        } else if (ZealotConst.BETWEEN.equals(type)) {
+            return newBetweenHandler().buildSqlInfo(source);
+        } else if (ZealotConst.AND_BETWEEN.equals(type)) {
             source.setPrefix(AND_PREFIX);
-            return newNumHandler().buildSqlInfo(source);
-        } else if (ZealotConst.OR_NUM_BETWEEN.equals(type)) {
+            return newBetweenHandler().buildSqlInfo(source);
+        } else if (ZealotConst.OR_BETWEEN.equals(type)) {
             source.setPrefix(OR_PREFIX);
-            return newNumHandler().buildSqlInfo(source);
-        } else if (ZealotConst.DT_BETWEEN.equals(type)) {
-            return newDateTimeHandler().buildSqlInfo(source);
-        } else if (ZealotConst.AND_DT_BETWEEN.equals(type)) {
-            source.setPrefix(AND_PREFIX);
-            return newDateTimeHandler().buildSqlInfo(source);
-        } else if (ZealotConst.OR_DT_BETWEEN.equals(type)) {
-            source.setPrefix(OR_PREFIX);
-            return newDateTimeHandler().buildSqlInfo(source);
+            return newBetweenHandler().buildSqlInfo(source);
         } else {
             return source.getSqlInfo();
         }

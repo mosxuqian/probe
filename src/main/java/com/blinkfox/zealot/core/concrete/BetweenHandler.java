@@ -14,7 +14,7 @@ import org.dom4j.Node;
  * 数字查询动态sql生成的实现类
  * Created by blinkfox on 2016/10/30.
  */
-public class NumberHandler implements IConditHandler {
+public class BetweenHandler implements IConditHandler {
 
     /**
      * 构建数字区间查询的动态条件sql
