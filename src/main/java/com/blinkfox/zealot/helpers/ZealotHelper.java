@@ -1,10 +1,7 @@
 package com.blinkfox.zealot.helpers;
 
-import com.blinkfox.zealot.bean.BuildSource;
-import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.consts.ZealotConst;
 import org.dom4j.Node;
-import java.util.List;
 
 /**
  * Zealot相关的帮助类

@@ -2,7 +2,6 @@ package com.blinkfox.zealot.bean;
 
 import ognl.OgnlContext;
 import org.dom4j.Node;
-import java.util.Map;
 
 /**
  * 构建动态sql和参数相关的bean
@@ -10,26 +9,44 @@ import java.util.Map;
  */
 public class BuildSource {
 
-    private SqlInfo sqlInfo; // sql拼接信息
-    private Node node; // xml节点
-    private OgnlContext context; // OGNL上下文
-    private Map<String, Object> paramMap; // 参数
+    // sql拼接信息
+    private SqlInfo sqlInfo;
 
-    private String prefix = ""; // 前缀
+    // xml节点
+    private Node node;
 
+    // OGNL上下文
+    private OgnlContext context;
+
+    // 参数对象
+    private Object paramObj;
+
+    // 前缀，默认空字符串
+    private String prefix = "";
+
+    /**
+     * 空构造方法
+     */
     public BuildSource() {
-        super();
+
     }
-    public BuildSource(SqlInfo sqlInfo, Node node, OgnlContext context,
-                       Map<String, Object> paramMap) {
+
+    /**
+     * 全构造方法
+     * @param sqlInfo
+     * @param node
+     * @param context
+     * @param paramObj
+     */
+    public BuildSource(SqlInfo sqlInfo, Node node, OgnlContext context, Object paramObj) {
         super();
         this.sqlInfo = sqlInfo;
         this.node = node;
         this.context = context;
-        this.paramMap = paramMap;
+        this.paramObj = paramObj;
     }
 
-
+    /* getter 和 setter 方法 */
     public SqlInfo getSqlInfo() {
         return sqlInfo;
     }
@@ -51,11 +68,11 @@ public class BuildSource {
         this.context = context;
         return this;
     }
-    public Map<String, Object> getParamMap() {
-        return paramMap;
+    public Object getParamObj() {
+        return paramObj;
     }
-    public BuildSource setParamMap(Map<String, Object> paramMap) {
-        this.paramMap = paramMap;
+    public BuildSource setParamObj(Object paramObj) {
+        this.paramObj = paramObj;
         return this;
     }
     public String getPrefix() {

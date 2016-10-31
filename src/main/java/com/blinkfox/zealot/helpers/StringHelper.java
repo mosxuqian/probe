@@ -31,6 +31,7 @@ public class StringHelper {
             return true;
         }
 
+        // 遍历每个空格是否有非空格元素
         for(int i = 0; i < strLen; i++) {
             if (!Character.isWhitespace(str.charAt(i))) {
                 return false;

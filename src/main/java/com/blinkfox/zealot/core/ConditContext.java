@@ -17,14 +17,26 @@ public class ConditContext {
     private static final String AND_PREFIX = " AND ";
     private static final String OR_PREFIX = " OR ";
 
+    /**
+     * 生成 EqualHandler 的方法
+     * @return
+     */
     private static IConditHandler newEqualHandler() {
         return new EqualHandler();
     }
 
+    /**
+     * 生成 LikeHandler 的方法
+     * @return
+     */
     private static IConditHandler newLikeHandler() {
         return new LikeHandler();
     }
 
+    /**
+     * 生成 BetweenHandler 的方法
+     * @return
+     */
     private static IConditHandler newBetweenHandler() {
         return new BetweenHandler();
     }

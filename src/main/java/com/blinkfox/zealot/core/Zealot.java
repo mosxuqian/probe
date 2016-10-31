@@ -9,7 +9,6 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Zealot的核心解析类
@@ -17,7 +16,7 @@ import java.util.Map;
  */
 public class Zealot {
 
-    public static SqlInfo getSqlInfo(String spaceKey, String zealotId, Map<String, Object> paramMap) {
+    public static SqlInfo getSqlInfo(String spaceKey, String zealotId, Object paramObj) {
         Document doc = ZealotConfig.getZealots().get(spaceKey);
         if (doc == null) {
             throw new RuntimeException("未获取到xml文档,spaceKey为：" + spaceKey);
@@ -29,17 +28,16 @@ public class Zealot {
             throw new RuntimeException("未获取到zealot节点,zealotId为：" + zealotId);
         }
 
-        return buildSqlInfo(node, zealotId, paramMap);
+        return buildSqlInfo(node, paramObj);
     }
 
     /**
-     * 构建zealot对象
+     * 构建完整的SqlInfo对象
      * @param node
-     * @param zealotId
+     * @param paramMap
      * @return
      */
-    @SuppressWarnings("unchecked")
-    private static SqlInfo buildSqlInfo(Node node, String zealotId, Map<String, Object> paramMap) {
+    private static SqlInfo buildSqlInfo(Node node, Object paramMap) {
         SqlInfo sqlInfo = new SqlInfo(new StringBuffer(""), new ArrayList<Object>());
         List<Object> params = sqlInfo.getParams();
         StringBuffer join = sqlInfo.getJoin();

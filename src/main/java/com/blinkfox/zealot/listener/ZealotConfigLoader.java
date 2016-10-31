@@ -14,9 +14,16 @@ import java.util.Map;
  */
 public class ZealotConfigLoader implements ServletContextListener {
 
+    // zealot配置类对象
     private ZealotConfig zealotConfig;
+
+    // zealotConfig对应的类全路径常量字符串
     private static final String CONFIG_CLASS = "zealotConfigClass";
 
+    /**
+     * ZealotConfig销毁时执行的方法
+     * @param arg0
+     */
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
 
@@ -31,6 +38,8 @@ public class ZealotConfigLoader implements ServletContextListener {
         System.out.println("----------Zealot应用程序启动了contextInitialized");
         createZealotConfig(event);
         Map<String, String> mappers = ZealotConfig.getContext();
+
+        // 遍历每个zealot配置文件，将其文档缓存到内存缓存中
         for (Iterator<Map.Entry<String, String>> it = mappers.entrySet().iterator(); it.hasNext();) {
             Map.Entry<String, String> entry = it.next();
             String key = entry.getKey();

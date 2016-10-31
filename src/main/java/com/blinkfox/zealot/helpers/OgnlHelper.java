@@ -13,7 +13,7 @@ public class OgnlHelper {
     public static Object parseWithOgnl(String tree, BuildSource source) {
         Object obj = false;
         try {
-            obj = Ognl.getValue(tree, source.getContext(), source.getParamMap());
+            obj = Ognl.getValue(tree, source.getContext(), source.getParamObj());
         } catch (OgnlException e) {
             System.out.println("-------OGNL表达式执行出错---OgnlException:" + tree);
             e.printStackTrace();
