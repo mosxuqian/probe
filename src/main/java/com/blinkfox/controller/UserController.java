@@ -103,7 +103,9 @@ public class UserController extends Controller {
         paramMap.put("startBirthday", "1990-01-01 00:00:00");
         paramMap.put("endBirthday", "1991-01-01 23:59:59");
         paramMap.put("sexs", new Integer[]{0, 1});
+        long startTime = System.currentTimeMillis();
         SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserInfo", paramMap);
+        System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
         String sql = sqlInfo.getSql();
         Object[] params = sqlInfo.getParamsArr();
 
