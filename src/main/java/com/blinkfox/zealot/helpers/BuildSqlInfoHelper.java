@@ -3,8 +3,8 @@ package com.blinkfox.zealot.helpers;
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.consts.ZealotConst;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 构建sql查询相关的帮助类
@@ -14,7 +14,7 @@ public class BuildSqlInfoHelper {
 
     private static SqlInfo sqlInfo = null; // sqlInfo对象
     private static StringBuffer join = null; // sql拼接器
-    private static List<Object> params = null; // 有序的参数结合
+    private static ArrayList<Object> params = null; // 有序的参数结合
 
     /**
      * 根据构建的资源参数初始化数据
@@ -112,7 +112,7 @@ public class BuildSqlInfoHelper {
         }
 
         // 遍历数组，并遍历添加in查询的替换符和参数
-       int len = values.length;
+        int len = values.length;
         for (int i = 0; i < len; i++) {
             if (i == (len - 1)) {
                 join.append("?)");

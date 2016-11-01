@@ -64,6 +64,7 @@ public abstract class ZealotConfig {
     /**
      * 添加自定义标签和其对应的Handler.class
      * @param tagName
+     * @param prefix
      * @param handlerCls
      */
     protected static void add(String tagName, String prefix,Class<?> handlerCls) {

@@ -1,6 +1,5 @@
 package com.blinkfox.zealot.bean;
 
-import com.blinkfox.zealot.config.ZealotConfig;
 import com.blinkfox.zealot.helpers.StringHelper;
 
 /**
@@ -45,11 +44,9 @@ public class TagHandler {
     public String getTagName() {
         return tagName;
     }
-
     public String getPrefix() {
         return prefix;
     }
-
     public Class<?> getHandlerCls() {
         return handlerCls;
     }

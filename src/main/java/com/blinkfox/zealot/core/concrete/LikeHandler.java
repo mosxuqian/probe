@@ -9,7 +9,6 @@ import com.blinkfox.zealot.helpers.StringHelper;
 import com.blinkfox.zealot.helpers.ZealotHelper;
 import com.blinkfox.zealot.consts.ZealotConst;
 import org.dom4j.Node;
-import org.mvel2.MVEL;
 
 /**
  * like查询动态sql生成的实现类

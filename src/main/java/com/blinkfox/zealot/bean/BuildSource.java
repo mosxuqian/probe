@@ -1,6 +1,5 @@
 package com.blinkfox.zealot.bean;
 
-import ognl.OgnlContext;
 import org.dom4j.Node;
 
 /**
@@ -14,9 +13,6 @@ public class BuildSource {
 
     // xml节点
     private Node node;
-
-    // OGNL上下文
-    private OgnlContext context;
 
     // 参数对象
     private Object paramObj;
@@ -35,14 +31,12 @@ public class BuildSource {
      * 全构造方法
      * @param sqlInfo
      * @param node
-     * @param context
      * @param paramObj
      */
-    public BuildSource(SqlInfo sqlInfo, Node node, OgnlContext context, Object paramObj) {
+    public BuildSource(SqlInfo sqlInfo, Node node, Object paramObj) {
         super();
         this.sqlInfo = sqlInfo;
         this.node = node;
-        this.context = context;
         this.paramObj = paramObj;
     }
 
@@ -59,13 +53,6 @@ public class BuildSource {
     }
     public BuildSource setNode(Node node) {
         this.node = node;
-        return this;
-    }
-    public OgnlContext getContext() {
-        return context;
-    }
-    public BuildSource setContext(OgnlContext context) {
-        this.context = context;
         return this;
     }
     public Object getParamObj() {

@@ -1,7 +1,7 @@
 package com.blinkfox.zealot.bean;
 
 import com.blinkfox.zealot.helpers.StringHelper;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 构造sql查询信息的拼接和参数对象
@@ -13,7 +13,7 @@ public class SqlInfo {
     private StringBuffer join;
 
     // sql语句对应的有序参数
-    private List<Object> params;
+    private ArrayList<Object> params;
 
     /**
      * 构造方法
@@ -28,7 +28,7 @@ public class SqlInfo {
      * @param join
      * @param params
      */
-    public SqlInfo(StringBuffer join, List<Object> params) {
+    public SqlInfo(StringBuffer join, ArrayList<Object> params) {
         super();
         this.join = join;
         this.params = params;
@@ -58,10 +58,10 @@ public class SqlInfo {
         this.join = join;
         return this;
     }
-    public List<Object> getParams() {
+    public ArrayList<Object> getParams() {
         return params;
     }
-    public SqlInfo setParams(List<Object> params) {
+    public SqlInfo setParams(ArrayList<Object> params) {
         this.params = params;
         return this;
     }

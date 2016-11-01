@@ -49,6 +49,7 @@ public class ZealotConfigLoader implements ServletContextListener {
     /**
      * 初始化zealotConfig的之类，并执行初始化mapper到缓存中
      * @param event
+     * @param xmlContext
      */
     private void createZealotConfig(ServletContextEvent event, XmlContext xmlContext) {
         String configClass = event.getServletContext().getInitParameter(CONFIG_CLASS);
@@ -57,7 +58,7 @@ public class ZealotConfigLoader implements ServletContextListener {
             throw new RuntimeException("请在web.xml设置zealotConfigClass参数");
         }
 
-        Object temp = null;
+        Object temp;
         try {
             temp = Class.forName(configClass).newInstance();
         } catch (Exception e) {
