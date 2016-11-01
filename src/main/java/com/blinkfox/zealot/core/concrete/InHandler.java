@@ -5,7 +5,7 @@ import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.consts.ZealotConst;
 import com.blinkfox.zealot.core.IConditHandler;
 import com.blinkfox.zealot.helpers.BuildSqlInfoHelper;
-import com.blinkfox.zealot.helpers.OgnlHelper;
+import com.blinkfox.zealot.helpers.ParseHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
 import com.blinkfox.zealot.helpers.ZealotHelper;
 import org.dom4j.Node;
@@ -38,7 +38,7 @@ public class InHandler implements IConditHandler {
             sqlInfo = BuildSqlInfoHelper.buildInSql(source, fieldText, valueText);
         } else {
 			/* 如果match匹配成功，则生成数据库sql条件和参数 */
-            Boolean isTrue = (Boolean) OgnlHelper.parseWithOgnl(matchText, source);
+            Boolean isTrue = (Boolean) ParseHelper.parseWithMvel(matchText, source);
             if (isTrue) {
                 sqlInfo = BuildSqlInfoHelper.buildInSql(source, fieldText, valueText);
             }

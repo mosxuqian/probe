@@ -18,16 +18,22 @@ public class MvelTest {
     public static void main(String[] args) {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("foobar", 100);
-        vars.put("foo", "");
+        vars.put("foo", "  ");
         vars.put("bar", "bar");
         vars.put("cat", "cat");
         vars.put("123", "123");
+        List<String> mylist = new ArrayList<String>();
+        mylist.add("1");
+        vars.put("mylist", mylist);
 
         Boolean result1 = (Boolean) MVEL.eval("foobar > 99", vars);
         System.out.println("----result1:" + result1);
 
         Boolean result2 = (Boolean) MVEL.eval("foo == empty", vars);
         System.out.println("----result2:" + result2);
+
+        Boolean result2_1 = (Boolean) MVEL.eval("mylist == empty", vars);
+        System.out.println("----result2_1:" + result2_1);
 
         Boolean result3 = (Boolean) MVEL.eval("foo == null", vars);
         System.out.println("----result3:" + result3);

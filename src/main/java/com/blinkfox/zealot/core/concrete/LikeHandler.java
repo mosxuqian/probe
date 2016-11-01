@@ -4,11 +4,12 @@ import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.core.IConditHandler;
 import com.blinkfox.zealot.helpers.BuildSqlInfoHelper;
+import com.blinkfox.zealot.helpers.ParseHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
 import com.blinkfox.zealot.helpers.ZealotHelper;
 import com.blinkfox.zealot.consts.ZealotConst;
-import com.blinkfox.zealot.helpers.OgnlHelper;
 import org.dom4j.Node;
+import org.mvel2.MVEL;
 
 /**
  * like查询动态sql生成的实现类
@@ -38,7 +39,7 @@ public class LikeHandler implements IConditHandler {
             sqlInfo = BuildSqlInfoHelper.buildLikeSql(source, fieldText, valueText);
         } else {
 			/* 如果match匹配成功，则生成数据库sql条件和参数 */
-            Boolean isTrue = (Boolean) OgnlHelper.parseWithOgnl(matchText, source);
+            Boolean isTrue = (Boolean) ParseHelper.parseWithMvel(matchText, source);
             if (isTrue) {
                 sqlInfo = BuildSqlInfoHelper.buildLikeSql(source, fieldText, valueText);
             }

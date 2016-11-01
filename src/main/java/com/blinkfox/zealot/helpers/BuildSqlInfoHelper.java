@@ -3,7 +3,6 @@ package com.blinkfox.zealot.helpers;
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.consts.ZealotConst;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class BuildSqlInfoHelper {
         init(source);
 
         join.append(source.getPrefix()).append(fieldText).append(ZealotConst.EQUAL_SUFFIX);
-        params.add(OgnlHelper.parseWithOgnl(valueText, source));
+        params.add(ParseHelper.parseWithMvel(valueText, source));
 
         return sqlInfo.setJoin(join).setParams(params);
     }
@@ -54,7 +53,7 @@ public class BuildSqlInfoHelper {
         init(source);
 
         join.append(source.getPrefix()).append(fieldText).append(ZealotConst.LIEK_SUFFIX);
-        Object obj = OgnlHelper.parseWithOgnl(valueText, source);
+        Object obj = ParseHelper.parseWithMvel(valueText, source);
         params.add("%" + obj + "%");
 
         return sqlInfo.setJoin(join).setParams(params);
@@ -76,16 +75,16 @@ public class BuildSqlInfoHelper {
         if (StringHelper.isNotBlank(startText) &&
                 StringHelper.isBlank(endText)) { // 开始不为空，结束为空的情况
             join.append(source.getPrefix()).append(fieldText).append(ZealotConst.GT_SUFFIX);
-            params.add(OgnlHelper.parseWithOgnl(startText, source));
+            params.add(ParseHelper.parseWithMvel(startText, source));
         } else if (StringHelper.isBlank(startText) &&
                 StringHelper.isNotBlank(endText)) { // 开始为空，结束不为空的情况
             join.append(source.getPrefix()).append(fieldText).append(ZealotConst.LT_SUFFIX);
-            params.add(OgnlHelper.parseWithOgnl(endText, source));
+            params.add(ParseHelper.parseWithMvel(endText, source));
         } else if (StringHelper.isNotBlank(startText) &&
                 StringHelper.isNotBlank(endText)) { // 开始、结束均不为空的情况
             join.append(source.getPrefix()).append(fieldText).append(ZealotConst.BT_AND_SUFFIX);
-            params.add(OgnlHelper.parseWithOgnl(startText, source));
-            params.add(OgnlHelper.parseWithOgnl(endText, source));
+            params.add(ParseHelper.parseWithMvel(startText, source));
+            params.add(ParseHelper.parseWithMvel(endText, source));
         }
 
         return sqlInfo.setJoin(join).setParams(params);
@@ -105,7 +104,7 @@ public class BuildSqlInfoHelper {
         join.append(source.getPrefix()).append(fieldText).append(ZealotConst.IN_SUFFIX).append("(");
 
         // 获取参数的集合信息，并转换成数组
-        Object obj = OgnlHelper.parseWithOgnl(valueText, source);
+        Object obj = ParseHelper.parseWithMvel(valueText, source);
         if (obj instanceof Collection) {
             values = ((Collection) obj).toArray();
         } else if (obj.getClass().isArray()) {
