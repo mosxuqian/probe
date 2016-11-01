@@ -47,13 +47,6 @@ public class Zealot {
         List<Node> nodes = node.selectNodes("child::node()");
         for (int i = 0; i < nodes.size(); i++) {
             Node n = nodes.get(i);
-            System.out.println(" -----遍历第" + (i + 1) +"个node name为:" + n.getName());
-            System.out.println(" -----遍历第" + (i + 1) +"个node type为:" + n.getNodeType());
-            System.out.println(" -----遍历第" + (i + 1) +"个node typeName为:" + n.getNodeTypeName());
-            System.out.println(" -----遍历第" + (i + 1) +"个node path为:" + n.getPath());
-            System.out.println(" -----遍历第" + (i + 1) +"个node text为:" + n.getText());
-            System.out.println(" -----------------------------------");
-
             if (ZealotConst.NODETYPE_TEXT.equals(n.getNodeTypeName())) {
                 // 如果子节点node 是文本节点，则直接获取其文本
                 join.append(n.getText());

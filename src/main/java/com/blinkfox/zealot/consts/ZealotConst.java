@@ -31,7 +31,11 @@ public class ZealotConst {
     public static final String ATTR_START = "attribute::start";
     public static final String ATTR_ENT = "attribute::end";
 
-    /* 查询后缀常量 */
+    /* sql中前缀常量 */
+    public static final String AND_PREFIX = " AND ";
+    public static final String OR_PREFIX = " OR ";
+
+    /* 查询sql中后缀常量 */
     public static final String EQUAL_SUFFIX = " = ? ";
     public static final String LIEK_SUFFIX = " LIKE ? ";
     public static final String GT_SUFFIX = " >= ? ";

@@ -1,6 +1,8 @@
 package com.blinkfox.zealot.demo;
 
+import com.blinkfox.zealot.bean.XmlContext;
 import com.blinkfox.zealot.config.ZealotConfig;
+import com.blinkfox.zealot.core.concrete.LikeHandler;
 
 /**
  * Zealot配置类的demo示例配置
@@ -8,16 +10,26 @@ import com.blinkfox.zealot.config.ZealotConfig;
  */
 public class DemoZealotConfig extends ZealotConfig {
 
-    public static final String MY_TEST = "mytest";
+    public static final String MY_TEST = "my_test";
     public static final String USER_SPACE = "user_space";
 
     /**
-     * 配置访问的Key和对应的路径xml
+     * 配置xml文件的标识和资源路径
+     * @param ctx
      */
     @Override
-    public void config() {
-        context.put(MY_TEST, "/zealot/mytest.xml");
-        context.put(USER_SPACE, "/zealot/zealot-user.xml");
+    public void configXml(XmlContext ctx) {
+        ctx.add(MY_TEST, "/zealot/mytest.xml");
+        ctx.add(USER_SPACE, "/zealot/zealot-user.xml");
+    }
+
+    /**
+     * 配置标签和其对应的处理类
+     */
+    @Override
+    public void configTagHandler() {
+        add("myLike", LikeHandler.class);
+        add("andMyLike", " and " ,LikeHandler.class);
     }
 
 }

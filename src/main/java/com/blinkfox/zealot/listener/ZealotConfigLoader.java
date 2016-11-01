@@ -1,5 +1,6 @@
 package com.blinkfox.zealot.listener;
 
+import com.blinkfox.zealot.bean.XmlContext;
 import com.blinkfox.zealot.config.ZealotConfig;
 import com.blinkfox.zealot.helpers.Dom4jHelper;
 import org.dom4j.Document;
@@ -35,28 +36,21 @@ public class ZealotConfigLoader implements ServletContextListener {
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        System.out.println("----------Zealot应用程序启动了contextInitialized");
-        createZealotConfig(event);
-        Map<String, String> mappers = ZealotConfig.getContext();
+        System.out.println("----------Zealot应用程序监听器开始启动");
 
-        // 遍历每个zealot配置文件，将其文档缓存到内存缓存中
-        for (Iterator<Map.Entry<String, String>> it = mappers.entrySet().iterator(); it.hasNext();) {
-            Map.Entry<String, String> entry = it.next();
-            String key = entry.getKey();
-            String value = entry.getValue();
-            System.out.println("-----key:" + key + ",value:" + value);
-            Document document = Dom4jHelper.getDocument(value);
-            if (document != null) {
-                ZealotConfig.getZealots().put(key, document);
-            }
-        }
+        // 创建XmlContext对象和创建执行ZealotConfig中的配置
+        XmlContext xmlContext = XmlContext.getInstance();
+        createZealotConfig(event, xmlContext);
+
+        // 获取遍历每个zealotxml配置文件，将其key和文档缓存到ConcurrentHashMap内存缓存中
+        cachingXmlZealots();
     }
 
     /**
      * 初始化zealotConfig的之类，并执行初始化mapper到缓存中
      * @param event
      */
-    private void createZealotConfig(ServletContextEvent event) {
+    private void createZealotConfig(ServletContextEvent event, XmlContext xmlContext) {
         String configClass = event.getServletContext().getInitParameter(CONFIG_CLASS);
         System.out.println("----------启动得到的参数name:" + configClass);
         if (configClass == null) {
@@ -72,7 +66,25 @@ public class ZealotConfigLoader implements ServletContextListener {
 
         if (temp instanceof ZealotConfig) {
             zealotConfig = (ZealotConfig) temp;
-            zealotConfig.config();
+            zealotConfig.configXml(xmlContext);
+            zealotConfig.configTagHandler();
+        }
+    }
+
+    /**
+     * 将每个zealotxml配置文件的key和文档缓存到ConcurrentHashMap内存缓存中
+     */
+    private void cachingXmlZealots() {
+        Map<String, String> xmlMaps = XmlContext.getXmlMap();
+        for (Iterator<Map.Entry<String, String>> it = xmlMaps.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<String, String> entry = it.next();
+            String key = entry.getKey();
+            String value = entry.getValue();
+            System.out.println("-----key:" + key + ",value:" + value);
+            Document document = Dom4jHelper.getDocument(value);
+            if (document != null) {
+                ZealotConfig.getZealots().put(key, document);
+            }
         }
     }
 

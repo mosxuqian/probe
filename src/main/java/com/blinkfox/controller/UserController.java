@@ -113,4 +113,17 @@ public class UserController extends Controller {
         renderJson(users);
     }
 
+    public void queryUserById() {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("id", "2");
+        long startTime = System.currentTimeMillis();
+        SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserById", paramMap);
+        System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
+        String sql = sqlInfo.getSql();
+        Object[] params = sqlInfo.getParamsArr();
+
+        List<User> users = User.userDao.find(sql, params);
+        renderJson(users);
+    }
+
 }

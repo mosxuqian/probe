@@ -2,11 +2,10 @@ package com.blinkfox.zealot.core;
 
 import com.blinkfox.zealot.bean.BuildSource;
 import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.consts.ZealotConst;
-import com.blinkfox.zealot.core.concrete.EqualHandler;
-import com.blinkfox.zealot.core.concrete.InHandler;
-import com.blinkfox.zealot.core.concrete.LikeHandler;
-import com.blinkfox.zealot.core.concrete.BetweenHandler;
+import com.blinkfox.zealot.bean.TagHandler;
+import com.blinkfox.zealot.config.ZealotConfig;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * 构建动态条件查询的上下文协调类
@@ -14,84 +13,37 @@ import com.blinkfox.zealot.core.concrete.BetweenHandler;
  */
 public class ConditContext {
 
-    /* 查询条件的前缀 */
-    private static final String AND_PREFIX = " AND ";
-    private static final String OR_PREFIX = " OR ";
-
     /**
-     * 生成 EqualHandler 对象的方法
-     * @return
-     */
-    private static IConditHandler newEqualHandler() {
-        return new EqualHandler();
-    }
-
-    /**
-     * 生成 LikeHandler 对象的方法
-     * @return
-     */
-    private static IConditHandler newLikeHandler() {
-        return new LikeHandler();
-    }
-
-    /**
-     * 生成 BetweenHandler 对象的方法
-     * @return
-     */
-    private static IConditHandler newBetweenHandler() {
-        return new BetweenHandler();
-    }
-
-    /**
-     * 生成 InHandler 对象的方法
-     * @return
-     */
-    private static IConditHandler newInHandler() {
-        return new InHandler();
-    }
-
-    /**
-     * 根据类型和对应的构建参数构造出对应标签的sql和参数
+     * 根据标签名称和对应的构建参数构造出对应标签的sql和参数
      * @param source
-     * @param type
+     * @param tag
      * @return
      */
-    public static SqlInfo buildSqlInfo(BuildSource source, String type) {
-        if (ZealotConst.EQUAL.equals(type)) {
-            return newEqualHandler().buildSqlInfo(source);
-        } else if (ZealotConst.AND_EQUAL.equals(type)) {
-            source.setPrefix(AND_PREFIX);
-            return newEqualHandler().buildSqlInfo(source);
-        } else if (ZealotConst.OR_EQUAL.equals(type)) {
-            source.setPrefix(OR_PREFIX);
-            return newEqualHandler().buildSqlInfo(source);
-        } else if (ZealotConst.LIKE.equals(type)) {
-            return newLikeHandler().buildSqlInfo(source);
-        } else if (ZealotConst.AND_LIKE.equals(type)) {
-            source.setPrefix(AND_PREFIX);
-            return newLikeHandler().buildSqlInfo(source);
-        } else if (ZealotConst.OR_LIKE.equals(type)) {
-            source.setPrefix(OR_PREFIX);
-            return newLikeHandler().buildSqlInfo(source);
-        } else if (ZealotConst.BETWEEN.equals(type)) {
-            return newBetweenHandler().buildSqlInfo(source);
-        } else if (ZealotConst.AND_BETWEEN.equals(type)) {
-            source.setPrefix(AND_PREFIX);
-            return newBetweenHandler().buildSqlInfo(source);
-        } else if (ZealotConst.OR_BETWEEN.equals(type)) {
-            source.setPrefix(OR_PREFIX);
-            return newBetweenHandler().buildSqlInfo(source);
-        } else if (ZealotConst.IN.equals(type)) {
-            return newInHandler().buildSqlInfo(source);
-        } else if (ZealotConst.AND_IN.equals(type)) {
-            source.setPrefix(AND_PREFIX);
-            return newInHandler().buildSqlInfo(source);
-        } else if (ZealotConst.OR_IN.equals(type)) {
-            source.setPrefix(OR_PREFIX);
-            return newInHandler().buildSqlInfo(source);
-        } else {
-            return source.getSqlInfo();
+    public static SqlInfo buildSqlInfo(BuildSource source, String tag) {
+        // 获取所有配置的标签处理对象，并遍历判断当前类型是否符合该type标签
+        // 如果符合就执行该标签中对应handler对象的方法
+        Set<TagHandler> tagHandlers = ZealotConfig.getTagHandlers();
+        for(Iterator it = tagHandlers.iterator(); it.hasNext();) {
+            TagHandler th = (TagHandler) it.next();
+
+            // 如果从全局的set中获取到了该标签，则将其前缀和handler对象的方法执行来获取sql和参数
+            if (tag.equals(th.getTagName())) {
+                source.setPrefix(th.getPrefix());
+                try {
+                    // 使用反射获取该Handler对应的实例，并执行方法
+                    IConditHandler handler = (IConditHandler) th.getHandlerCls().newInstance();
+                    return handler.buildSqlInfo(source);
+                } catch (InstantiationException e) {
+                    System.out.println("-------实例化IConditHandler的实现类出错!");
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    System.out.println("-------访问Handler的实现类出错!");
+                    e.printStackTrace();
+                }
+            }
         }
+
+        return source.getSqlInfo();
     }
 
 }

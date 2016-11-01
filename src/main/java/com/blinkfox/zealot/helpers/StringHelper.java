@@ -10,6 +10,11 @@ import java.util.regex.Pattern;
 public class StringHelper {
 
     /**
+     * 空字符串的静态常量
+     */
+    public static final String EMPTY = "";
+
+    /**
      * 将字符串中的“空格（包括换行、回车、制表符）”等转成空格来处理，最后去掉所有多余空格
      * @param str
      * @return
@@ -17,7 +22,7 @@ public class StringHelper {
     public static String replaceBlank(String str) {
         Pattern p = Pattern.compile("\\|\t|\r|\n");
         Matcher m = p.matcher(str);
-        return m.replaceAll("").replaceAll("\\s{2,}", " ").trim();
+        return m.replaceAll(EMPTY).replaceAll("\\s{2,}", " ").trim();
     }
 
     /**
