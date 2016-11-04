@@ -5,9 +5,6 @@ import com.blinkfox.interceptor.AaaInter;
 import com.blinkfox.interceptor.BbbInter;
 import com.blinkfox.interceptor.DemoInterceptor;
 import com.blinkfox.model.User;
-import com.blinkfox.zealot.bean.SqlInfo;
-import com.blinkfox.zealot.core.Zealot;
-import com.blinkfox.zealot.demo.DemoZealotConfig;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
@@ -92,38 +89,6 @@ public class UserController extends Controller {
         map.put("users", users);
 
         renderJson(map);
-    }
-
-    public void userZealot() {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("nickName", "张");
-        paramMap.put("email", "san");
-        paramMap.put("startAge", 23);
-        paramMap.put("endAge", 28);
-        paramMap.put("startBirthday", "1990-01-01 00:00:00");
-        paramMap.put("endBirthday", "1991-01-01 23:59:59");
-        paramMap.put("sexs", new Integer[]{0, 1});
-        long startTime = System.currentTimeMillis();
-        SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserInfo", paramMap);
-        System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
-        String sql = sqlInfo.getSql();
-        Object[] params = sqlInfo.getParamsArr();
-
-        List<User> users = User.userDao.find(sql, params);
-        renderJson(users);
-    }
-
-    public void queryUserById() {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("id", "2");
-        long startTime = System.currentTimeMillis();
-        SqlInfo sqlInfo = Zealot.getSqlInfo(DemoZealotConfig.USER_SPACE, "queryUserById", paramMap);
-        System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
-        String sql = sqlInfo.getSql();
-        Object[] params = sqlInfo.getParamsArr();
-
-        List<User> users = User.userDao.find(sql, params);
-        renderJson(users);
     }
 
 }
