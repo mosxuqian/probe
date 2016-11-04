@@ -24,11 +24,11 @@
     <context-param>
         <!-- paramName必须为zealotConfigClass名称，param-value对应自己的Java配置 -->
         <param-name>zealotConfigClass</param-name>
-        <param-value>com.blinkfox.zealot.demo.DemoZealotConfig</param-value>
+        <param-value>com.blinkfox.config.MyZealotConfig</param-value>
     </context-param>
     <!-- listener-class必须配置，JavaEE容器启动时才会执行 -->
     <listener>
-        <listener-class>com.blinkfox.zealot.listener.ZealotConfigLoader</listener-class>
+        <listener-class>com.blinkfox.zealot.loader.ZealotConfigLoader</listener-class>
     </listener>
 
 </web-app>
