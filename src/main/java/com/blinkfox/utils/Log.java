@@ -22,8 +22,8 @@ public class Log  {
 
     /**
      * 构造并获取日志对象的实例
-     * @param cls
-     * @return
+     * @param cls 记录日志的类Class
+     * @return 返回自身的实例
      */
     public static Log get(Class cls) {
         return new Log(Logger.getLogger(cls.getName()));
@@ -39,7 +39,7 @@ public class Log  {
 
     /**
      * 记录 warning 级别的日志信息
-     * @param msg
+     * @param msg 日志消息
      */
     public void warn(String msg) {
         logger.warning(msg);
@@ -47,7 +47,7 @@ public class Log  {
 
     /**
      * 记录 error 级别的日志信息
-     * @param msg
+     * @param msg 日志消息
      */
     public void error(String msg) {
         logger.severe(msg);
