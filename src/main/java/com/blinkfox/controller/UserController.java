@@ -12,6 +12,8 @@ import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +123,24 @@ public class UserController extends Controller {
         System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
         String sql = sqlInfo.getSql();
         Object[] params = sqlInfo.getParamsArr();
+        System.out.println("----生成sql的为:" + sql);
+        System.out.println("----生成sql的参数为:" + Arrays.toString(params));
+
+        List<User> users = User.userDao.find(sql, params);
+        renderJson(users);
+    }
+
+    public void queryUserIdEmail() {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", 3);
+        paramMap.put("userEmail", "san");
+        long startTime = System.currentTimeMillis();
+        SqlInfo sqlInfo = Zealot.getSqlInfo(MyZealotConfig.USER_ZEALOT, "queryUserWithIdEmail", paramMap);
+        System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
+        String sql = sqlInfo.getSql();
+        Object[] params = sqlInfo.getParamsArr();
+        System.out.println("----生成sql的为:" + sql);
+        System.out.println("----生成sql的参数为:" + Arrays.toString(params));
 
         List<User> users = User.userDao.find(sql, params);
         renderJson(users);

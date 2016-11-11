@@ -1,5 +1,6 @@
 package com.blinkfox.config;
 
+import com.blinkfox.handler.UserIdEmailHandler;
 import com.blinkfox.zealot.bean.XmlContext;
 import com.blinkfox.zealot.config.AbstractZealotConfig;
 
@@ -18,7 +19,10 @@ public class MyZealotConfig extends AbstractZealotConfig {
 
     @Override
     public void configTagHandler() {
-
+        // 自定义userIdEmail标签和处理器
+        add("userIdEmail", UserIdEmailHandler.class);
+        // 有and前缀的自定义标签
+        add("andUserIdEmail", " and " ,UserIdEmailHandler.class);
     }
 
 }

@@ -18,5 +18,12 @@
         select * from user where
         <equal field="id" value="id"></equal>
     </zealot>
+
+    <!-- 根据id和email来实现自定义条件查询用户信息 -->
+    <zealot id="queryUserWithIdEmail">
+        select * from user where
+        <userIdEmail match="userId != empty || userEmail != empty" idField="id" emailField="email"
+                idValue="userId" emailValue="userEmail"></userIdEmail>
+    </zealot>
     
 </zealots>
