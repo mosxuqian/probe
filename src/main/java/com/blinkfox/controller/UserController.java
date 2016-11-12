@@ -114,10 +114,10 @@ public class UserController extends Controller {
         paramMap.put("nickName", "张");
         paramMap.put("email", "san");
         paramMap.put("startAge", 23);
-        paramMap.put("endAge", 28);
+        paramMap.put("endAge", null);
         paramMap.put("startBirthday", "1990-01-01 00:00:00");
-        paramMap.put("endBirthday", "1991-01-01 23:59:59");
-        paramMap.put("sexs", new Integer[]{0, 1});
+        paramMap.put("endBirthday", null);
+        paramMap.put("sexs", new Integer[]{});
         long startTime = System.currentTimeMillis();
         SqlInfo sqlInfo = Zealot.getSqlInfo(MyZealotConfig.USER_ZEALOT, "queryUserInfo", paramMap);
         System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
@@ -131,12 +131,11 @@ public class UserController extends Controller {
     }
 
     public void queryUserIdEmail() {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("userId", 3);
-        paramMap.put("userEmail", "san");
-        long startTime = System.currentTimeMillis();
-        SqlInfo sqlInfo = Zealot.getSqlInfo(MyZealotConfig.USER_ZEALOT, "queryUserWithIdEmail", paramMap);
-        System.out.println("---------生成sql的耗时为:" + (System.currentTimeMillis() - startTime) + " ms");
+        Map<String, Object> user = new HashMap<String, Object>();
+        user.put("userId", null);
+        user.put("userEmail", "san");
+
+        SqlInfo sqlInfo = Zealot.getSqlInfo(MyZealotConfig.USER_ZEALOT, "queryUserWithIdEmail", user);
         String sql = sqlInfo.getSql();
         Object[] params = sqlInfo.getParamsArr();
         System.out.println("----生成sql的为:" + sql);

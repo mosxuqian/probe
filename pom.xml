@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.blinkfox</groupId>
             <artifactId>zealot</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>1.0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
