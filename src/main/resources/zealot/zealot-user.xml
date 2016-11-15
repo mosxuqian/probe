@@ -5,8 +5,7 @@
     <zealot id="queryUserInfo">
         select * from user where
         <like field="nickname" value="nickName"></like>
-        <andLike match="email != empty" field="email" value="email"></andLike>
-        <andMyLike match="email != empty" field="email" value="email"></andMyLike>
+        <andLike match="isdef email &amp;&amp; email != empty" field="email" value="email"></andLike>
         <andBetween match="startAge != null || endAge != null" field="age" start="startAge" end="endAge"></andBetween>
         <andBetween match="startBirthday != null || endBirthday != null" field="birthday" start="startBirthday" end="endBirthday"></andBetween>
         <andIn match="sexs != empty" field="sex" value="sexs"></andIn>

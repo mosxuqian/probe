@@ -112,7 +112,7 @@ public class UserController extends Controller {
     public void userZealot() {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("nickName", "张");
-        paramMap.put("email", "san");
+        // paramMap.put("email", "san");
         paramMap.put("startAge", 23);
         paramMap.put("endAge", null);
         paramMap.put("startBirthday", "1990-01-01 00:00:00");
