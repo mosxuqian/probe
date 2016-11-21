@@ -12,4 +12,8 @@ public class IndexController extends Controller {
         renderText("Hello JFinal World!");
     }
 
+    public void testDwr() {
+        render("/app/dwr/demo1.html");
+    }
+
 }

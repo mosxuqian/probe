@@ -1,0 +1,12 @@
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN" "http://getahead.org/dwr/dwr30.dtd">
+
+<dwr>
+    <allow>
+        <create creator="new" javascript="JDate">
+            <param name="class" value="java.util.Date"/>
+        </create>
+        <create creator="new" javascript="DwrDemo">
+            <param name="class" value="com.blinkfox.test.dwr.Demo"/>
+        </create>
+    </allow>
+</dwr>

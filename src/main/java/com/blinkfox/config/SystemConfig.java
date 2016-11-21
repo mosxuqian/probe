@@ -2,6 +2,7 @@ package com.blinkfox.config;
 
 import com.blinkfox.controller.IndexController;
 import com.blinkfox.controller.UserController;
+import com.blinkfox.handler.DwrSkipHandler;
 import com.blinkfox.handler.FakeStaticHandler;
 import com.blinkfox.interceptor.GlobalActionTestInter;
 import com.blinkfox.interceptor.GlobalServiceTestInter;
@@ -68,6 +69,7 @@ public class SystemConfig extends JFinalConfig {
         // 配置项目基础路径
         me.add(new ContextPathHandler("base"));
         me.add(new FakeStaticHandler());
+        me.add(new DwrSkipHandler());
     }
 
 }

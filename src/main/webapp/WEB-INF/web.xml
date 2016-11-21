@@ -6,6 +6,20 @@
 
     <display-name>This is my exploration and learning programming project</display-name>
 
+    <!-- dwr的相关配置 -->
+    <servlet>
+        <servlet-name>dwr-invoker</servlet-name>
+        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dwr-invoker</servlet-name>
+        <url-pattern>/dwr/*</url-pattern>
+    </servlet-mapping>
+
     <!-- jfinal的配置 -->
     <filter>
         <filter-name>jfinal</filter-name>
@@ -25,6 +39,10 @@
         <!-- paramName必须为zealotConfigClass名称，param-value对应自己的Java配置 -->
         <param-name>zealotConfigClass</param-name>
         <param-value>com.blinkfox.config.MyZealotConfig</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/dwr.xml</param-value>
     </context-param>
     <!-- listener-class必须配置，JavaEE容器启动时才会执行 -->
     <listener>

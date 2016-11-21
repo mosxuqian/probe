@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DWR demo1测试页面</title>
+</head>
+<body>
+
+    <h2>hello dwr!</h2>
+
+<script type='text/javascript' src='/probe/dwr/engine.js'></script>
+<script type='text/javascript' src='/probe/dwr/interface/DwrDemo.js'></script>
+<script>
+function sayHello() {
+    DwrDemo.sayHello("World", function (result) {
+        alert(result);
+    });
+}
+sayHello();
+</script>
+</body>
+</html>
