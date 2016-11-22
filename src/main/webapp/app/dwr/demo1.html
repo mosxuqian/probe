@@ -11,12 +11,20 @@
 <script type='text/javascript' src='/probe/dwr/engine.js'></script>
 <script type='text/javascript' src='/probe/dwr/interface/DwrDemo.js'></script>
 <script>
-function sayHello() {
-    DwrDemo.sayHello("World", function (result) {
-        alert(result);
+function sayHello(msg) {
+    DwrDemo.sayHello(msg, {
+        timeout: 10000,
+        callback: function (result) {
+            console.log('callback result:' + result);
+        },
+        errorHandler: function (result) {
+            alert('不好！出错啦！' + result);
+        }
     });
 }
-sayHello();
+
+sayHello("World");
+sayHello("");
 </script>
 </body>
 </html>
