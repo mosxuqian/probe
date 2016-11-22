@@ -2,6 +2,8 @@
 
 <dwr>
     <allow>
+        <convert converter="bean" match="com.blinkfox.test.dwr.Person"/>
+
         <create creator="new" javascript="JDate">
             <param name="class" value="java.util.Date"/>
         </create>

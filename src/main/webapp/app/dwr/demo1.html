@@ -23,8 +23,17 @@ function sayHello(msg) {
     });
 }
 
+function doPersonSomething() {
+    var myPersion = {
+        name: '张三',
+        age: 26,
+        appointments: [new Date(), new Date(2016, 3, 25)]
+    };
+    DwrDemo.doSomethingWithPerson(myPersion);
+}
+
 sayHello("World");
-sayHello("");
+doPersonSomething();
 </script>
 </body>
 </html>
