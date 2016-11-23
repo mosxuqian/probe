@@ -50,6 +50,7 @@ public class UserController extends Controller {
             return;
         }
 
+        setSessionAttr("email", user.get("email"));
         renderJson(user);
     }
 
