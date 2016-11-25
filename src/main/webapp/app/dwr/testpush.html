@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试发送dwr推送消息的页面</title>
+</head>
+<body>
+
+    id值: <input type="text" name="msgId" id="msgId" /> <br />
+    <input type="button" value="发送" onclick="testPush();"  />
+
+<script type='text/javascript' src='/probe/dwr/engine.js'></script>
+<script type='text/javascript' src='/probe/dwr/interface/TestPush.js'></script>
+<script>
+function testPush() {
+    var msg = document.getElementById('msgId').value;
+    TestPush.sendMessageAuto('blinkfoxcom@gmail.com', msg);
+}
+</script>
+</body>
+</html>

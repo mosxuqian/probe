@@ -4,7 +4,7 @@
     <allow>
         <convert converter="bean" match="com.blinkfox.test.dwr.Person"/>
         
-        <filter class="com.blinkfox.test.dwr.TestFilter"></filter>
+        <!--<filter class="com.blinkfox.test.dwr.TestFilter"></filter>-->
 
         <create creator="new" javascript="JDate">
             <param name="class" value="java.util.Date"/>

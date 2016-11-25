@@ -20,7 +20,11 @@
         </init-param>
         <init-param>
             <param-name>classes</param-name>
-            <param-value>java.lang.Object</param-value>
+            <param-value>
+                java.lang.Object,
+                com.blinkfox.test.dwr.push.MessagePush,
+                com.blinkfox.test.dwr.push.TestPush
+            </param-value>
         </init-param>
         <init-param>
             <param-name>activeReverseAjaxEnabled</param-name>

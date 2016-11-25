@@ -4,6 +4,8 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptBuffer;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ScriptSessionFilter;
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 
 import java.util.Collection;
 
@@ -11,8 +13,10 @@ import java.util.Collection;
  * 测试发送推送信息的dwr类
  * Created by blinkfox on 2016/11/25.
  */
+@RemoteProxy
 public class TestPush {
 
+    @RemoteMethod
     public void sendMessageAuto(String email, String message){
         final String finalEmail = email;
         final String autoMessage = message;

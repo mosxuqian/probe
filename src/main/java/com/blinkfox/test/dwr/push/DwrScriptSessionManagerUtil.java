@@ -18,7 +18,11 @@ public class DwrScriptSessionManagerUtil extends DwrServlet {
 
     private static final long serialVersionUID = -7504612622407420071L;
 
-    public void init()throws ServletException {
+    /**
+     * 初始化
+     * @throws ServletException
+     */
+    public void init() throws ServletException {
         Container container = ServerContextFactory.get().getContainer();
         ScriptSessionManager manager = container.getBean(ScriptSessionManager.class);
 

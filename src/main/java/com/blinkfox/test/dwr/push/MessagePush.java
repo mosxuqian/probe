@@ -1,16 +1,19 @@
 package com.blinkfox.test.dwr.push;
 
-import com.blinkfox.test.dwr.push.DwrScriptSessionManagerUtil;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 import javax.servlet.ServletException;
 
 /**
  * 被推送页面的消息推送类
  * Created by blinkfox on 2016/11/25.
  */
+@RemoteProxy
 public class MessagePush {
 
+    @RemoteMethod
     public void onPageLoad(String email) {
         ScriptSession scriptSession = WebContextFactory.get().getScriptSession();
         scriptSession.setAttribute("email", email);

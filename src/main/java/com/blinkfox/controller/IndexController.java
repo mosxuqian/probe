@@ -16,4 +16,12 @@ public class IndexController extends Controller {
         render("/app/dwr/demo1.html");
     }
 
+    public void testpush() {
+        render("/app/dwr/testpush.html");
+    }
+
+    public void showmsg() {
+        render("/app/dwr/showmsg.html");
+    }
+
 }
