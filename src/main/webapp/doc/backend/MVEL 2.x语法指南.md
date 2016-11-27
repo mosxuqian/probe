@@ -111,5 +111,61 @@ foo == nil; // 和null一样
 
 这个表达式的值为true,因为为了执行比较，强制类型转换系统会隐式的将数字`123`转换成字符串。
 
+## 三、内联Lists、Maps和数组Arrays
+
+MVEL允许你使用简单优雅的语法来表示Lists，Mpas和数组Arrays。 且看下面的示例：
+
+```java
+["Bob" : new Person("Bob"), "Michael" : new Person("Michael")]
+```
+
+这个表达式的功能等价于：
+
+```java
+Map map = new HashMap();
+map.put("Bob", new Person("Bob"));
+map.put("Michael", new Person("Michael"));
+```
+
+用这种结构描述MVEL内部数据结构，功能非常强大，你可以在任何地方使用它，甚至可以作为方法的参数使用，如：
+
+```java
+something.someMethod(["foo" : "bar"]);
+```
+
+### 1. Lists
+
+Lists用以下格式来表示："[item1, item2, ...]"，如：
+
+```java
+["Jim", "Bob", "Smith"]
+```
+
+### 2. Maps
+
+Maps用以下格式来表示："[key1 : value1, key2: value2, …]"，如：
+
+```java
+["Foo" : "Bar", "Bar" : "Foo"]
+```
+
+### 3. 数组Arrays
+
+数组Arrays用以下格式来表示："{item1, item2, …}"，如：
+
+```java
+{"Jim", "Bob", "Smith"}
+```
+
+### 4. 数组强制转换
+
+关于内联数组，需要知道的一个非常重要的方面是，它可以被强制转换成其它类型的数组，当你声明一个数组时，是不直接指定其类型的，但你可以通过将其传递给一个接收int[]类型参数的方法来指定。如：
+
+```java
+foo.someMethod({1,2,3,4});
+```
+
+在这种情况下，当MVEL发现目标方法接收的是一个int[]，会自动的将{1,2,3,4}转换成int[]类型。
+
 [1]: https://github.com/mvel/mvel
 [2]: https：//en.wikipedia.org/wiki/MVEL
