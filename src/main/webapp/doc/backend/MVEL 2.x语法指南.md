@@ -167,5 +167,86 @@ foo.someMethod({1,2,3,4});
 
 在这种情况下，当MVEL发现目标方法接收的是一个int[]，会自动的将{1,2,3,4}转换成int[]类型。
 
+## 四、属性导航
+
+MVEL属性导航遵循在其他语言（如Groovy，OGNL，EL等）中bean属性表达式中公认惯例的使用方式。和其它语言必须通过底层的方法来控制权限不同的是，MVEL提供了一种单一的，统一的语法来访问属性，静态字段和maps等。
+
+### 1. Bean属性
+
+大多数java开发者都熟悉getter/setter模式，并在java对象中用它来封装属性的访问权限。例如，你可能会通过下面的方式访问一个对象的属性：
+
+```java
+user.getManager().getName();
+```
+
+为了简化此操作，您可以使用以下表达式访问相同的属性：
+
+```java
+user.manager.name
+```
+
+> **注意：**当一个对象中的字段的作用域是public时，MVEL仍然倾向于通过get方法来访问其属性。
+
+### 2. Bean的安全属性导航
+
+有时，当你的表达式中会含有null元素时，这时就需要你进行一个为空判断，否则就会发生错误。当你使用null-safe操作符时你可以简化这个操作：
+
+```java
+user.?manager.name
+```
+
+它的功能相当于：
+
+```java
+if (user.manager != null) { return user.manager.name; } else { return null; }
+```
+
+### 3. 集合
+
+集合的遍历也可以通过简单的语法来实现：
+
+#### (1). List的访问
+
+List可以像访问数组一样访问，如：
+
+```java
+user[5]
+```
+
+这等价与java中的代码：
+
+```java
+user.get(5);
+```
+
+#### (2). Map的访问
+
+Map的访问和访问数组也非常相似，不同的是，在访问Map时索引值可以是任意对象，如：
+
+```java
+user["foobar"]
+```
+
+这等价与java中的代码：
+
+```java
+user.get("foobar");
+```
+
+当Map的key是String类型时，还可以使用特殊的方式来访问，如：
+
+```java
+user.foobar
+```
+
+### 4. 字符串作数组
+
+为了能使用属性的索引（迭代也是如此），所有的字符串都可以看成是一个数组，在MVEL中你可以用下面的方式来获取一个字符串变量的第一个字符：
+
+```java
+foo = "My String";
+foo[0]; // returns 'M'
+```
+
 [1]: https://github.com/mvel/mvel
 [2]: https：//en.wikipedia.org/wiki/MVEL
