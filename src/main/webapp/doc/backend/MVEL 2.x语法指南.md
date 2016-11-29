@@ -342,5 +342,135 @@ HashMap
 org.proctor.Person$BodyPart
 ```
 
+## 七、流程控制
+
+MVEL的强大已经超出了简单的表达式。事实上，MVEL提供了一系列的程序流程控制操作符来方便你进行高级的脚本操作。
+
+### 1. If-Then-Else
+
+MVEL提供了完整的C/Java式的if-then-else块，如：
+
+```java
+if (var > 0) {
+   System.out.println("Greater than zero!");
+} else if (var == -1) { 
+   System.out.println("Minus one!");
+} else { 
+   System.out.println("Something else!");
+}
+```
+
+### 2. 三目运算符
+
+其实就是Java中的条件表达式，如：
+
+```java
+var > 0 ? "Yes" : "No";
+```
+
+可以嵌套三目运算符
+
+```java
+var > 0 ? "Yes" : (var == -1 ? "Minus One!" : "No")
+```
+
+### 3. Foreach
+
+MVEL的强大特性之一就是其Foreach操作符，在功能和语法上，他都类似于java1.5中的for each操作符，它接收用冒号隔开的两个参数，第一个是当前元素的一个域变量，而第二个是要迭代的集合或数组。如下所示：
+
+```java
+count = 0;
+foreach (name : people) {
+   count++;
+   System.out.println("Person #" + count + ":" + name);
+}
+    
+System.out.println("Total people: " + count);
+```
+
+因为MVEL将字符串视作一个可以迭代的对象，所以你可以用foreach语句来迭代一个字符串（一个字符接一个字符的）：
+
+```java
+str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+foreach (el : str) {
+   System.out.print("["+ el + "]"); 
+}
+```
+
+上面的示例将会输出：
+
+```java
+[A][B][C][D][E][F][G][H][I][J][K][L][M][N][O][P][Q][R][S][T][U][V][W][X][Y][Z]
+```
+
+你也可以利用MVEL进行计数（从1开始）：
+
+```java
+foreach (x : 9) { 
+   System.out.print(x);
+}
+```
+
+这会输出：
+
+```java
+123456789
+```
+
+**注意：**像java5.0一样，在MVEL2.0中，可以将foreach简化成关键字for来使用，如：
+
+```java
+for (item : collection) { ... }
+```
+
+### 4. for循环
+
+MVEL实现了标准的C语言的for循环：
+
+```java
+for (int i =0; i < 100; i++) { 
+   System.out.println(i);
+}
+```
+
+### 5. Do While, Do Until
+
+和java中的意义一样，MVEL也实现了Do While,Do Until，While和Until意义正好相反。
+
+```java
+do { 
+   x = something();
+} 
+while (x != null);
+```
+
+在语义上相当于：
+
+```java
+do {
+   x = something();
+}
+until (x == null);
+```
+
+### 6. While, Until
+
+MVEL中实现了标准的While，并添加了一个与之相反的Until。
+
+```java
+while (isTrue()) {
+   doSomething();
+}
+```
+
+或者写成
+
+```java
+until (isFalse()) {
+   doSomething();
+}
+```
+
 [1]: https://github.com/mvel/mvel
 [2]: https：//en.wikipedia.org/wiki/MVEL
