@@ -472,5 +472,48 @@ until (isFalse()) {
 }
 ```
 
+## 八、投影和交集
+
+简单地说，投影是一种描述集合的方式。 通过非常简单的语法，您可以检索集合中非常复杂的对象模型。
+
+假设，你有一个User对象的集合。 每个对象都有一个Parent。 现在你想获得集合users中的所有parent的name的列表（假设Parent中有字段name），你可以这样来写：
+
+```java
+parentNames = (parent.name in users);
+```
+
+您甚至可以执行嵌套操作，假设，User对象有个集合成员叫做familyMembers，现在我们想获得一个所有家庭成员姓名的集合：
+
+```java
+familyMembers = (name in (familyMembers in users));
+```
+
+## 九、分配
+
+MVEL允许在表达式中来分配变量，无论是从运行时提取还是在表达式中使用。
+
+由于MVEL是一种动态类型语言，因此您不必指定类型以声明一个新变量。 但是，您可以选择这样做。
+
+```java
+str =“My String”; // valid
+String str =“My String”; // valid
+```
+
+与Java不同，MVEL在为类型变量赋值时提供自动类型转换（如果可能）。 例如：
+
+```java
+String num = 1;
+assert num instanceof String＆amp;＆amp; num ==“1”;
+```
+
+对于只想执行类型转换的动态类型变量，您可以简单地将值转换为所需的类型：
+
+```java
+num =（String）1;
+assert num instanceof String＆amp;＆amp; num ==“1”;
+```
+
+翻译原文：http://mvel.documentnode.com/
+
 [1]: https://github.com/mvel/mvel
 [2]: https：//en.wikipedia.org/wiki/MVEL
