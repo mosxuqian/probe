@@ -511,6 +511,71 @@ num =（String）1;
 assert num instanceof String＆amp;＆amp; num ==“1”;
 ```
 
+## 十、函数定义
+
+MVEL可以使用def或function关键字来定义本地函数。
+
+函数必须是先声明后引用，唯一例外的是递归调用的时候。
+
+### 1. 一个简单示例
+
+定义一个简单函数：
+
+```java
+def hello() { System.out.println("Hello!"); }
+```
+
+定义了一个没有参数的函数`hello`.当调用该函数时会在控制台打印"Hello!" 一个MVEL定义的函数就像任何常规的方法调用。
+
+```java
+hello(); // 调用函数
+```
+
+### 2. 传参和返回值
+
+函数可以接收参数和返回一个值，看下面的示例：
+
+```java
+def addTwo(a, b) { 
+   a + b;
+}
+```
+
+这个函数会接收两个参数(a和b)，然后将这两个变量相加。因为MVEL遵循last-value-out原则，所以结果将会被返回。因此，你可以这样来使用这个函数：
+
+```java
+val = addTwo(5, 2);
+assert val == 10;
+```
+
+当然，也可以使用return关键字来强制从程序内部返回一个函数值。
+
+### 3. 闭包
+
+MVEL支持闭包,然而其功能与本地java函数没有任何关联。
+
+```java
+// 定义一个接收一个参数的函数
+def someFunction(f_ptr) { f_ptr(); }
+
+// 定义变量a
+var a = 10;
+
+// 传递函数闭包
+someFunction(def { a * 10 });
+```
+
+## 十一、Lambda表达式
+
+MVEL允许定义Lambda方法，如下所示：
+
+```java
+threshold = def (x) { x >= 10 ? x : 0 };
+result = cost + threshold(lowerBound);
+```
+
+上面的例子定义了一个Lambda，并将其赋值给变量"threshold".Lambda实质上就是一个用来给变量赋值的函数，也是闭包。
+
 翻译原文：http://mvel.documentnode.com/
 
 [1]: https://github.com/mvel/mvel
