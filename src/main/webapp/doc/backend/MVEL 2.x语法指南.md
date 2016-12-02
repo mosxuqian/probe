@@ -488,25 +488,23 @@ parentNames = (parent.name in users);
 familyMembers = (name in (familyMembers in users));
 ```
 
-## 九、分配
+## 九、赋值
 
-MVEL允许在表达式中来分配变量，无论是从运行时提取还是在表达式中使用。
-
-由于MVEL是一种动态类型语言，因此您不必指定类型以声明一个新变量。 但是，您可以选择这样做。
+MMVEL允许你对表达式中的变量进行赋值，以便在运行时获取，或在表达式内部使用。因为MVEL是动态类型语言，所以你不必为了声明一个变量而指定其类型。当然，你也可以选择指定。
 
 ```java
 str =“My String”; // valid
 String str =“My String”; // valid
 ```
 
-与Java不同，MVEL在为类型变量赋值时提供自动类型转换（如果可能）。 例如：
+与java语言不同的是，当给一个指定类型的变量赋值时，MVEL会提供自动的类型转换（可行的话），如：
 
 ```java
 String num = 1;
 assert num instanceof String＆amp;＆amp; num ==“1”;
 ```
 
-对于只想执行类型转换的动态类型变量，您可以简单地将值转换为所需的类型：
+对于动态类型变量而言，你要想对其进行类型转换，你只需要将值转换成相应的类型既可：
 
 ```java
 num =（String）1;
