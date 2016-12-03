@@ -771,8 +771,41 @@ java -jar mvel2-2.0.jar
 
 或者，您可以通过为您的类设置运行配置文件，从最喜欢的IDE中运行shell：`org.mvel2.sh.Main`。
 
+## 十五、FAQ
+
+### 1. 为什么不能使用.class的引用？
+
+MVEL没有像java中的用来执行类型文件的.class标识符，其实它本身就没有class文件，而只需要通过其名称就可以引用这个类。比如，一个方法接收一个Class类型作为参数，你可以这样来调用：
+
+```java
+// MVEL
+someMethod(String);
+
+// Java-equivalent
+someMethod(String.class);
+```
+
+事实上，MVEL将`.class`视作一个普通的bean属性，因此，如果使用String.class，那返回值就会是指向`java.lang.Class`本身的一个`java.lang.Class`的实例，因此就相当于在java中使用`String.class.getClass()`。
+
+原理是这样的，MVEL使用动态类型系统，这样类型就被当作普通的变量来看待，而不是像java中限定类文件。所以，MVEL允许class类型作为一个普通变量来引用，而不像java。
+
+### 2. 为什么不能用object.class.name的格式？
+
+这是MVEL的一个限制，可能会在将来的某个版本中标记出来，但bean属性不支持对Class的引用。并不是说不能调用Class的方法，你必须使用限定的方法，像：
+
+```java
+someVar.class.getName();     // Yes!
+someVar.class.name;          // No!
+
+someVar.getClass().getName() // Yes!
+someVar.getClass().name      // No!
+```
+
+这一规定完全限制了`java.lang.Class`仅可用做某个变量的属性，并限制了MVEL处理类的引用的方式。
+
 翻译原文：http://mvel.documentnode.com/
 
 [1]: https://github.com/mvel/mvel
 [2]: https：//en.wikipedia.org/wiki/MVEL
-[3]: https://en.wikipedia.org/wiki/Drools [4]:https://en.wikipedia.org/wiki/Unified_Expression_Language
+[3]: https://en.wikipedia.org/wiki/Drools
+[4]:https://en.wikipedia.org/wiki/Unified_Expression_Language
