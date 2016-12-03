@@ -756,7 +756,23 @@ compiler.compile(context);
 
 在这个例子中我们通知编译器表达式将接收两个外部输入：`message`和`person`及它们的类型。这就使得编译器可以在编译时确定某一个调用是否是安全的，从而防止了运行时的错误。
 
+## 十四、Shell
+
+通过交互式的Shell，你可以直接与MVEL打交道，去探究MVEL的特性。另请参阅:
+[https://en.wikipedia.org/wiki/Drools][3] [https://en.wikipedia.org/wiki/Unified_Expression_Language][4]。
+
+### 1. 运行Shell
+
+只需运行MVEL的分布式jar包，既可运行Shell：
+
+```java
+java -jar mvel2-2.0.jar
+```
+
+或者，您可以通过为您的类设置运行配置文件，从最喜欢的IDE中运行shell：`org.mvel2.sh.Main`。
+
 翻译原文：http://mvel.documentnode.com/
 
 [1]: https://github.com/mvel/mvel
 [2]: https：//en.wikipedia.org/wiki/MVEL
+[3]: https://en.wikipedia.org/wiki/Drools [4]:https://en.wikipedia.org/wiki/Unified_Expression_Language
