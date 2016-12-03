@@ -576,6 +576,96 @@ result = cost + threshold(lowerBound);
 
 上面的例子定义了一个Lambda，并将其赋值给变量"threshold".Lambda实质上就是一个用来给变量赋值的函数，也是闭包。
 
+## 十二、拦截器
+
+MVEL提供了在编译后的表达式里使用拦截器的功能，这对实现监听器或是在表达式内部触发一个外部事件特别有用。
+
+声明拦截器用的是`@Syntax`,有点像java语言中的注解。拦截器的声明应该放在待封装的语句之前，它可以实现之前或之后的监听器，或二者都实现。例如：
+
+```java
+@Intercept
+foreach (item : fooItems) { 
+   total += fooItems.price;
+}
+```
+
+在这个特殊的句子里，拦截器封装了整个的foreach块，因此，如果拦截器实现了之后的监听器，则当foreach循环结束后，拦截动作将被触发。
+
+### 1. 拦截器接口org.mvel.intergration.Interceptor
+
+```java
+public interface Interceptor {
+    public int doBefore(ASTNode node, VariableResolverFactory factory);
+    public int doAfter(Object exitStackValue, ASTNode node, VariableResolverFactory factory);
+}
+```
+
+拦截器接口提供了两个待实现的方法：`doBefore`和`doAfter`,下面我们来看一下MVEL运行时传递给这两个方法的参数的含义。
+
+### 2. DoBefore
+
+在执行封装的命令前会执行doBefore方法。
+
+> **org.mvel.ASTNode::node**	
+ASTNode句柄是拦截器内部ASTNode 的一个引用，可以用来获取实际编译后的代码的信息。
+
+> **org.mvel.integration.VariableResolverFactory::factory**
+变量分析器工厂提供表达式内当前范围内变量的访问权限。
+
+### 3. doAfter
+
+在执行完封装的指令后执行doAfter方法。
+
+>**java.lang.Object::exitStackValue**
+doAfter方法虽是在语句执行后执行，但却不是在帧结束前。因此，操作结束时留在栈中的任何数据都仍然存在，而且能被拦截器访问。例如：
+
+```java
+@Intercept cost += value;
+```
+这是一个比较特殊的句子，cost的原值一直保存在栈中，直到整个帧执行完毕，因此，这个值在调用doAfter方法时可以通过exitStackValue访问到。
+
+> **org.mvel.ASTNode::node**
+这是传递到doBefore方法中的同一个AST 元素，更多细节参考doBefore方法。
+
+>**org.mvel.intergration.VariableResolverFactory::factory**
+同doBefore方法
+
+### 4. 编译器中使用拦截器
+
+为了能是拦截器连到表达式中，必须在编译表达式之前提供拦截器，因此有一点需要注意，拦截器可能不用于MVEL解释器。
+
+拦截器是储存在map里提供给编译器的，map中的键为拦截器的名称，值为拦截器实例。如：
+
+```java
+// Create a new ParserContext
+ParserContext context = new ParserContext();
+
+Map<String, Interceptor> myInterceptors = new HashMap<String, Interceptor>();
+
+// Create a simple interceptor.
+Interceptor myInterceptor = new Interceptor() {
+    public int doBefore(ASTNode node, VariableResolverFactory factory) {
+        System.out.println("BEFORE!");
+    }
+
+    public int doAfter((Object value, ASTNode node, VariableResolverFactory factory) {
+        System.out.println("AFTER!");
+    }
+};
+
+// Now add the interceptor to the map.
+myInterceptors.put("Foo", myInterceptor);
+
+// Add the interceptors map to the parser context.
+context.setInterceptors(myInterceptors);
+
+// Compile the expression.
+Serializable compiledExpression = MVEL.compileExpression(expression, context);
+```
+
+> **表达式的序列化**
+> 如果你打算序列化一个编译表达式以跨多个运行时实例重用，你必须确保你的拦截器本身是可序列化的，否则你会遇到序列化问题，因为你的拦截器“实例”被直接添加到AST。
+
 翻译原文：http://mvel.documentnode.com/
 
 [1]: https://github.com/mvel/mvel
