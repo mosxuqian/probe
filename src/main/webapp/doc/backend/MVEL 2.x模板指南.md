@@ -54,5 +54,43 @@ Email any questions to: foo@bar.com
 @{username}@{'@'}@{domain}
 ```
 
+## 二、MVEL 2.0 Orb标签
+
+本文包含了MVEL 2.0模板引擎中所有开箱即用的orb标签。
+
+### 1. @{}表达式
+
+@{}表达式是orb-tag的最基本形式。它包含一个对字符串求值的值表达式，并附加到输出模板中。例如：
+
+```java
+Hello, my name is @{person.name}
+```
+
+### 2. @code{}静默代码标签
+
+静默代码标记允许您在模板中执行MVEL表达式代码。它不返回值，并且不以任何方式影响模板的格式。
+
+```java
+@code{age = 23; name = 'John Doe'}
+@{name} is @{age} years old
+```
+该模板将计算出：John Doe is 23 years old。
+
+### 3. @if{}@else{}控制流标签
+
+@if{}和@else{}标签在MVEL模板中提供了完全的if-then-else功能。 例如：
+
+```java
+@if{foo != bar}
+   Foo not a bar!
+@else{bar != cat}
+   Bar is not a cat!
+@else{}
+   Foo may be a Bar or a Cat!
+@end{}
+```
+
+MVEL模板中的所有块必须用`@end{}`标签来终止，除非是`if-then-else`结构，其中`@else{}`标记表示前一个控制语句的终止。
+
 [1]: https://github.com/mvel/mvel
 [2]: http://blinkfox.com/mvel-2-xyu-fa-zhi-nan/
