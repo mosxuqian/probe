@@ -58,7 +58,7 @@ Email any questions to: foo@bar.com
 
 本文包含了MVEL 2.0模板引擎中所有开箱即用的orb标签。
 
-### 1. @{}表达式
+### 1. @{} Orb表达式
 
 @{}表达式是orb-tag的最基本形式。它包含一个对字符串求值的值表达式，并附加到输出模板中。例如：
 
@@ -66,7 +66,7 @@ Email any questions to: foo@bar.com
 Hello, my name is @{person.name}
 ```
 
-### 2. @code{}静默代码标签
+### 2. @code{} 静默代码标签
 
 静默代码标记允许您在模板中执行MVEL表达式代码。它不返回值，并且不以任何方式影响模板的格式。
 
@@ -76,7 +76,7 @@ Hello, my name is @{person.name}
 ```
 该模板将计算出：John Doe is 23 years old。
 
-### 3. @if{}@else{}控制流标签
+### 3. @if{}@else{} 控制流标签
 
 @if{}和@else{}标签在MVEL模板中提供了完全的if-then-else功能。 例如：
 
@@ -91,6 +91,89 @@ Hello, my name is @{person.name}
 ```
 
 MVEL模板中的所有块必须用`@end{}`标签来终止，除非是`if-then-else`结构，其中`@else{}`标记表示前一个控制语句的终止。
+
+### 4. @foreach{} Foreach迭代
+
+foreach标签允许您在模板中迭代集合或数组。 注意：foreach的语法已经在MVEL模板2.0中改变，以使用foreach符号来标记MVEL语言本身的符号。
+
+```java
+@foreach{item : products} 
+ - @{item.serialNumber}
+@end{}
+```
+
+MVEL 2.0要求您指定一个迭代变量。虽然MVEL 1.2假设您没有指定别名，但由于对该默认操作有一些抱怨，因此已被删除。
+
+### 5. 多重迭代
+
+您可以通过逗号分隔迭代在一个foreach循环中一次性迭代多个集合：
+
+```java
+@foreach{var1 : set1, var2 : set2}
+  @{var1}-@{var2}
+@end{}
+```
+
+### 6. 分隔
+
+你可以通过在`@end{}`标签中指定迭代器的文本分隔符。
+
+```java
+@foreach{item : people}@{item.name}@end{', '}
+```
+
+将返回类似这样的结果：John, Mary, Joseph。
+
+### 7. @include{} 包含模板文件
+
+您可以使用此标签将模板文件包含到MVEL模板中。
+
+```java
+@include{'header.mv'}
+
+This is a test template.
+```
+
+您还可以通过在模板名称后面添加分号在include标签内执行MVEL表达式：
+
+```java
+@include {'header.mv'; title ='Foo Title'}
+```
+
+### 8. @includeNamed{} 包括一个命名模板
+
+命名模板是已经通过TemplateRegistry预先编译并传递到运行时的模板，或者已在模板本身中声明的模板。 您只需添加：
+
+```java
+@includeNamed {'fooTemplate'}
+@includeNamed {'footerTemplate'，showSomething = true}
+```
+
+你也可以在`@includeNamed{}`标签中执行MVEL代码，就像`@include{}`标签一样。
+
+### 9. @declare{} 声明一个模板
+
+除了包括外部文件的外部模板，并以编程方式传递它们之外，您还可以从模板中声明模板。 它允许你做这样的事情：
+
+```java
+@declare{'personTemplate'}
+ Name: @{name}
+ Age:  @{age}
+@end{}
+
+@includeNamed{'personTemplate'; name='John Doe'; age=22}
+```
+
+### 10. @comment{} 注释标签
+
+注释标签允许您向模板添加不可见的注释。 例如：
+
+```java
+@comment{
+  This is a comment
+}
+Hello: @{name}!
+```
 
 [1]: https://github.com/mvel/mvel
 [2]: http://blinkfox.com/mvel-2-xyu-fa-zhi-nan/
