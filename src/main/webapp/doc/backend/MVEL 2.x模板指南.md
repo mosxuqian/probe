@@ -175,5 +175,53 @@ This is a test template.
 Hello: @{name}!
 ```
 
+## 三、MVEL 2.0模板集成
+
+使用MVEL模板是直接和容易的。 与常规MVEL表达式一样，它们可以解释性地执行，或者预编译并重新用于更快的评估。
+
+### 1. org.mvel.templates.TemplateRuntime 类
+
+`TemplateRuntime`类是模板引擎的中心。您可以通过`eval()`方法将要计算的模板传递给模板引擎。
+
+一般来说，模板引擎遵循上下文和变量绑定的所有相同规则，使用一组重载的`eval()`方法。
+
+下面是一个解析模板的简单例子：
+
+```java
+String template = "Hello, my name is @{name.toUpperCase()}");
+Map vars = new HashMap();
+vars.put("name", "Michael");
+
+String output = (String) TemplateRuntime.eval(template, vars);
+```
+
+在执行结束时，“output”变量将包含字符串：
+
+```java
+Hello, my name is MICHAEL
+```
+
+### 2. org.mvel.templates.TemplateCompiler类
+
+`TemplateCompiler`类允许预先编译模板。
+
+当编译模板时，将生成一个紧凑，可重用的评估树，可以快速用于计算模板。它直接使用：
+
+```java
+String template = "1 + 1 = @{1+1}";
+
+// 编译模板
+CompiledTemplate compiled = TemplateCompiler.compileTemplate(template);
+
+// 执行模板
+String output = (String) TemplateRuntime.execute(compiled);
+```
+
+在执行结束时，“output”变量将包含字符串：
+
+```java
+1 + 1 = 2
+```
+
 [1]: https://github.com/mvel/mvel
 [2]: http://blinkfox.com/mvel-2-xyu-fa-zhi-nan/
