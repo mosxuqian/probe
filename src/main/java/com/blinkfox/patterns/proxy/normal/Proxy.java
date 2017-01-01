@@ -1,4 +1,6 @@
-package com.blinkfox.patterns.proxy;
+package com.blinkfox.patterns.proxy.normal;
+
+import com.blinkfox.patterns.proxy.ISubject;
 
 /**
  * 代理类

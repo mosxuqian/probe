@@ -1,4 +1,7 @@
-package com.blinkfox.patterns.proxy;
+package com.blinkfox.patterns.proxy.normal;
+
+import com.blinkfox.patterns.proxy.ISubject;
+import com.blinkfox.patterns.proxy.RealSubject;
 
 /**
  * 代理模式客户端场景类
