@@ -9,7 +9,7 @@ import com.blinkfox.zealot.core.Khala;
 public class KhalaTest {
 
     public static void main(String[] args) {
-        String sql = Khala.getInstance().start()
+        String sql = Khala.newInstance().start()
             .select("u.id, u.name, u.email, ud.addr")
             .from("user as u")
             .leftJoin("user_detail as ud").on("u.id = ud.user_id")
