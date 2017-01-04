@@ -9,8 +9,9 @@ public class A {
     /**
      * do someting...
      */
+    @CostTime
     public void doSomeThing() {
-
+        System.out.println("执行doSomeThing方法！");
     }
 
 }
