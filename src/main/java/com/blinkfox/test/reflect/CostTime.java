@@ -17,6 +17,6 @@ public @interface CostTime {
      * 执行超过该 ms 数则打印日志，默认 0ms，即默认都打印
      * @return
      */
-    public long value() default 0;
+    long value() default 0;
 
 }
