@@ -7,7 +7,7 @@ import com.blinkfox.myioc.annotation.Provider;
  * 测试的car 类
  * Created by blinkfox on 2017/1/8.
  */
-@Provider
+@Provider("car")
 public class Car {
 
     @Injection

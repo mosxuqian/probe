@@ -1,5 +1,6 @@
 package com.blinkfox.myioc.test;
 
+import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.annotation.Provider;
 import com.blinkfox.utils.Log;
 import eu.infomas.annotation.AnnotationDetector;
@@ -14,7 +15,7 @@ public class ProviderScanner {
 
     private static final Log log = Log.get(ProviderScanner.class);
 
-    static class ProviderReporter implements AnnotationDetector.TypeReporter {
+    static class ProviderReporter implements AnnotationDetector.TypeReporter, AnnotationDetector.FieldReporter {
 
         private final Class<? extends Annotation>[] annotations;
 
@@ -27,25 +28,30 @@ public class ProviderScanner {
         }
 
         @Override
+        public Class<? extends Annotation>[] annotations() {
+            return annotations;
+        }
+
+        @Override
         public void reportTypeAnnotation(Class<? extends Annotation> annotation, String className) {
             System.out.println("注解名称:" + annotation.getName() + ",注解到的类:" + className);
         }
 
         @Override
-        public Class<? extends Annotation>[] annotations() {
-            return annotations;
+        public void reportFieldAnnotation(Class<? extends Annotation> annotation, String className, String fieldName) {
+            System.out.println("注解名称:" + annotation.getName() + ",注解到的类:" + className + ",注解的字段:" + fieldName);
         }
 
     }
 
     public static void main(String[] args) {
-        ProviderReporter providerReporter = new ProviderReporter(Provider.class);
+        ProviderReporter providerReporter = new ProviderReporter(Provider.class, Injection.class);
         AnnotationDetector detector = new AnnotationDetector(providerReporter);
 
         try {
             detector.detect("com.blinkfox");
         } catch (IOException e) {
-            log.error("在com.blinkfox包下扫描@Provider注解出错！", e);
+            log.error("在com.blinkfox包下扫描@Provider和@Injection注解出错！", e);
         }
     }
 
