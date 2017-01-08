@@ -1,5 +1,6 @@
-package com.blinkfox.myioc.test;
+package com.blinkfox.myioc.testbean;
 
+import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.annotation.Provider;
 
 /**
@@ -9,9 +10,13 @@ import com.blinkfox.myioc.annotation.Provider;
 @Provider
 public class Engine {
 
+    @Injection
+    private Material material;
+
     // 名称
     private String name;
 
+    /* getter 和 setter 方法*/
     public String getName() {
         return name;
     }
