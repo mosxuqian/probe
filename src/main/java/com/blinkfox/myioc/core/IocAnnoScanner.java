@@ -40,6 +40,9 @@ public enum IocAnnoScanner {
         // 存放提供者及需要注入的依赖对象信息集合的Map,其中 key是全路径类名className,value是ProviderInfo对象
         private final Map<String, ProviderInfo> providerInfoMap = new HashMap<String, ProviderInfo>();
 
+        // 用来存放Provider的ID和全路径类名的一一对应关系信息的Map，key是ProviderId，value是对应类的Class
+        private final Map<String, Class> idClsMap = new HashMap<String, Class>();
+
         /**
          * AnnotationReporter构造方法
          * @param annotations 各注解的class
@@ -67,6 +70,9 @@ public enum IocAnnoScanner {
             } else {
                 providerId = StringHelper.getCamelByClsName(clsName);
             }
+
+            // 将Provider的ID和全路径类名存到 idClsMap 中
+            idClsMap.put(providerId, cls);
 
             // 初始化ProviderInfo信息，包括class及其对应的id、scope等，然后将其存放到map中
             return ProviderInfo.newInstance().setId(providerId).setCls(cls).setScope(scope);
@@ -126,6 +132,23 @@ public enum IocAnnoScanner {
             detector.detect(packages);
         } catch (IOException e) {
             log.error("扫描依赖注入注解出错！扫描的包有：" + Arrays.toString(packages), e);
+        }
+
+        // 通过两个map中的数据，填充ProviderInfo中的injects数据，即某个类中依赖注入需要的Class集合
+        Map<String, Class> idClsMap = reporter.idClsMap;
+        Map<String, ProviderInfo> providerInfoMap = reporter.providerInfoMap;
+        for (Map.Entry<String, ProviderInfo> entry: providerInfoMap.entrySet()) {
+            ProviderInfo providerInfo = entry.getValue();
+            List<String> fields = providerInfo.getFields();
+            List<Class> injects = providerInfo.getInjects();
+            for (String field: fields) {
+                // 先判断是否包含该注入的ID，如果没有则抛出异常，否则将需要注入的class加到ProviderInfo中的 injects 集合中
+                if (!idClsMap.containsKey(field)) {
+                    throw new RuntimeException("未找到需要注入ID为:" + field + "所依赖的类！");
+                }
+                injects.add(idClsMap.get(field));
+            }
+            providerInfo.setInjects(injects);
         }
 
         return reporter.providerInfoMap;

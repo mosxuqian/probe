@@ -23,8 +23,10 @@ public class ScannerTest {
             String clsName = entry.getKey();
             ProviderInfo info = entry.getValue();
             log.info("className:" + clsName + ",ProviderInfo的id:" + info.getId() + ",cls:" +
-                    info.getCls() + ",scope:" + info.getScope() + ",fields:" + info.getFields().toString());
+                    info.getCls() + ",scope:" + info.getScope() + ",fields:" + info.getFields().toString() +
+                    ",injects:" + info.getInjects());
         }
+
         assertNotNull(providerInfoMap);
     }
 

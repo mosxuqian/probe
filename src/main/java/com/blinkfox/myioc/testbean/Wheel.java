@@ -1,9 +1,12 @@
 package com.blinkfox.myioc.testbean;
 
+import com.blinkfox.myioc.annotation.Provider;
+
 /**
  * 制造汽车需要的轮子 类
  * Created by blinkfox on 2017/1/8.
  */
+@Provider
 public class Wheel {
 
     private String name; // 名称

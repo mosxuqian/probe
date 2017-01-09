@@ -11,10 +11,10 @@ import com.blinkfox.myioc.annotation.Provider;
 public class Car {
 
     @Injection
-    private Engine engine;
+    private Engine myEngine;
 
     @Injection
-    private Door door;
+    private Door myDoor;
 
     @Injection
     private Wheel wheel;
@@ -23,7 +23,7 @@ public class Car {
     private Material material;
 
     public void start() {
-        System.out.println("引擎是:" + engine.getName() + ",门的名字是:" + door +
+        System.out.println("引擎是:" + myEngine.getName() + ",门的名字是:" + myDoor +
                 ",材料名称:" + material.getName() + ",轮子:" + wheel.getName());
         System.out.println("开始开车...");
     }
