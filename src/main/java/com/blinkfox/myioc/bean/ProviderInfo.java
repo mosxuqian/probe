@@ -14,6 +14,8 @@ public class ProviderInfo {
 
     private Class cls; // 待实例化的类的class
 
+    private List<String> fields; // 该类所拥有的注入字段名，即对应的providerId集合
+
     private List<Class> injects; // 需要注入的类class
 
     private Scope scope; // 实例化bean的方式,默认实例为单例模式
@@ -30,7 +32,7 @@ public class ProviderInfo {
      * @return 默认的提供者信息
      */
     public static ProviderInfo newInstance() {
-        return new ProviderInfo().setScope(Scope.PROTOTYPE).setInjects(new ArrayList<Class>());
+        return new ProviderInfo().setFields(new ArrayList<String>()).setInjects(new ArrayList<Class>());
     }
 
     /* getter 和 setter 方法*/
@@ -49,6 +51,15 @@ public class ProviderInfo {
 
     public ProviderInfo setCls(Class cls) {
         this.cls = cls;
+        return this;
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public ProviderInfo setFields(List<String> fields) {
+        this.fields = fields;
         return this;
     }
 

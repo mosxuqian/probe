@@ -24,7 +24,8 @@ public enum IocManager {
      * @return 提供者信息的集合
      */
     public List<ProviderInfo> initProviderInfo(String... packages) {
-        Map<String, List<String>> iocMap = IocAnnoScanner.INSTANCE.getProviderAndInjections(packages);
+        // Map<String, List<String>> iocMap = IocAnnoScanner.INSTANCE.getProviderAndInjections(packages);
+        Map<String, List<String>> iocMap = null;
         List<ProviderInfo> providerInfos = new ArrayList<ProviderInfo>();
         for (Map.Entry<String, List<String>> entry: iocMap.entrySet()) {
             String className = entry.getKey();

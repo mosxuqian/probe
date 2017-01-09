@@ -2,6 +2,10 @@ package com.blinkfox.myioc.core;
 
 import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.annotation.Provider;
+import com.blinkfox.myioc.bean.ProviderInfo;
+import com.blinkfox.myioc.consts.Scope;
+import com.blinkfox.myioc.tools.ClassHelper;
+import com.blinkfox.myioc.tools.StringHelper;
 import com.blinkfox.utils.Log;
 import eu.infomas.annotation.AnnotationDetector;
 import java.io.IOException;
@@ -27,13 +31,14 @@ public enum IocAnnoScanner {
 
     /**
      * 扫描依赖注入的注解及其所在类、字段等信息的内部类
+     * 用来将注解和类信息存储起来
      */
     private class Reporter implements AnnotationDetector.TypeReporter, AnnotationDetector.FieldReporter {
 
         private final Class<? extends Annotation>[] annotations;
 
-        // 存放提供者及需要注入的依赖对象集合的Map
-        private final Map<String, List<String>> providerInjectionMap = new HashMap<String, List<String>>();
+        // 存放提供者及需要注入的依赖对象信息集合的Map,其中 key是全路径类名className,value是ProviderInfo对象
+        private final Map<String, ProviderInfo> providerInfoMap = new HashMap<String, ProviderInfo>();
 
         /**
          * AnnotationReporter构造方法
@@ -44,38 +49,56 @@ public enum IocAnnoScanner {
         }
 
         /**
+         * 根据全路径类名的className,构建出该类依赖注入需要的提供者信息，即ProviderInfo对象
+         * @param clsName 全路径类名
+         * @return 提供者信息
+         */
+        private ProviderInfo initProviderInfoByClsName(String clsName) {
+            // 获取该类所在的类class和注解相关信息，并将其保存到providerInfo对象中
+            Class cls = ClassHelper.getClass(clsName);
+            String providerId = "";
+            Scope scope = Scope.SINGLETON;
+            if (cls.isAnnotationPresent(Provider.class)) {
+                Provider provider = (Provider) cls.getAnnotation(Provider.class);
+                // 依赖诸如提供者的ID，如果为空，则默认将类名转换成驼峰式命名作为ID
+                providerId = provider.value();
+                providerId = providerId.trim().equals("") ? StringHelper.getCamelByClsName(clsName) : providerId;
+                scope = provider.scope();
+            } else {
+                providerId = StringHelper.getCamelByClsName(clsName);
+            }
+
+            // 初始化ProviderInfo信息，包括class及其对应的id、scope等，然后将其存放到map中
+            return ProviderInfo.newInstance().setId(providerId).setCls(cls).setScope(scope);
+        }
+
+        /**
          * 类、接口或枚举的注解所在类的信息
          * @param annotation 注解的class
-         * @param className 注解的类名
+         * @param clsName 注解的全路径类名
          */
         @Override
-        public void reportTypeAnnotation(Class<? extends Annotation> annotation, String className) {
-            if (providerInjectionMap.containsKey(className)) {
-                log.info("-----已经包含className的注解了，className:" + className + ",:" + annotation.getName());
-            } else {
-                providerInjectionMap.put(className, new ArrayList<String>());
-                log.info("注解名称:" + annotation.getName() + ",注解到的类:" + className);
+        public void reportTypeAnnotation(Class<? extends Annotation> annotation, String clsName) {
+            if (!providerInfoMap.containsKey(clsName)) {
+                providerInfoMap.put(clsName, this.initProviderInfoByClsName(clsName));
             }
         }
 
         /**
          * 字段上的注解的类或字段的信息
          * @param annotation 注解class
-         * @param className 类名
+         * @param clsName 类名
          * @param fieldName 字段名
          */
         @Override
-        public void reportFieldAnnotation(Class<? extends Annotation> annotation, String className, String fieldName) {
-            List<String> injections;
-            if (providerInjectionMap.containsKey(className)) {
-                injections = providerInjectionMap.get(className);
-                injections.add(fieldName);
-            } else {
-                injections = new ArrayList<String>();
-                injections.add(fieldName);
-            }
-            providerInjectionMap.put(className, injections);
-            log.info("注解名称:" + annotation.getName() + ",注解到的类:" + className + ",注解的字段:" + fieldName);
+        public void reportFieldAnnotation(Class<? extends Annotation> annotation, String clsName, String fieldName) {
+            // 先判断map中是否包含该类的ProviderInfo信息，如果有则获取到fields，设置该字段到fields中
+            ProviderInfo providerInfo = providerInfoMap.containsKey(clsName) ? providerInfoMap.get(clsName) :
+                    this.initProviderInfoByClsName(clsName);
+            List<String> fields = providerInfo.getFields();
+            fields.add(fieldName);
+            providerInfo.setFields(fields);
+            providerInfoMap.put(clsName, providerInfo);
         }
 
         /**
@@ -94,7 +117,7 @@ public enum IocAnnoScanner {
      * @param packages 多个包路径名
      * @return 提供依赖注入的类及其依赖元素集合的Map信息
      */
-    public Map<String, List<String>> getProviderAndInjections(String... packages) {
+    public Map<String, ProviderInfo> getProviderAndInjections(String... packages) {
         Reporter reporter = new Reporter(Provider.class, Injection.class);
         AnnotationDetector detector = new AnnotationDetector(reporter);
 
@@ -105,7 +128,7 @@ public enum IocAnnoScanner {
             log.error("扫描依赖注入注解出错！扫描的包有：" + Arrays.toString(packages), e);
         }
 
-        return reporter.providerInjectionMap;
+        return reporter.providerInfoMap;
     }
 
 }
