@@ -1,5 +1,7 @@
 package com.blinkfox.myioc.annotation;
 
+import com.blinkfox.myioc.consts.Scope;
+
 import java.lang.annotation.*;
 
 /**
@@ -11,6 +13,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface Provider {
 
-    String value() default "";
+    String value() default ""; // 组件提供的ID值，默认为空
+
+    Scope scope() default Scope.SINGLETON; // 实例模式，默认单例
 
 }

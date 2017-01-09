@@ -2,12 +2,13 @@ package com.blinkfox.myioc.testbean;
 
 import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.annotation.Provider;
+import com.blinkfox.myioc.consts.Scope;
 
 /**
  * 引擎类
  * Created by blinkfox on 2017/1/8.
  */
-@Provider
+@Provider(value = "myEngine")
 public class Engine {
 
     @Injection
