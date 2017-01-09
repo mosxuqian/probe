@@ -18,7 +18,7 @@ public class ScannerTest {
     @Test
     public void testGetProviderAndInjections() {
         String packages = "com.blinkfox";
-        Map<String, ProviderInfo> providerInfoMap = IocAnnoScanner.INSTANCE.getProviderAndInjections(packages);
+        Map<String, ProviderInfo> providerInfoMap = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
         for (Map.Entry<String, ProviderInfo> entry: providerInfoMap.entrySet()) {
             String clsName = entry.getKey();
             ProviderInfo info = entry.getValue();

@@ -1,12 +1,12 @@
 package com.blinkfox.myioc.core;
 
-import com.blinkfox.myioc.annotation.Provider;
+import com.blinkfox.myioc.bean.Nil;
 import com.blinkfox.myioc.bean.ProviderInfo;
-import com.blinkfox.myioc.tools.StringHelper;
+import com.blinkfox.myioc.consts.Scope;
+import com.blinkfox.myioc.tools.ClassHelper;
 import com.blinkfox.utils.Log;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * IOC管理器
@@ -14,47 +14,33 @@ import java.util.Map;
  */
 public enum IocManager {
 
-    INSTANCE;
+    INSTANCE; // 实例
 
     private static final Log log = Log.get(IocManager.class);
 
+    // 用来存放key为注入id和value是实例bean的Map
+    private static final Map<String, Object> beanMap = new ConcurrentHashMap<String, Object>();
+
     /**
-     * 初始化依赖注入所有提供者的信息
-     * @param packages 多个不定参数的包路径名
-     * @return 提供者信息的集合
+     * 私有构造方法
      */
-    public List<ProviderInfo> initProviderInfo(String... packages) {
-        // Map<String, List<String>> iocMap = IocAnnoScanner.INSTANCE.getProviderAndInjections(packages);
-        Map<String, List<String>> iocMap = null;
-        List<ProviderInfo> providerInfos = new ArrayList<ProviderInfo>();
-        for (Map.Entry<String, List<String>> entry: iocMap.entrySet()) {
-            String className = entry.getKey();
-            List<String> fields = entry.getValue();
+    private IocManager() {
 
-            // 获取要注入类的class
-            Class cls = null;
-            try {
-                cls = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("未找到名为" + className + "的类!");
-            }
+    }
 
-            // 判断是否有@Provider注解，如果没有则默认该实例也提供,且注入的Id为该类名的驼峰式命名
-            boolean isProvider = cls.isAnnotationPresent(Provider.class);
-            ProviderInfo providerInfo = ProviderInfo.newInstance();
-            if (isProvider) {
-                Provider provider = (Provider) cls.getAnnotation(Provider.class);
-                String providerId = provider.value();
-                providerId = "".equals(providerId) ? StringHelper.getCamelByClsName(className) : providerId;
-                providerInfo.setId(providerId).setCls(cls).setScope(provider.scope());
-            } else {
-                // 获取默认的注入类信息，并设置其驼峰式命名的默认id和class等信息
-                String providerId = StringHelper.getCamelByClsName(className);
-                providerInfo.setId(providerId).setCls(cls);
-            }
-            providerInfos.add(providerInfo);
+    /**
+     * 初始化依赖注入所有提供者的注入id和实例bean的Map
+     * @param packages 多个不定参数的包路径名
+     * @return key为注入id和value是实例bean的Map
+     */
+    public Map<String, Object> initProviderBeanMap(String... packages) {
+        Map<String, ProviderInfo> providerInfoMap = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
+        for (ProviderInfo providerInfo: providerInfoMap.values()) {
+            Object obj = (providerInfo.getScope() == Scope.SINGLETON) ?
+                    ClassHelper.newInstance(providerInfo.getCls()) : Nil.INSTANCE;
+            beanMap.put(providerInfo.getId(), obj);
         }
-        return providerInfos;
+        return beanMap;
     }
 
 }

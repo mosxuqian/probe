@@ -1,10 +1,10 @@
 package com.blinkfox.myioc.test;
 
-import com.blinkfox.myioc.bean.ProviderInfo;
 import com.blinkfox.myioc.core.IocManager;
 import com.blinkfox.utils.Log;
 import org.junit.Test;
-import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 /**
@@ -16,12 +16,12 @@ public class IocManagerTest {
     private static final Log log = Log.get(IocManagerTest.class);
 
     @Test
-    public void testInitProviderInfo() {
-        List<ProviderInfo> providerInfos = IocManager.INSTANCE.initProviderInfo("com.blinkfox");
-        for (ProviderInfo info: providerInfos) {
-            log.info("ProviderInfo的id:" + info.getId() + ",cls:" + info.getCls() + ",scope:" + info.getScope());
+    public void testInitProviderBeanMap() {
+        Map<String, Object> beanMap = IocManager.INSTANCE.initProviderBeanMap("com.blinkfox");
+        for (String providerId: beanMap.keySet()) {
+            log.info("ProviderInfo的id:" + providerId);
         }
-        assertEquals(4, providerInfos.size());
+        assertEquals(6, beanMap.size());
     }
 
 }

@@ -59,13 +59,13 @@ public enum IocAnnoScanner {
         private ProviderInfo initProviderInfoByClsName(String clsName) {
             // 获取该类所在的类class和注解相关信息，并将其保存到providerInfo对象中
             Class cls = ClassHelper.getClass(clsName);
-            String providerId = "";
+            String providerId;
             Scope scope = Scope.SINGLETON;
             if (cls.isAnnotationPresent(Provider.class)) {
                 Provider provider = (Provider) cls.getAnnotation(Provider.class);
                 // 依赖诸如提供者的ID，如果为空，则默认将类名转换成驼峰式命名作为ID
                 providerId = provider.value();
-                providerId = providerId.trim().equals("") ? StringHelper.getCamelByClsName(clsName) : providerId;
+                providerId = "".equals(providerId.trim()) ? StringHelper.getCamelByClsName(clsName) : providerId;
                 scope = provider.scope();
             } else {
                 providerId = StringHelper.getCamelByClsName(clsName);
@@ -123,7 +123,7 @@ public enum IocAnnoScanner {
      * @param packages 多个包路径名
      * @return 提供依赖注入的类及其依赖元素集合的Map信息
      */
-    public Map<String, ProviderInfo> getProviderAndInjections(String... packages) {
+    public Map<String, ProviderInfo> getProviderInfoMaps(String... packages) {
         Reporter reporter = new Reporter(Provider.class, Injection.class);
         AnnotationDetector detector = new AnnotationDetector(reporter);
 
@@ -144,7 +144,7 @@ public enum IocAnnoScanner {
             for (String field: fields) {
                 // 先判断是否包含该注入的ID，如果没有则抛出异常，否则将需要注入的class加到ProviderInfo中的 injects 集合中
                 if (!idClsMap.containsKey(field)) {
-                    throw new RuntimeException("未找到需要注入ID为:" + field + "所依赖的类！");
+                    throw new RuntimeException("未找到需要注入ID为" + field + "所依赖的类！");
                 }
                 injects.add(idClsMap.get(field));
             }
