@@ -1,14 +1,9 @@
 package com.blinkfox.myioc.core;
 
-import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.bean.DataContainer;
-import com.blinkfox.myioc.bean.Nil;
 import com.blinkfox.myioc.bean.ProviderInfo;
-import com.blinkfox.myioc.consts.Scope;
-import com.blinkfox.myioc.tools.ClassHelper;
+import com.blinkfox.myioc.tools.ReflectHelper;
 import com.blinkfox.utils.Log;
-
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,27 +34,14 @@ public enum IocManager {
      * @return key为注入id和value是实例bean的Map
      */
     public Map<String, Object> initProviderBeanMap(String... packages) {
+        // 先获取依赖注入需要的全路径类名、提供者信息、依赖注入的id和对应的class等基础信息
         DataContainer container = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
         Map<String, ProviderInfo> providerInfoMap = container.getProviderInfoMap();
+        Map<String, Class> idClsMap = container.getIdClsMap();
+
+        // 遍历对每个提供者类及其依赖注入属性生成实例
         for (ProviderInfo providerInfo: providerInfoMap.values()) {
-            if (providerInfo.getScope() == Scope.SINGLETON) {
-                Class cls = providerInfo.getCls();
-                Object obj = ClassHelper.newInstance(cls);
-                List<String> fields = providerInfo.getFields();
-                Field[] declarFelds = cls.getDeclaredFields();
-                for (Field df: declarFelds) {
-                    if (df.isAnnotationPresent(Injection.class)) {
-                        df.setAccessible(true);
-                        try {
-                            df.set(obj, null);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            Object obj = (providerInfo.getScope() == Scope.SINGLETON) ?
-                    ClassHelper.newInstance(providerInfo.getCls()) : Nil.INSTANCE;
+            Object obj = injectProviderFields(providerInfo, providerInfoMap, idClsMap);
             beanMap.put(providerInfo.getId(), obj);
         }
 
@@ -67,13 +49,26 @@ public enum IocManager {
     }
 
     /**
-     * 根据ProviderInfo中的信息生成对应类的实例，如果是原型，则不生成对象，而赋值一个空类型
-     * @param providerInfo 依赖注入提供者信息
-     * @return 实例
+     * 对某个Provider的所有需要依赖注入的属性做注入功能，递归实例化每个类和属性的实例
+     * @param providerInfo 提供者信息实例
+     * @param providerInfoMap 提供依赖注入的类及其依赖元素集合的Map
+     * @param idClsMap Provider的ID和全路径类名的Map
+     * @return 该提供者对应的实例
      */
-    private Object newInstance(ProviderInfo providerInfo) {
-        return (providerInfo.getScope() == Scope.SINGLETON) ?
-                ClassHelper.newInstance(providerInfo.getCls()) : Nil.INSTANCE;
+    private Object injectProviderFields(ProviderInfo providerInfo,
+            Map<String, ProviderInfo> providerInfoMap, Map<String, Class> idClsMap) {
+        // 遍历对每个提供者类及其依赖注入属性生成实例
+        Class cls = providerInfo.getCls();
+        Object obj = ReflectHelper.newInstance(cls);
+        List<String> fields = providerInfo.getFields();
+        for (String fieldName: fields) {
+            Class injectCls = idClsMap.get(fieldName);
+            ProviderInfo injectProviderInfo = providerInfoMap.get(injectCls.getName());
+            Object injectObj = injectProviderFields(injectProviderInfo, providerInfoMap, idClsMap);
+            // Object injectObj = ReflectHelper.newInstance(injectCls);
+            ReflectHelper.setFieldValue(cls, obj, injectObj, fieldName);
+        }
+        return obj;
     }
 
 }

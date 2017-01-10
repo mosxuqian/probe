@@ -5,7 +5,7 @@ import com.blinkfox.myioc.annotation.Provider;
 import com.blinkfox.myioc.bean.DataContainer;
 import com.blinkfox.myioc.bean.ProviderInfo;
 import com.blinkfox.myioc.consts.Scope;
-import com.blinkfox.myioc.tools.ClassHelper;
+import com.blinkfox.myioc.tools.ReflectHelper;
 import com.blinkfox.myioc.tools.StringHelper;
 import com.blinkfox.utils.Log;
 import eu.infomas.annotation.AnnotationDetector;
@@ -59,7 +59,7 @@ public enum IocAnnoScanner {
          */
         private ProviderInfo initProviderInfoByClsName(String clsName) {
             // 获取该类所在的类class和注解相关信息，并将其保存到providerInfo对象中
-            Class cls = ClassHelper.getClass(clsName);
+            Class cls = ReflectHelper.getClass(clsName);
             String providerId;
             Scope scope = Scope.SINGLETON;
             if (cls.isAnnotationPresent(Provider.class)) {
