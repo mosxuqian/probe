@@ -4,7 +4,6 @@ import com.blinkfox.myioc.core.IocManager;
 import com.blinkfox.utils.Log;
 import org.junit.Test;
 import java.util.Map;
-
 import static org.junit.Assert.*;
 
 /**

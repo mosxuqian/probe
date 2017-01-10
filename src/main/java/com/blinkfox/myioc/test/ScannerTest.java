@@ -22,8 +22,8 @@ public class ScannerTest {
         for (Map.Entry<String, ProviderInfo> entry: providerInfoMap.entrySet()) {
             String clsName = entry.getKey();
             ProviderInfo info = entry.getValue();
-            log.info("className:" + clsName + ",ProviderInfo的id:" + info.getId() + ",cls:" +
-                    info.getCls() + ",scope:" + info.getScope() + ",fields:" + info.getFields().toString() +
+            log.info("className:" + clsName + ",ProviderInfo的id:" + info.getId() + ",clsName:" +
+                    info.getCls().getName() + ",scope:" + info.getScope() + ",fields:" + info.getFields().toString() +
                     ",injects:" + info.getInjects());
         }
 

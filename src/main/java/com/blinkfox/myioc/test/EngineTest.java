@@ -4,10 +4,7 @@ import com.blinkfox.myioc.testbean.Engine;
 import com.blinkfox.myioc.testbean.Material;
 import com.blinkfox.utils.Log;
 import org.junit.Test;
-
 import java.lang.reflect.Field;
-
-import static org.junit.Assert.*;
 
 /**
  * 动态属性注入的单元测试类
@@ -27,6 +24,7 @@ public class EngineTest {
 
         Class engineCls = engine.getClass();
         Field[] fields = engineCls.getDeclaredFields();
+        log.info("赋值前engine:" + engine.toString());
         for (Field field: fields) {
             log.info("---------");
             field.setAccessible(true);
@@ -36,9 +34,8 @@ public class EngineTest {
             if ("material".equals(field.getName())) {
                 field.set(engine, material);
             }
-            log.info("属性name:" + field.getName() + ",    属性值value:" + val);
         }
-        log.info("engine:" + engine.toString());
+        log.info("赋值后engine:" + engine.toString());
     }
 
 }

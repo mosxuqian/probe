@@ -2,7 +2,6 @@ package com.blinkfox.myioc.testbean;
 
 import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.annotation.Provider;
-import com.blinkfox.myioc.consts.Scope;
 
 /**
  * 引擎类
@@ -24,6 +23,15 @@ public class Engine {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * toString方法
+     * @return
+     */
+    public String toString() {
+        String materialName = material == null ? "null" : material.getName();
+        return new StringBuilder("engine name:" + name + ",material name:" + materialName).toString();
     }
 
 }
