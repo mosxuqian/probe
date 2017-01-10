@@ -1,6 +1,7 @@
 package com.blinkfox.myioc.test;
 
 import static org.junit.Assert.*;
+import com.blinkfox.myioc.bean.DataContainer;
 import com.blinkfox.myioc.bean.ProviderInfo;
 import com.blinkfox.myioc.core.IocAnnoScanner;
 import com.blinkfox.utils.Log;
@@ -18,13 +19,13 @@ public class ScannerTest {
     @Test
     public void testGetProviderAndInjections() {
         String packages = "com.blinkfox";
-        Map<String, ProviderInfo> providerInfoMap = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
+        DataContainer container = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
+        Map<String, ProviderInfo> providerInfoMap = container.getProviderInfoMap();
         for (Map.Entry<String, ProviderInfo> entry: providerInfoMap.entrySet()) {
             String clsName = entry.getKey();
             ProviderInfo info = entry.getValue();
             log.info("className:" + clsName + ",ProviderInfo的id:" + info.getId() + ",clsName:" +
-                    info.getCls().getName() + ",scope:" + info.getScope() + ",fields:" + info.getFields().toString() +
-                    ",injects:" + info.getInjects());
+                    info.getCls().getName() + ",scope:" + info.getScope() + ",fields:" + info.getFields().toString());
         }
 
         assertNotNull(providerInfoMap);

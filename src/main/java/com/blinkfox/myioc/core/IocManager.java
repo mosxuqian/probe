@@ -1,6 +1,7 @@
 package com.blinkfox.myioc.core;
 
 import com.blinkfox.myioc.annotation.Injection;
+import com.blinkfox.myioc.bean.DataContainer;
 import com.blinkfox.myioc.bean.Nil;
 import com.blinkfox.myioc.bean.ProviderInfo;
 import com.blinkfox.myioc.consts.Scope;
@@ -38,7 +39,8 @@ public enum IocManager {
      * @return key为注入id和value是实例bean的Map
      */
     public Map<String, Object> initProviderBeanMap(String... packages) {
-        Map<String, ProviderInfo> providerInfoMap = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
+        DataContainer container = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
+        Map<String, ProviderInfo> providerInfoMap = container.getProviderInfoMap();
         for (ProviderInfo providerInfo: providerInfoMap.values()) {
             if (providerInfo.getScope() == Scope.SINGLETON) {
                 Class cls = providerInfo.getCls();
@@ -53,15 +55,6 @@ public enum IocManager {
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
-                    }
-                }
-
-                List<Class> injects = providerInfo.getInjects();
-                if (injects.size() > 0) {
-                    for (Class injectCls: injects) {
-                        ProviderInfo injectProvInfo = providerInfoMap.get(injectCls.getName());
-                        Object injectObj = this.newInstance(injectProvInfo);
-
                     }
                 }
             }
