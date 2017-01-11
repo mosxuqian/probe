@@ -23,4 +23,13 @@ public class ProviderNotFoundException extends RuntimeException {
         super(msg);
     }
 
+    /**
+     * 附带日志消息和原异常信息参数的构造方法
+     * @param msg 日志信息
+     * @param t 异常信息
+     */
+    public ProviderNotFoundException(String msg, Throwable t) {
+        super(msg, t);
+    }
+
 }

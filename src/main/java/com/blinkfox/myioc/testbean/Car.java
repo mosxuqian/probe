@@ -2,6 +2,7 @@ package com.blinkfox.myioc.testbean;
 
 import com.blinkfox.myioc.annotation.Injection;
 import com.blinkfox.myioc.annotation.Provider;
+import com.blinkfox.utils.Log;
 
 /**
  * 测试的car 类
@@ -9,6 +10,8 @@ import com.blinkfox.myioc.annotation.Provider;
  */
 @Provider("car")
 public class Car {
+
+    private static final Log log = Log.get(Car.class);
 
     @Injection
     private Engine myEngine;
@@ -23,9 +26,9 @@ public class Car {
     private Material material;
 
     public void start() {
-        System.out.println("引擎是:" + myEngine.getName() + ",门的名字是:" + myDoor +
+        log.info("引擎是:" + myEngine.getName() + ",门的名字是:" + myDoor +
                 ",材料名称:" + material.getName() + ",轮子:" + wheel.getName());
-        System.out.println("开始开车...");
+        log.info("开始开车...");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.blinkfox.myioc.tools;
 
+import com.blinkfox.myioc.exceptioni.ClassForNameExecption;
 import com.blinkfox.myioc.exceptioni.InjectFieldException;
 import java.lang.reflect.Field;
 
@@ -10,6 +11,13 @@ import java.lang.reflect.Field;
 public final class ReflectHelper {
 
     /**
+     * 私有构造方法
+     */
+    private ReflectHelper() {
+        super();
+    }
+
+    /**
      * 根据全路径类名得到应用中对应的Class
      * @param clsName class名称
      * @return 类的class
@@ -18,7 +26,7 @@ public final class ReflectHelper {
         try {
             return Class.forName(clsName);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("未找到名为" + clsName + "的类!");
+            throw new ClassForNameExecption("未找到名为" + clsName + "的类!", e);
         }
     }
 
@@ -37,7 +45,7 @@ public final class ReflectHelper {
             field.set(obj, injectObj);
             return field;
         } catch (Exception e) {
-            throw new InjectFieldException("动态注入依赖字段的引用出错！");
+            throw new InjectFieldException("动态注入依赖字段的引用出错！", e);
         }
     }
 

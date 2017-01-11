@@ -29,6 +29,7 @@ public class Engine {
      * toString方法
      * @return
      */
+    @Override
     public String toString() {
         String materialName = material == null ? "null" : material.getName();
         return new StringBuilder("engine name:" + name + ",material name:" + materialName).toString();
