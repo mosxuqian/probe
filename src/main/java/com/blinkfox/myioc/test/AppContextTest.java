@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class AppContextTest {
 
-    private static final Log log = Log.get(IocManagerTest.class);
+    private static final Log log = Log.get(AppContextTest.class);
 
     @BeforeClass
     public static void init() {
