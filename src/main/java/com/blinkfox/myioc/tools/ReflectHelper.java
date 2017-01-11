@@ -23,32 +23,6 @@ public final class ReflectHelper {
     }
 
     /**
-     * 根据class得到该类的实例
-     * @param cls 对象类的class
-     * @return 对象类的实例
-     */
-    public static Object newInstance(Class cls) {
-        try {
-            return cls.newInstance();
-        }catch (Exception e) {
-            throw new RuntimeException("实例化类" + cls.getName() + "出错!");
-        }
-    }
-
-    /**
-     * 根据class得到该类的单例实例
-     * @param cls 对象类的class
-     * @return 对象类的实例
-     */
-    public static Object getInstance(Class cls) {
-        try {
-            return cls.newInstance();
-        }catch (Exception e) {
-            throw new RuntimeException("实例化类" + cls.getName() + "出错!");
-        }
-    }
-
-    /**
      * 动态注入依赖字段的引用
      * @param cls 待注入的提供者Class
      * @param obj 待注入的提供者实例

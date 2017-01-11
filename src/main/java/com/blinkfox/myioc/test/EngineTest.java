@@ -2,9 +2,9 @@ package com.blinkfox.myioc.test;
 
 import com.blinkfox.myioc.testbean.Engine;
 import com.blinkfox.myioc.testbean.Material;
+import com.blinkfox.myioc.tools.ReflectHelper;
 import com.blinkfox.utils.Log;
 import org.junit.Test;
-import java.lang.reflect.Field;
 import static org.junit.Assert.*;
 
 /**
@@ -16,7 +16,7 @@ public class EngineTest {
     private static final Log log = Log.get(EngineTest.class);
 
     @Test
-    public void testDynamicInject() throws IllegalAccessException, NoSuchFieldException {
+    public void testDynamicInject() {
         // 构造实例属性等信息
         Engine engine = new Engine();
         engine.setName("发动引擎");
@@ -26,9 +26,7 @@ public class EngineTest {
 
         // 动态赋值
         Class engineCls = engine.getClass();
-        Field field = engineCls.getDeclaredField("material");
-        field.setAccessible(true);
-        field.set(engine, material);
+        ReflectHelper.setFieldValue(engineCls, engine, material, "material");
 
         // 断言和输出结果
         String engineStr = engine.toString();

@@ -2,6 +2,7 @@ package com.blinkfox.myioc.core;
 
 import com.blinkfox.myioc.bean.DataContainer;
 import com.blinkfox.myioc.bean.ProviderInfo;
+import com.blinkfox.myioc.tools.ClassStrategy;
 import com.blinkfox.myioc.tools.ReflectHelper;
 import com.blinkfox.utils.Log;
 import java.util.List;
@@ -18,9 +19,6 @@ public enum IocManager {
 
     private static final Log log = Log.get(IocManager.class);
 
-    // 用来存放key为注入id和value是实例bean的Map
-    private static final Map<String, Object> beanMap = new ConcurrentHashMap<String, Object>();
-
     /**
      * 私有构造方法
      */
@@ -33,19 +31,21 @@ public enum IocManager {
      * @param packages 多个不定参数的包路径名
      * @return key为注入id和value是实例bean的Map
      */
-    public Map<String, Object> initProviderBeanMap(String... packages) {
+    public void initProviderBeanMap(String... packages) {
         // 先获取依赖注入需要的全路径类名、提供者信息、依赖注入的id和对应的class等基础信息
         DataContainer container = IocAnnoScanner.INSTANCE.getProviderInfoMaps(packages);
         Map<String, ProviderInfo> providerInfoMap = container.getProviderInfoMap();
         Map<String, Class> idClsMap = container.getIdClsMap();
 
         // 遍历对每个提供者类及其依赖注入属性生成实例
+        Map<String, Object> beanMap = new ConcurrentHashMap<String, Object>();
         for (ProviderInfo providerInfo: providerInfoMap.values()) {
             Object obj = injectProviderFields(providerInfo, providerInfoMap, idClsMap);
             beanMap.put(providerInfo.getId(), obj);
         }
 
-        return beanMap;
+        // 将Map存放到全局的数据容器中供获取
+        container.setBeanMap(beanMap);
     }
 
     /**
@@ -59,13 +59,12 @@ public enum IocManager {
             Map<String, ProviderInfo> providerInfoMap, Map<String, Class> idClsMap) {
         // 遍历对每个提供者类及其依赖注入属性生成实例
         Class cls = providerInfo.getCls();
-        Object obj = ReflectHelper.newInstance(cls);
+        Object obj = ClassStrategy.SINGLETON.getInstance(cls);
         List<String> fields = providerInfo.getFields();
         for (String fieldName: fields) {
             Class injectCls = idClsMap.get(fieldName);
             ProviderInfo injectProviderInfo = providerInfoMap.get(injectCls.getName());
             Object injectObj = injectProviderFields(injectProviderInfo, providerInfoMap, idClsMap);
-            // Object injectObj = ReflectHelper.newInstance(injectCls);
             ReflectHelper.setFieldValue(cls, obj, injectObj, fieldName);
         }
         return obj;

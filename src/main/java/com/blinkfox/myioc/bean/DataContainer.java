@@ -16,6 +16,9 @@ public class DataContainer {
     // 用来存放Provider的ID和全路径类名的一一对应关系信息的Map，key是ProviderId，value是对应类的Class
     private Map<String, Class> idClsMap;
 
+    // 用来存放bean和对应实例的map
+    private Map<String, Object> beanMap;
+
     // 初始化的唯一实例
     private static final DataContainer container = new DataContainer();
 
@@ -78,6 +81,14 @@ public class DataContainer {
 
     public void setIdClsMap(Map<String, Class> idClsMap) {
         this.idClsMap = idClsMap;
+    }
+
+    public Map<String, Object> getBeanMap() {
+        return beanMap;
+    }
+
+    public void setBeanMap(Map<String, Object> beanMap) {
+        this.beanMap = beanMap;
     }
 
 }
