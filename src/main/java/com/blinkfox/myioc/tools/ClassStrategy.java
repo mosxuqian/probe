@@ -1,6 +1,6 @@
 package com.blinkfox.myioc.tools;
 
-import com.blinkfox.myioc.exceptioni.NewInstanceException;
+import com.blinkfox.myioc.exception.NewInstanceException;
 import java.util.HashMap;
 import java.util.Map;
 

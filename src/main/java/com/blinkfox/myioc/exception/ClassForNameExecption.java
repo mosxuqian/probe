@@ -1,17 +1,17 @@
-package com.blinkfox.myioc.exceptioni;
+package com.blinkfox.myioc.exception;
 
 /**
- * 自定义的“生成实例”异常
- * Created by blinkfox on 2017/1/11.
+ * 自定义的根据“类名生成类的Class”异常
+ * Created by blinkfox on 2017-01-11.
  */
-public class NewInstanceException extends RuntimeException {
+public class ClassForNameExecption extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 默认无参构造方法
      */
-    public NewInstanceException() {
+    public ClassForNameExecption() {
         super();
     }
 
@@ -19,7 +19,7 @@ public class NewInstanceException extends RuntimeException {
      * 附带日志消息参数的构造方法
      * @param msg 日志消息
      */
-    public NewInstanceException(String msg) {
+    public ClassForNameExecption(String msg) {
         super(msg);
     }
 
@@ -28,7 +28,7 @@ public class NewInstanceException extends RuntimeException {
      * @param msg 日志信息
      * @param t 异常信息
      */
-    public NewInstanceException(String msg, Throwable t) {
+    public ClassForNameExecption(String msg, Throwable t) {
         super(msg, t);
     }
 

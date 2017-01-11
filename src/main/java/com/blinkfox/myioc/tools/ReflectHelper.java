@@ -1,7 +1,7 @@
 package com.blinkfox.myioc.tools;
 
-import com.blinkfox.myioc.exceptioni.ClassForNameExecption;
-import com.blinkfox.myioc.exceptioni.InjectFieldException;
+import com.blinkfox.myioc.exception.ClassForNameExecption;
+import com.blinkfox.myioc.exception.InjectFieldException;
 import java.lang.reflect.Field;
 
 /**

@@ -1,4 +1,4 @@
-package com.blinkfox.myioc.exceptioni;
+package com.blinkfox.myioc.exception;
 
 /**
  * 自定义的“依赖注入提供者未找到”异常

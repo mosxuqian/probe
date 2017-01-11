@@ -1,6 +1,6 @@
 package com.blinkfox.myioc.bean;
 
-import com.blinkfox.myioc.exceptioni.ProviderNotFoundException;
+import com.blinkfox.myioc.exception.ProviderNotFoundException;
 import java.util.List;
 import java.util.Map;
 
