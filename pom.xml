@@ -123,6 +123,21 @@
             <artifactId>annotation-detector</artifactId>
             <version>3.0.5</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.jett</groupId>
+            <artifactId>jett-core</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.14</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
     <build>
