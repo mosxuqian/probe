@@ -4,6 +4,7 @@ import com.blinkfox.utils.Log;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 对象属性比较工具类
@@ -13,6 +14,10 @@ public class ObjCompareUtils {
 
     private static final Log log = Log.get(ObjCompareUtils.class);
 
+    private ObjCompareUtils() {
+        super();
+    }
+
     /**
      * 比较的方法
      * @param obj1
@@ -20,8 +25,7 @@ public class ObjCompareUtils {
      * @return
      * @throws Exception
      */
-    public static List<PropRecord> compare(Object obj1, Object Obj2) {
-        long startTime = System.currentTimeMillis();
+    public static List<PropRecord> compare(Object obj1, Object Obj2, Map<String, String> propMap) {
         List<PropRecord> props = new ArrayList<PropRecord>();
         Field[] fs = obj1.getClass().getDeclaredFields();
         for (Field f : fs) {
@@ -36,13 +40,40 @@ public class ObjCompareUtils {
             }
 
             // 判断这两对象该属性值是否相等，如果不相等则将差异记录到list集合中
-            if (!equals(v1, v2)) {
-
-                props.add(new PropRecord(f.getName(), f.getName(), objToStr(v1), objToStr(v2)));
-
+            String fieldName = f.getName();
+            if (!equals(v1, v2) && propMap.containsKey(fieldName)) {
+                props.add(new PropRecord(f.getName(), propMap.get(fieldName), objToStr(v1), objToStr(v2)));
             }
         }
-        System.out.println("循环中的反射耗时:" + (System.currentTimeMillis() - startTime) + " ms");
+
+        return props;
+    }
+
+    /**
+     * 比较的方法
+     * @param obj1
+     * @param Obj2
+     * @return
+     * @throws Exception
+     */
+    public static List<PropRecord> compare2(Object obj1, Object Obj2, Map<String, String> propMap) {
+        List<PropRecord> props = new ArrayList<PropRecord>();
+        Class cls = obj1.getClass();
+        try {
+            for (Map.Entry<String, String> entry: propMap.entrySet()) {
+                String key = entry.getKey();
+                Field field = cls.getDeclaredField(key);
+                field.setAccessible(true);
+                Object v1 = field.get(obj1);
+                Object v2 = field.get(Obj2);
+                if (!equals(v1, v2)) {
+                    props.add(new PropRecord(key, entry.getValue(), objToStr(v1), objToStr(v2)));
+                }
+            }
+        } catch (Exception e) {
+            log.error("未获取到对象的属性!", e);
+        }
+
         return props;
     }
 
