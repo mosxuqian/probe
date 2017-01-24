@@ -1,12 +1,14 @@
 package com.blinkfox.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.blinkfox.carrier.annotation.Injection;
+import com.blinkfox.carrier.core.CarrierContext;
 import com.blinkfox.config.MyZealotConfig;
 import com.blinkfox.interceptor.AaaInter;
 import com.blinkfox.interceptor.BbbInter;
 import com.blinkfox.interceptor.DemoInterceptor;
 import com.blinkfox.model.User;
-import com.blinkfox.test.reflect.CostTime;
+import com.blinkfox.test.carrier.IUserService;
 import com.blinkfox.zealot.bean.SqlInfo;
 import com.blinkfox.zealot.core.Zealot;
 import com.jfinal.aop.Before;
@@ -25,6 +27,9 @@ import java.util.Map;
  */
 @Before({DemoInterceptor.class, AaaInter.class})
 public class UserController extends Controller {
+
+    @Injection
+    private IUserService userService;
 
     @Clear()
     @Before({BbbInter.class})
@@ -145,6 +150,17 @@ public class UserController extends Controller {
 
         List<User> users = User.userDao.find(sql, params);
         renderJson(users);
+    }
+
+    /**
+     * 根据用户ID查询该用户信息
+     */
+    public void getUserById() {
+        String userId = "2";
+        userService = userService == null ?
+                (IUserService) CarrierContext.getBean("userService") : userService;
+        User user = userService.findUserById(userId);
+        renderJson(user);
     }
 
 }
