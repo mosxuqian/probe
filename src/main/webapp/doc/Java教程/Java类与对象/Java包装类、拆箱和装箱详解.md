@@ -60,7 +60,7 @@ obj 等价于 obj1？true
 Integer类有一个静态的`paseInt()`方法，可以将字符串转换为整数，语法为：
 
 ```java
-parseInt(String s, int radix);
+Integer.parseInt(String s, int radix);
 ```
 
 s为要转换的字符串，`radix`为进制，可选，默认为十进制。
