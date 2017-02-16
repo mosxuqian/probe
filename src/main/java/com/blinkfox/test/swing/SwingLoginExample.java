@@ -2,8 +2,11 @@ package com.blinkfox.test.swing;
 
 import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Swing登录示例
@@ -51,26 +54,52 @@ public class SwingLoginExample {
         passwordText.setBounds(70, 60, 220, 25);
         panel.add(passwordText);
 
+        // 提示信息组件
+        JLabel msgLabel = new JLabel();
+        msgLabel.setBounds(70, 90, 150, 20);
+        msgLabel.setForeground(Color.RED);
+        panel.add(msgLabel);
+
+        // 密码框的回车监听登录事件
+        passwordText.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {}
+
+            /**
+             * 如果松开了回车键，则进行登录
+             * @param e
+             */
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (KeyEvent.VK_ENTER == e.getKeyCode()) {
+                    validAndLogin(userText, passwordText, msgLabel);
+                }
+            }
+        });
+
         // 创建登录按钮
         JButton loginButton = new JButton("登 录");
-        loginButton.setBounds(70, 110, 80, 25);
+        loginButton.setBounds(70, 120, 80, 25);
         // 登录单击事件
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                validLogin(userText, passwordText);
+                validAndLogin(userText, passwordText, msgLabel);
             }
         });
         panel.add(loginButton);
 
         // 创建重置按钮
         JButton resetBtn = new JButton("重 置");
-        resetBtn.setBounds(180, 110, 80, 25);
+        resetBtn.setBounds(190, 120, 80, 25);
         // 重置的单击事件
         resetBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                reset(userText, passwordText);
+                reset(userText, passwordText, msgLabel);
             }
         });
         panel.add(resetBtn);
@@ -81,25 +110,29 @@ public class SwingLoginExample {
      * @param userText
      * @param passwordText
      */
-    private static void validLogin(JTextField userText, JPasswordField passwordText) {
+    private static void validAndLogin(JTextField userText, JPasswordField passwordText, JLabel msgLabel) {
         String userName = userText.getText();
         String password = new String(passwordText.getPassword()).trim();
 
         if (StringUtils.isBlank(userName)) {
-            JOptionPane.showMessageDialog(null, "用户账户不能为空！", "温馨提示", JOptionPane.WARNING_MESSAGE);
+            msgLabel.setText("用户账户不能为空！");
             return;
         }
 
         if (StringUtils.isBlank(password)) {
-            JOptionPane.showMessageDialog(null, "账户密码不能为空！", "温馨提示", JOptionPane.WARNING_MESSAGE);
+            msgLabel.setText("账户密码不能为空！");
             return;
         }
 
         if ("blinkfox".equals(userName) && "123456".equals(password)) {
-            JOptionPane.showMessageDialog(null, "登录成功！", "温馨提示", JOptionPane.INFORMATION_MESSAGE);
+            msgLabel.setText("登录成功！");
+            msgLabel.setForeground(Color.GREEN);
             return;
         } else {
-            JOptionPane.showMessageDialog(null, "登录失败！", "温馨提示", JOptionPane.ERROR_MESSAGE);
+            msgLabel.setText("登录失败！");
+            msgLabel.setForeground(Color.RED);
+            passwordText.setFocusable(true);
+            passwordText.setText("");
             return;
         }
     }
@@ -109,9 +142,11 @@ public class SwingLoginExample {
      * @param userText
      * @param passwordText
      */
-    private static void reset(JTextField userText, JPasswordField passwordText) {
+    private static void reset(JTextField userText, JPasswordField passwordText, JLabel msgLabel) {
         userText.setText("");
         passwordText.setText("");
+        msgLabel.setText("");
+        msgLabel.setForeground(Color.RED);
     }
 
     /**
