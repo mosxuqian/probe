@@ -1,7 +1,6 @@
 package com.blinkfox.test.swing;
 
 import org.apache.commons.lang3.StringUtils;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,9 +58,7 @@ public class SwingLoginExample {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String userName = userText.getText();
-                String password = new String(passwordText.getPassword()).trim();
-                validLogin(userName, password);
+                validLogin(userText, passwordText);
             }
         });
         panel.add(loginButton);
@@ -81,10 +78,13 @@ public class SwingLoginExample {
 
     /**
      * 实现登录判断的方法
-     * @param userName
-     * @param password
+     * @param userText
+     * @param passwordText
      */
-    private static void validLogin(String userName, String password) {
+    private static void validLogin(JTextField userText, JPasswordField passwordText) {
+        String userName = userText.getText();
+        String password = new String(passwordText.getPassword()).trim();
+
         if (StringUtils.isBlank(userName)) {
             JOptionPane.showMessageDialog(null, "用户账户不能为空！", "温馨提示", JOptionPane.WARNING_MESSAGE);
             return;
