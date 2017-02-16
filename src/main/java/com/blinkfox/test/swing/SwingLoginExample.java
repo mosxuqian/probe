@@ -1,11 +1,10 @@
 package com.blinkfox.test.swing;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Swing登录示例
@@ -56,12 +55,63 @@ public class SwingLoginExample {
         // 创建登录按钮
         JButton loginButton = new JButton("登 录");
         loginButton.setBounds(70, 110, 80, 25);
+        // 登录单击事件
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = userText.getText();
+                String password = new String(passwordText.getPassword()).trim();
+                validLogin(userName, password);
+            }
+        });
         panel.add(loginButton);
 
         // 创建重置按钮
         JButton resetBtn = new JButton("重 置");
         resetBtn.setBounds(180, 110, 80, 25);
+        // 重置的单击事件
+        resetBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reset(userText, passwordText);
+            }
+        });
         panel.add(resetBtn);
+    }
+
+    /**
+     * 实现登录判断的方法
+     * @param userName
+     * @param password
+     */
+    private static void validLogin(String userName, String password) {
+        if (StringUtils.isBlank(userName)) {
+            JOptionPane.showMessageDialog(null, "用户账户不能为空！", "温馨提示", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (StringUtils.isBlank(password)) {
+            JOptionPane.showMessageDialog(null, "账户密码不能为空！", "温馨提示", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if ("blinkfox".equals(userName) && "123456".equals(password)) {
+            JOptionPane.showMessageDialog(null, "登录成功！", "温馨提示", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } else {
+            JOptionPane.showMessageDialog(null, "登录失败！", "温馨提示", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+
+    /**
+     * 重置输入框内容
+     * @param userText
+     * @param passwordText
+     */
+    private static void reset(JTextField userText, JPasswordField passwordText) {
+        userText.setText("");
+        passwordText.setText("");
     }
 
     /**
