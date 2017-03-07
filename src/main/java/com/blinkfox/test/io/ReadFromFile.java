@@ -1,5 +1,7 @@
 package com.blinkfox.test.io;
 
+import com.blinkfox.utils.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +16,8 @@ import java.io.Reader;
  * 读取文件的类
  */
 public class ReadFromFile {
+
+    private static final Log log = Log.get(ReadFromFile.class);
 
     /**
      * 私有构造方法
@@ -45,12 +49,12 @@ public class ReadFromFile {
 				System.out.print("len:" + len);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("文件读取异常！", e);
 		} finally {
 			try {
 				is.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+                log.error("文件关闭异常！", e);
 			}
 		}
 	}
@@ -71,12 +75,12 @@ public class ReadFromFile {
 				System.out.print("len:" + len);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("文件读取异常！", e);
 		} finally {
 			try {
 				is.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+                log.error("文件关闭异常！", e);
 			}
 		}
 	}
@@ -102,12 +106,12 @@ public class ReadFromFile {
                 }
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("文件读取异常！", e);
 		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+                log.error("文件关闭异常！", e);
 			}
 		}
 	}
@@ -141,12 +145,12 @@ public class ReadFromFile {
                 }
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("文件读取异常！", e);
 		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+                log.error("文件关闭异常！", e);
 			}
 		}
 	}
@@ -168,12 +172,12 @@ public class ReadFromFile {
                 line++;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("文件读取异常！", e);
 		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+                log.error("文件关闭异常！", e);
 			}
 		}
 	}
@@ -202,12 +206,13 @@ public class ReadFromFile {
                 System.out.write(bytes, 0, byteread);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("文件读取异常！", e);
         } finally {
             if (randomFile != null) {
                 try {
                     randomFile.close();
-                } catch (IOException e1) {
+                } catch (IOException e) {
+                    log.error("文件关闭异常！", e);
                 }
             }
         }

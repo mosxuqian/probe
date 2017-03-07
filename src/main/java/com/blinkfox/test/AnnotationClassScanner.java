@@ -86,8 +86,6 @@ public final class AnnotationClassScanner {
                 }
                 log.info("scan path:{}" + fileNames.toString());
                 cf.detect(toStringArray(fileNames));
-                // FIXME 这里扫描全部可能会有性能问题
-                // XXX 在java项目中可以扫描到jar文件中的类，在web项目中不行.
                 cf.detect();
             } else {
                 cf.detect(packageNames);
