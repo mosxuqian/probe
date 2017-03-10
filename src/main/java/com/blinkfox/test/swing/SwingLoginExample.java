@@ -1,5 +1,7 @@
 package com.blinkfox.test.swing;
 
+import com.blinkfox.utils.Log;
+import freeseawind.lf.LittleLuckLookAndFeel;
 import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +15,27 @@ import java.awt.event.KeyListener;
  * Created by blinkfox on 2017-02-08.
  */
 public class SwingLoginExample {
+
+    private static final Log log = Log.get(SwingLoginExample.class);
+
+    //使用静态代码块加载界面皮肤
+    static {
+        try {
+            EventQueue.invokeAndWait(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        UIManager.setLookAndFeel(LittleLuckLookAndFeel.class.getName());
+                    } catch (Exception e) {
+                        log.error("设置界面风格失败", e);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            log.error("页面设置风格失败", e);
+        }
+    }
 
     /**
      * 创建和设置登录面板
