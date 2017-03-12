@@ -18,6 +18,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 /**
  * JavaFx的SignIn示例
  * Created by blinkfox on 2017/3/12.
@@ -35,7 +37,7 @@ public class SignIn extends Application{
 
         // 欢迎标题
         Text sceneTitle = new Text("欢迎登录");
-        sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        sceneTitle.setId("sceneText");
         grid.add(sceneTitle, 0, 0, 2, 1);
 
         // 用户账户
@@ -45,7 +47,7 @@ public class SignIn extends Application{
         grid.add(userField, 1, 1);
 
         // 用户密码
-        Label pwdLabel = new Label("账户：");
+        Label pwdLabel = new Label("密码：");
         grid.add(pwdLabel, 0, 2);
         TextField pwdField = new TextField();
         grid.add(pwdField, 1, 2);
@@ -59,11 +61,12 @@ public class SignIn extends Application{
 
         // 显示提示信息的文本
         final Text actionTarget = new Text();
+        actionTarget.setId("actionTarget");
         grid.add(actionTarget, 0, 6);
         grid.setColumnSpan(actionTarget, 2);
         grid.setHalignment(actionTarget, HPos.RIGHT);
-        actionTarget.setId("actionTarget");
 
+        // 点击事件
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -74,6 +77,7 @@ public class SignIn extends Application{
 
         Scene scene = new Scene(grid, 300, 275);
         primaryStage.setScene(scene);
+        scene.getStylesheets().add(this.getClass().getResource("/javafx/Signin.css").toExternalForm());
         primaryStage.setTitle("JavaFx SignIn Demo");
         primaryStage.show();
     }
