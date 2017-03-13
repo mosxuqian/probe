@@ -21,12 +21,10 @@ public class FXMLExample extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
-        URL url = getClass().getResource("/javafx/fxml/fxml_example.fxml");
-        Parent root = FXMLLoader.load(url);
-
-        Scene scene = new Scene(root);
+        Parent root = FXMLLoader.load(getClass().getResource("/javafx/fxml/fxml_example.fxml"));
+        Scene scene = new Scene(root, 300, 275);
         stage.setScene(scene);
-        stage.setTitle("测试fxml的示例");
+        stage.setTitle("欢迎使用FXML创建登录示例");
         stage.show();
     }
 
