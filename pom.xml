@@ -98,10 +98,16 @@
             <artifactId>dwr</artifactId>
             <version>3.0.1-RELEASE</version>
         </dependency>
+        <!-- slf4j及其自带的简单实现包 -->
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.24</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.24</version>
         </dependency>
         <dependency>
             <groupId>org.tinylog</groupId>
@@ -112,6 +118,12 @@
             <groupId>cn.jimmyshi</groupId>
             <artifactId>bean-query</artifactId>
             <version>1.1.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
@@ -143,11 +155,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>ooxml-schemas</artifactId>
             <version>1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.javadev</groupId>
