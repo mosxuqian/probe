@@ -1,4 +1,4 @@
-package com.blinkfox.test.tinylog;
+package com.blinkfox.learn.tinylog;
 
 import org.pmw.tinylog.Logger;
 import org.pmw.tinylog.LoggingContext;
