@@ -33,6 +33,10 @@ public class TinylogDemo {
 
         Logger.info("{} + {} = 3", 1, 2);
 
+        for (int i = 0; i < 1000; i++) {
+            Logger.info("循环打印日志, {}", i);
+        }
+
         String a = null;
         try {
             a.toString();
