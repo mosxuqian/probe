@@ -12,6 +12,13 @@ public class HelloWorld {
     private static final Logger log = LoggerFactory.getLogger(HelloWorld.class);
 
     /**
+     * 私有构造方法
+     */
+    private HelloWorld() {
+        super();
+    }
+
+    /**
      * main方法
      * @param args 数组参数
      */
