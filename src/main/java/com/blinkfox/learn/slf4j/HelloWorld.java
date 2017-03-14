@@ -24,7 +24,10 @@ public class HelloWorld {
      */
     public static void main(String[] args) {
         String name = "World";
-        log.info("Hello {}!", name);
+        log.debug("This is debug level!");
+        log.info("This is info level! Hello {}!", name);
+        log.warn("This is warn level!");
+        log.error("This is error level!");
     }
 
 }

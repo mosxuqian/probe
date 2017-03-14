@@ -2,15 +2,25 @@ package com.blinkfox.learn.tinylog;
 
 import org.pmw.tinylog.Logger;
 import org.pmw.tinylog.LoggingContext;
-
 import java.util.Date;
 
 /**
  * tinylog测试类
  * Created by blinkfox on 2016/12/7.
  */
-public class Application {
+public class TinylogDemo {
 
+    /**
+     * 私有构造方法
+     */
+    private TinylogDemo() {
+        super();
+    }
+
+    /**
+     * main 方法
+     * @param args 数组参数
+     */
     public static void main(String[] args) {
         Logger.trace("Hello trace");
         Logger.debug("Hello debug");
