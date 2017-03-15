@@ -2,14 +2,12 @@ package com.blinkfox.learn.javafx.address;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.pmw.tinylog.Logger;
-
 import java.io.IOException;
 
 /**
