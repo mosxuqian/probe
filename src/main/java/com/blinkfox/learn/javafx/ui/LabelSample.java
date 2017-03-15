@@ -1,4 +1,4 @@
-package com.blinkfox.test.javafx.ui;
+package com.blinkfox.learn.javafx.ui;
 
 import javafx.application.Application;
 import javafx.scene.Group;
