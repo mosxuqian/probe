@@ -1,6 +1,10 @@
 package com.blinkfox.learn.javafx.address;
 
+import com.blinkfox.learn.javafx.address.controller.PersonOverviewController;
+import com.blinkfox.learn.javafx.address.model.Person;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -16,9 +20,27 @@ import java.io.IOException;
  */
 public class MainApp extends Application {
 
+    // 主stage
     private Stage primaryStage;
 
     private BorderPane rootLayout;
+
+    // 可观察的person集合
+    private ObservableList<Person> persons = FXCollections.observableArrayList();
+
+    /**
+     * 构造器,初始化一些person数据
+     */
+    public MainApp() {
+        persons.add(new Person("张", "三"));
+        persons.add(new Person("李", "四"));
+        persons.add(new Person("王", "五"));
+        persons.add(new Person("马", "六"));
+        persons.add(new Person("赵", "七"));
+        persons.add(new Person("周", "八"));
+        persons.add(new Person("孙", "九"));
+        persons.add(new Person("郑", "十"));
+    }
 
     /**
      * start
@@ -52,8 +74,15 @@ public class MainApp extends Application {
      */
     private void showPersonOverview() {
         try {
-            AnchorPane personOverview = FXMLLoader.load(getClass().getResource("/javafx/fxml/PersonOverview.fxml"));
+            // 加载PersonOverview.fxml
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("/javafx/fxml/PersonOverview.fxml"));
+            AnchorPane personOverview = loader.load();
             rootLayout.setCenter(personOverview);
+
+            // 给这个Controller设置MainApp实例
+            PersonOverviewController controller = loader.getController();
+            controller.setMainApp(this);
         } catch (IOException e) {
             Logger.error(e, "加载PersonOverview文件失败");
         }
@@ -65,6 +94,14 @@ public class MainApp extends Application {
      */
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    /**
+     * 得到可观察的person集合数据
+     * @return persons
+     */
+    public ObservableList<Person> getPersons() {
+        return persons;
     }
 
     /**
