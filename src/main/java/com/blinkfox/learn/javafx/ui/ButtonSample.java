@@ -99,6 +99,7 @@ public class ButtonSample extends Application {
         ((Group)scene.getRoot()).getChildren().add(vbox);
 
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("/javafx/image/ok.png"));
         primaryStage.setTitle("JavaFx的Button示例");
         primaryStage.setWidth(310);
         primaryStage.setHeight(200);
