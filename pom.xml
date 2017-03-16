@@ -167,6 +167,11 @@
             <version>2.0.0</version>
         </dependency>
         <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.12</version>
+        </dependency>
+        <dependency>
             <groupId>com.blinkfox</groupId>
             <artifactId>carrier</artifactId>
             <version>1.0.0-SNAPSHOT</version>

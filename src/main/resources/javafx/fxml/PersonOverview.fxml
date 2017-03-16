@@ -62,7 +62,7 @@
                      <children>
                         <Button mnemonicParsing="false" text="新增" />
                         <Button mnemonicParsing="false" text="编辑" />
-                        <Button mnemonicParsing="false" text="删除" />
+                        <Button fx:id="delPersonBtn" onAction="#delPersonAction" mnemonicParsing="false" text="删除" />
                      </children>
                   </HBox>
                </children>

@@ -53,7 +53,7 @@ public class MainApp extends Application {
         initRootLayout();
         showPersonOverview();
         primaryStage.setTitle("联系人管理应用");
-        primaryStage.getIcons().add(new Image("/javafx/image/ok.png"));
+        primaryStage.getIcons().add(new Image("/javafx/image/notebook.png"));
         primaryStage.show();
     }
 
