@@ -1,6 +1,9 @@
 package com.blinkfox.learn.javafx.address.model;
 
+import com.blinkfox.learn.javafx.address.utils.LocalDateAdapter;
 import javafx.beans.property.*;
+
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 
 /**
@@ -75,6 +78,11 @@ public class Person {
         this.lastName.set(lastName);
     }
 
+    /**
+     * 获取生日，并添加LocalDate适配器
+     * @return
+     */
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getBirthday() {
         return birthday.get();
     }

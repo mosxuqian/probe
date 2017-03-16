@@ -3,6 +3,7 @@ package com.blinkfox.learn.javafx.address.controller;
 import com.blinkfox.learn.javafx.address.MainApp;
 import com.blinkfox.learn.javafx.address.model.Person;
 import com.blinkfox.learn.javafx.address.utils.DateUtils;
+import com.blinkfox.learn.javafx.address.utils.DialogUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.pmw.tinylog.Logger;
@@ -109,20 +110,8 @@ public class PersonOverviewController {
                 showPersonDetail(person);
             }
         } else {
-            alertNotSelected();
+            DialogUtils.alertWarn("删除联系人失败", "你还没有选中联系人，无法删除，请选择您需要删除的联系人");
         }
-    }
-
-    /**
-     * 弹出未选择联系人的警告提示框
-     */
-    private void alertNotSelected() {
-        Logger.warn("没有选中联系人，无法删除");
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("温馨提示");
-        alert.setHeaderText("无法删除联系人");
-        alert.setContentText("你还没有选中联系人，无法删除，请选择您需要删除的联系人");
-        alert.showAndWait();
     }
 
     /**
@@ -134,7 +123,7 @@ public class PersonOverviewController {
         if (selectedIndex >= 0) {
             personTable.getItems().remove(selectedIndex);
         } else {
-            alertNotSelected();
+            DialogUtils.alertWarn("删除联系人失败", "你还没有选中联系人，无法删除，请选择您需要删除的联系人");
         }
     }
 

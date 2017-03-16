@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  * Java8日期工具类
  * Created by blinkfox on 2017-03-16.
  */
-public class DateUtils {
+public final class DateUtils {
 
     /* 标准日期格式 */
     private static final String STAND_DATE = "yyyy-MM-dd";

@@ -2,7 +2,10 @@ package com.blinkfox.learn.javafx.address;
 
 import com.blinkfox.learn.javafx.address.controller.PersonEditController;
 import com.blinkfox.learn.javafx.address.controller.PersonOverviewController;
+import com.blinkfox.learn.javafx.address.controller.RootLayoutController;
 import com.blinkfox.learn.javafx.address.model.Person;
+import com.blinkfox.learn.javafx.address.model.PersonsWrapper;
+import com.blinkfox.learn.javafx.address.utils.DialogUtils;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +17,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.pmw.tinylog.Logger;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 /**
  * 主运行类
@@ -26,6 +36,9 @@ public class MainApp extends Application {
     private Stage primaryStage;
 
     private BorderPane rootLayout;
+
+    /* 配置文件key常量 */
+    private static final String PREFS_FILE_PATH = "filePath";
 
     // 可观察的person集合
     private ObservableList<Person> persons = FXCollections.observableArrayList();
@@ -56,7 +69,7 @@ public class MainApp extends Application {
         showPersonOverview();
         primaryStage.setTitle("联系人管理应用");
         primaryStage.getIcons().add(new Image("/javafx/image/book.png"));
-        primaryStage.show();
+
     }
 
     /**
@@ -65,10 +78,25 @@ public class MainApp extends Application {
     private void initRootLayout() {
         try {
             // 加载RootLayout.fxml
-            rootLayout = FXMLLoader.load(getClass().getResource("/javafx/fxml/RootLayout.fxml"));
+            // 加载PersonOverview.fxml
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("/javafx/fxml/RootLayout.fxml"));
+            rootLayout = loader.load();
             primaryStage.setScene(new Scene(rootLayout));
+
+            // 得到对应的控制器，并设置mainApp实例
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
+
+            primaryStage.show();
         } catch (IOException e) {
             Logger.error(e, "加载RootLayout.fxml文件失败");
+        }
+
+        // 加载最后打开的Person文件
+        File file = this.getPersonFilePath();
+        if (file != null) {
+            this.loadPersonsFromFile(file);
         }
     }
 
@@ -119,6 +147,82 @@ public class MainApp extends Application {
         controller.setPerson(person);
         editStage.showAndWait();
         return controller.isOnClicked();
+    }
+
+    /**
+     * 获取用户的注册文件信息
+     * @return file
+     */
+    public File getPersonFilePath() {
+        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+        String filePath = prefs.get(PREFS_FILE_PATH, null);
+        return filePath != null ? new File(filePath) : null;
+    }
+
+    /**
+     * 设置当前加载的文件的文件路径。 该路径持久存储在操作系统特定的注册表中。
+     * @param file file
+     */
+    public void setPersonFilePath(File file) {
+        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+        if (file != null) {
+            prefs.put(PREFS_FILE_PATH, file.getPath());
+            primaryStage.setTitle("联系人应用-" + file.getName());
+        } else {
+            prefs.remove(PREFS_FILE_PATH);
+            primaryStage.setTitle("联系人应用");
+        }
+    }
+
+    /**
+     * 从指定的文件加载Person数据，将替换当前的Persons数据。
+     * @param file file
+     */
+    public void loadPersonsFromFile(File file) {
+        PersonsWrapper personsWrapper = null;
+        try {
+            JAXBContext context = JAXBContext.newInstance(PersonsWrapper.class);
+            Unmarshaller um = context.createUnmarshaller();
+
+            // 从XML文件中读取并反解析为Java对象
+            personsWrapper = (PersonsWrapper) um.unmarshal(file);
+        } catch (Exception e) {
+            Logger.error(e, "加载联系人应用的注册表信息失败");
+            Preferences.userNodeForPackage(MainApp.class).remove(PREFS_FILE_PATH);
+            DialogUtils.alertWarn("加载联系人应用的注册表信息失败", "生成JAXBContext实例失败");
+            return;
+        }
+
+        // 将文件中的person信息存到可观察列表中
+        persons.clear();
+        persons.addAll(personsWrapper.getPersons());
+
+        // 保存文件到注册表中
+        setPersonFilePath(file);
+    }
+
+    /**
+     * 保持persons信息到注册表文件中
+     * @param file file
+     */
+    public void savePersonsToFile(File file) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(PersonsWrapper.class);
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            PersonsWrapper wrapper = new PersonsWrapper();
+            wrapper.setPersons(persons);
+
+            // 解析Pesons信息到XML文件中
+            m.marshal(wrapper, file);
+
+            // 保存文件到注册表中
+            setPersonFilePath(file);
+        } catch (JAXBException e) {
+            Logger.error(e, "保持persons信息到注册表文件中失败");
+            DialogUtils.alertWarn("保存联系人信息失败", "保持persons信息到注册表文件中失败");
+        }
     }
 
     /**
