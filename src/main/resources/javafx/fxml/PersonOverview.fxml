@@ -2,12 +2,11 @@
 
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.address.controller.PersonOverviewController">
+<AnchorPane prefHeight="350.0" prefWidth="600.0" styleClass="background" stylesheets="@../css/DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.address.controller.PersonOverviewController">
    <children>
-      <SplitPane dividerPositions="0.5" layoutX="226.0" layoutY="44.0" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.5" layoutX="226.0" layoutY="44.0" prefHeight="300.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
@@ -23,14 +22,14 @@
                   </TableView>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="357.0" prefWidth="296.0">
                <children>
-                  <Label layoutX="20.0" layoutY="6.0" prefHeight="31.0" prefWidth="98.0" text="个人详情" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                  <Label layoutX="20.0" layoutY="6.0" prefHeight="62.0" prefWidth="209.0" styleClass="label-header" text="个人详情" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <GridPane layoutX="14.0" layoutY="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
+                  <GridPane layoutX="14.0" layoutY="83.0" prefHeight="205.0" prefWidth="276.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="83.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -47,22 +46,22 @@
                         <Label text="姓" />
                         <Label text="名" GridPane.rowIndex="1" />
                         <Label text="生日" GridPane.rowIndex="2" />
-                        <Label fx:id="familyNameLabel" text="Label" GridPane.columnIndex="1" />
-                        <Label fx:id="lastNameLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="birthdayLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="familyNameLabel" styleClass="label-bright" text="Label" GridPane.columnIndex="1" />
+                        <Label fx:id="lastNameLabel" styleClass="label-bright" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="birthdayLabel" styleClass="label-bright" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="城市" GridPane.rowIndex="3" />
                         <Label text="街道" GridPane.rowIndex="4" />
                         <Label text="邮编" GridPane.rowIndex="5" />
-                        <Label fx:id="cityLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label fx:id="streetLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label fx:id="postalCodeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="cityLabel" styleClass="label-bright" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="streetLabel" styleClass="label-bright" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="postalCodeLabel" styleClass="label-bright" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
-                  <HBox alignment="CENTER" layoutX="141.0" layoutY="259.0" prefHeight="38.0" prefWidth="152.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                  <HBox alignment="CENTER" layoutX="141.0" layoutY="259.0" prefHeight="38.0" prefWidth="276.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                      <children>
-                        <Button onAction="#newPersonAction" mnemonicParsing="false" text="新增" />
-                        <Button onAction="#editPersonAction" mnemonicParsing="false" text="编辑" />
-                        <Button fx:id="delPersonBtn" onAction="#delPersonAction" mnemonicParsing="false" text="删除" />
+                        <Button mnemonicParsing="false" onAction="#newPersonAction" prefHeight="33.0" prefWidth="79.0" text="新增" />
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#editPersonAction" text="编辑" />
+                        <Button fx:id="delPersonBtn" mnemonicParsing="false" onAction="#delPersonAction" text="删除" />
                      </children>
                   </HBox>
                </children>
