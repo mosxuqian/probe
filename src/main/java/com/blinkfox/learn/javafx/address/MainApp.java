@@ -78,7 +78,6 @@ public class MainApp extends Application {
     private void initRootLayout() {
         try {
             // 加载RootLayout.fxml
-            // 加载PersonOverview.fxml
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/javafx/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
