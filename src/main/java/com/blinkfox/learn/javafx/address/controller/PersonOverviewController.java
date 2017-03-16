@@ -44,11 +44,14 @@ public class PersonOverviewController {
     @FXML
     private Button delPersonBtn;
 
+    private MainApp mainApp;
+
     /**
      * 主应用程序调用
      * @param mainApp mainApp
      */
     public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
         // 添加一个可观察的列表到table中
         personTable.setItems(mainApp.getPersons());
     }
@@ -83,6 +86,46 @@ public class PersonOverviewController {
     }
 
     /**
+     * 新增联系人的action操作
+     */
+    @FXML
+    private void newPersonAction() {
+        Person person = new Person();
+        boolean onClicked = mainApp.showPersonEditDialog(person);
+        if (onClicked) {
+            mainApp.getPersons().add(person);
+        }
+    }
+
+    /**
+     * 编辑联系人的action操作
+     */
+    @FXML
+    private void editPersonAction() {
+        Person person = personTable.getSelectionModel().getSelectedItem();
+        if (person != null) {
+            boolean onClicked = mainApp.showPersonEditDialog(person);
+            if (onClicked) {
+                showPersonDetail(person);
+            }
+        } else {
+            alertNotSelected();
+        }
+    }
+
+    /**
+     * 弹出未选择联系人的警告提示框
+     */
+    private void alertNotSelected() {
+        Logger.warn("没有选中联系人，无法删除");
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("温馨提示");
+        alert.setHeaderText("无法删除联系人");
+        alert.setContentText("你还没有选中联系人，无法删除，请选择您需要删除的联系人");
+        alert.showAndWait();
+    }
+
+    /**
      * 删除一个联系人的action操作
      */
     @FXML
@@ -91,12 +134,7 @@ public class PersonOverviewController {
         if (selectedIndex >= 0) {
             personTable.getItems().remove(selectedIndex);
         } else {
-            Logger.warn("没有选中联系人，无法删除");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("温馨提示");
-            alert.setHeaderText("无法删除联系人");
-            alert.setContentText("你还没有选中联系人，无法删除，请选择您需要删除的联系人");
-            alert.showAndWait();
+            alertNotSelected();
         }
     }
 

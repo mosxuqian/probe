@@ -60,8 +60,8 @@
                   </GridPane>
                   <HBox alignment="CENTER" layoutX="141.0" layoutY="259.0" prefHeight="38.0" prefWidth="152.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                      <children>
-                        <Button mnemonicParsing="false" text="新增" />
-                        <Button mnemonicParsing="false" text="编辑" />
+                        <Button onAction="#newPersonAction" mnemonicParsing="false" text="新增" />
+                        <Button onAction="#editPersonAction" mnemonicParsing="false" text="编辑" />
                         <Button fx:id="delPersonBtn" onAction="#delPersonAction" mnemonicParsing="false" text="删除" />
                      </children>
                   </HBox>

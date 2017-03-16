@@ -50,4 +50,12 @@ public class DateUtils {
         }
     }
 
+    /**
+     * 是否是LocalDate日期
+     * @return boolean
+     */
+    public static boolean isLocalDate(String dateStr) {
+        return DateUtils.getStrByDate(dateStr) != null;
+    }
+
 }
