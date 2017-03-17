@@ -4,45 +4,43 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:controller="com.blinkfox.learn.javafx.address.controller.RootLayoutController" prefHeight="400.0"
-            prefWidth="600.0" stylesheets="@../css/DarkTheme.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.address.controller.RootLayoutController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="文件">
                     <items>
-                        <MenuItem onAction="#onFileNewAction" mnemonicParsing="false" text="新建">
+                        <MenuItem mnemonicParsing="false" onAction="#onFileNewAction" text="新建">
                             <accelerator>
-                                <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                                <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                             </accelerator>
                         </MenuItem>
-                        <MenuItem onAction="#onFileOpenAction" mnemonicParsing="false" text="打开...">
+                        <MenuItem mnemonicParsing="false" onAction="#onFileOpenAction" text="打开...">
                             <accelerator>
-                                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                             </accelerator>
                         </MenuItem>
-                        <MenuItem onAction="#onFileSaveAction" mnemonicParsing="false" text="保存">
+                        <MenuItem mnemonicParsing="false" onAction="#onFileSaveAction" text="保存">
                             <accelerator>
-                                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                             </accelerator>
                         </MenuItem>
-                        <MenuItem onAction="#onFileSaveAsAction" mnemonicParsing="false" text="另存为..."/>
-                        <MenuItem onAction="#onFileExitAction" mnemonicParsing="false" text="退出">
+                        <MenuItem mnemonicParsing="false" onAction="#onFileSaveAsAction" text="另存为..." />
+                        <MenuItem mnemonicParsing="false" onAction="#onFileExitAction" text="退出">
                             <accelerator>
-                                <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                                <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                             </accelerator>
                         </MenuItem>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="编辑">
+                <Menu mnemonicParsing="false" text="统计">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="删除"/>
+                        <MenuItem onAction="#onBirthdayStatisAction" mnemonicParsing="false" text="生日统计" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="帮助">
                     <items>
-                        <MenuItem onAction="#onHelpAboutAction" mnemonicParsing="false" text="关于"/>
+                        <MenuItem mnemonicParsing="false" onAction="#onHelpAboutAction" text="关于" />
                     </items>
                 </Menu>
             </menus>

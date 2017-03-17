@@ -34,7 +34,7 @@ public class Person {
      * 空构造方法
      */
     public Person() {
-        this(null, null);
+        this(null, null, null);
     }
 
     /**
@@ -42,12 +42,12 @@ public class Person {
      * @param familyName 姓
      * @param lastName 名
      */
-    public Person(String familyName, String lastName) {
+    public Person(String familyName, String lastName, LocalDate date) {
         this.familyName = new SimpleStringProperty(familyName);
         this.lastName = new SimpleStringProperty(lastName);
+        this.birthday = new SimpleObjectProperty<>(date);
 
         // 为方便测试的初始化数据
-        this.birthday = new SimpleObjectProperty<>(LocalDate.of(1990, 2, 15));
         this.city = new SimpleStringProperty("成都");
         this.street = new SimpleStringProperty("天府二街");
         this.postalCode = new SimpleIntegerProperty(123456);

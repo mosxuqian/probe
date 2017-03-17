@@ -1,5 +1,6 @@
 package com.blinkfox.learn.javafx.address;
 
+import com.blinkfox.learn.javafx.address.controller.BirthdayStatisController;
 import com.blinkfox.learn.javafx.address.controller.PersonEditController;
 import com.blinkfox.learn.javafx.address.controller.PersonOverviewController;
 import com.blinkfox.learn.javafx.address.controller.RootLayoutController;
@@ -17,13 +18,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.pmw.tinylog.Logger;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.prefs.Preferences;
 
 /**
@@ -47,14 +48,14 @@ public class MainApp extends Application {
      * 构造器,初始化一些person数据
      */
     public MainApp() {
-        persons.add(new Person("张", "三"));
-        persons.add(new Person("李", "四"));
-        persons.add(new Person("王", "五"));
-        persons.add(new Person("马", "六"));
-        persons.add(new Person("赵", "七"));
-        persons.add(new Person("周", "八"));
-        persons.add(new Person("孙", "九"));
-        persons.add(new Person("郑", "十"));
+        persons.add(new Person("张", "三", LocalDate.of(1990, 2, 15)));
+        persons.add(new Person("李", "四", LocalDate.of(1991, 3, 11)));
+        persons.add(new Person("王", "五", LocalDate.of(1993, 3, 7)));
+        persons.add(new Person("马", "六", LocalDate.of(1992, 3, 9)));
+        persons.add(new Person("赵", "七", LocalDate.of(1989, 5, 2)));
+        persons.add(new Person("周", "八", LocalDate.of(1991, 6, 3)));
+        persons.add(new Person("孙", "九", LocalDate.of(1992, 6, 18)));
+        persons.add(new Person("郑", "十", LocalDate.of(1993, 9, 2)));
     }
 
     /**
@@ -221,6 +222,32 @@ public class MainApp extends Application {
         } catch (JAXBException e) {
             Logger.error(e, "保持persons信息到注册表文件中失败");
             DialogUtils.alertWarn("保存联系人信息失败", "保持persons信息到注册表文件中失败");
+        }
+    }
+
+    /**
+     * 打开一个显示联系人生日月份统计的对话框
+     */
+    public void showBirthdayStatis() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("/javafx/fxml/BirthdayStatis.fxml"));
+            AnchorPane statisPane = loader.load();
+
+            // 创建显示统计图的stage和scene
+            Stage statisStage = new Stage();
+            statisStage.setTitle("联系人生日月份统计图");
+            statisStage.initModality(Modality.WINDOW_MODAL);
+            statisStage.initOwner(primaryStage);
+            statisStage.setScene(new Scene(statisPane));
+
+            // 设置person集合数据到controller中并显示
+            BirthdayStatisController controller = loader.getController();
+            controller.setPersons(persons);
+            statisStage.show();
+        } catch (Exception e) {
+            Logger.error(e, "显示联系人生日月份统计的对话框出错！");
+            DialogUtils.alertWarn("统计失败", "显示联系人生日月份统计的对话框出错！");
         }
     }
 

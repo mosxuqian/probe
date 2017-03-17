@@ -99,6 +99,14 @@ public class RootLayoutController {
     }
 
     /**
+     * 菜单中"统计->生日统计"的操作
+     */
+    @FXML
+    private void onBirthdayStatisAction() {
+        mainApp.showBirthdayStatis();
+    }
+
+    /**
      * 菜单中"文件->打开"的操作
      */
     @FXML
