@@ -7,6 +7,10 @@ import com.blinkfox.learn.javafx.address.controller.RootLayoutController;
 import com.blinkfox.learn.javafx.address.model.Person;
 import com.blinkfox.learn.javafx.address.model.PersonsWrapper;
 import com.blinkfox.learn.javafx.address.utils.DialogUtils;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,15 +21,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.pmw.tinylog.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.prefs.Preferences;
+import org.pmw.tinylog.Logger;
 
 /**
  * 主运行类
@@ -45,7 +45,7 @@ public class MainApp extends Application {
     private ObservableList<Person> persons = FXCollections.observableArrayList();
 
     /**
-     * 构造器,初始化一些person数据
+     * 构造器,初始化一些person数据.
      */
     public MainApp() {
         persons.add(new Person("张", "三", LocalDate.of(1990, 2, 15)));
@@ -59,7 +59,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * start
+     * start方法.
      * @param primaryStage start
      * @throws Exception e
      */
@@ -74,7 +74,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 初始化rootLayout
+     * 初始化rootLayout.
      */
     private void initRootLayout() {
         try {
@@ -101,7 +101,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 在根布局中显示联系人管理界面
+     * 在根布局中显示联系人管理界面.
      */
     private void showPersonOverview() {
         try {
@@ -120,7 +120,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 打开一个联系人信息编辑框，如果用户点击保存则保存联系人信息
+     * 打开一个联系人信息编辑框，如果用户点击保存则保存联系人信息.
      * @param person Person实例
      * @return boolean
      */
@@ -150,7 +150,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 获取用户的注册文件信息
+     * 获取用户的注册文件信息.
      * @return file
      */
     public File getPersonFilePath() {
@@ -160,7 +160,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 设置当前加载的文件的文件路径。 该路径持久存储在操作系统特定的注册表中。
+     * 设置当前加载的文件的文件路径。 该路径持久存储在操作系统特定的注册表中.
      * @param file file
      */
     public void setPersonFilePath(File file) {
@@ -175,7 +175,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 从指定的文件加载Person数据，将替换当前的Persons数据。
+     * 从指定的文件加载Person数据，将替换当前的Persons数据.
      * @param file file
      */
     public void loadPersonsFromFile(File file) {
@@ -202,7 +202,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 保持persons信息到注册表文件中
+     * 保持persons信息到注册表文件中.
      * @param file file
      */
     public void savePersonsToFile(File file) {
@@ -226,7 +226,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 打开一个显示联系人生日月份统计的对话框
+     * 打开一个显示联系人生日月份统计的对话框.
      */
     public void showBirthdayStatis() {
         try {
@@ -252,7 +252,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 得到主要的stage
+     * 得到主要的stage.
      * @return stage
      */
     public Stage getPrimaryStage() {
@@ -260,7 +260,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * 得到可观察的person集合数据
+     * 得到可观察的person集合数据.
      * @return persons
      */
     public ObservableList<Person> getPersons() {
@@ -268,7 +268,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * main方法
+     * main方法.
      * @param args 数组参数
      */
     public static void main(String[] args) {
