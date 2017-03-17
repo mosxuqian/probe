@@ -133,7 +133,7 @@ public class MainApp extends Application {
         // 加载PersonOverview.fxml
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("/javafx/fxml/PersonEdit.fxml"));
-        AnchorPane personEditPane = null;
+        AnchorPane personEditPane;
         try {
             personEditPane = loader.load();
             editStage.setScene(new Scene(personEditPane));
@@ -179,7 +179,7 @@ public class MainApp extends Application {
      * @param file file
      */
     public void loadPersonsFromFile(File file) {
-        PersonsWrapper personsWrapper = null;
+        PersonsWrapper personsWrapper;
         try {
             JAXBContext context = JAXBContext.newInstance(PersonsWrapper.class);
             Unmarshaller um = context.createUnmarshaller();
