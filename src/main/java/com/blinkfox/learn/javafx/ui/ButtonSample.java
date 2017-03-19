@@ -24,7 +24,7 @@ import org.pmw.tinylog.Logger;
 public class ButtonSample extends Application {
 
     /**
-     * start方法
+     * start方法.
      * @param primaryStage stage
      */
     @Override
@@ -38,7 +38,7 @@ public class ButtonSample extends Application {
         label.setTextFill(color);
 
         Image okImage = new Image(getClass().getResourceAsStream("/javafx/image/ok.png"));
-        Image notImage = new Image(getClass().getResourceAsStream("/javafx/image/not.png"));
+
 
         Button btn1 = new Button("同意", new ImageView(okImage));
         btn1.getStyleClass().add("button1");
@@ -70,6 +70,7 @@ public class ButtonSample extends Application {
         });
 
         Button btn5 = new Button();
+        Image notImage = new Image(getClass().getResourceAsStream("/javafx/image/not.png"));
         btn5.setGraphic(new ImageView(notImage));
         btn5.setOnAction(event -> {
             Logger.info("点击了按钮5");
@@ -80,7 +81,6 @@ public class ButtonSample extends Application {
         vbox.setLayoutX(20);
         vbox.setLayoutY(20);
         HBox hbox1 = new HBox();
-        HBox hbox2 = new HBox();
 
         hbox1.getChildren().add(btn2);
         hbox1.getChildren().add(btn3);
@@ -88,6 +88,7 @@ public class ButtonSample extends Application {
         hbox1.setSpacing(10);
         hbox1.setAlignment(Pos.BOTTOM_CENTER);
 
+        HBox hbox2 = new HBox();
         hbox2.getChildren().add(btn4);
         hbox2.getChildren().add(btn5);
         hbox2.setSpacing(25);
@@ -107,7 +108,7 @@ public class ButtonSample extends Application {
     }
 
     /**
-     * main方法
+     * main方法.
      * @param args 数组参数
      */
     public static void main(String[] args) {

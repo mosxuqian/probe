@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 public class LabelSample extends Application {
 
     /**
-     * start方法
+     * start方法.
      * @param primaryStage stage
      */
     @Override
@@ -73,7 +73,7 @@ public class LabelSample extends Application {
     }
 
     /**
-     * main方法
+     * main方法.
      * @param args 数组参数
      */
     public static void main(String[] args) {
