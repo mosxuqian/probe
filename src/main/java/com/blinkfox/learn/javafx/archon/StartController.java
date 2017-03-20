@@ -7,7 +7,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -23,6 +25,14 @@ public class StartController {
     private Button nextStepBtn;
     @FXML
     private TextField hideStepField;
+
+    /* 三步Label标签的控件 */
+    @FXML
+    private HBox gitAccountBox;
+    @FXML
+    private HBox defaultRepoBox;
+    @FXML
+    private HBox startUseBox;
 
     /* git账户、默认仓库和开始使用的三个label控件 */
     @FXML
@@ -41,6 +51,9 @@ public class StartController {
     private GridPane cloneRepoPane;
     @FXML
     private GridPane openRepoPane;
+
+    /* 选中时的样式名称 */
+    private static final String SELECTED_CSS_CLASS = "selectedBox";
 
     /**
      * 初始化时的相关操作.
@@ -75,11 +88,15 @@ public class StartController {
     private void nextStepAction() {
         String step = hideStepField.getText();
         if (Constant.STEP_ONE.equals(step)) {
+            gitAccountBox.getStyleClass().remove(SELECTED_CSS_CLASS);
+            defaultRepoBox.getStyleClass().add(SELECTED_CSS_CLASS);
             gitAccountPane.setVisible(false);
             defaultRepoPane.setVisible(true);
             prevStepBtn.setVisible(true);
             hideStepField.setText(Constant.STEP_TWO);
         } else if (Constant.STEP_TWO.equals(step)) {
+            defaultRepoBox.getStyleClass().remove(SELECTED_CSS_CLASS);
+            startUseBox.getStyleClass().add(SELECTED_CSS_CLASS);
             defaultRepoPane.setVisible(false);
             startUsePane.setVisible(true);
             nextStepBtn.setText("完成");
@@ -94,6 +111,8 @@ public class StartController {
     private void prevStepAction() {
         String step = hideStepField.getText();
         if (Constant.STEP_TWO.equals(step)) {
+            gitAccountBox.getStyleClass().add(SELECTED_CSS_CLASS);
+            defaultRepoBox.getStyleClass().remove(SELECTED_CSS_CLASS);
             defaultRepoPane.setVisible(false);
             gitAccountPane.setVisible(true);
             prevStepBtn.setVisible(false);
@@ -101,35 +120,13 @@ public class StartController {
         } else if (Constant.STEP_THREE_INIT.equals(step)
                 || Constant.STEP_THREE_CLONE.equals(step)
                 || Constant.STEP_THREE_OPEN.equals(step)) {
+            defaultRepoBox.getStyleClass().add(SELECTED_CSS_CLASS);
+            startUseBox.getStyleClass().remove(SELECTED_CSS_CLASS);
             startUsePane.setVisible(false);
             defaultRepoPane.setVisible(true);
             nextStepBtn.setText("下一步");
             hideStepField.setText(Constant.STEP_TWO);
         }
-    }
-
-    /**
-     * 初始化仓库时的操作.
-     */
-    @FXML
-    private void initRepoAction() {
-
-    }
-
-    /**
-     * 克隆远程仓库时的操作.
-     */
-    @FXML
-    private void cloneRepoAction() {
-
-    }
-
-    /**
-     * 打开已有仓库时的操作.
-     */
-    @FXML
-    private void openRepoAction() {
-
     }
 
 }

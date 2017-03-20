@@ -32,9 +32,9 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <HBox alignment="CENTER" styleClass="selectedTab">
+            <HBox fx:id="gitAccountBox" styleClass="selectedBox" alignment="CENTER">
                <children>
-                  <Label fx:id="gitAccountTab" styleClass="whiteText" alignment="CENTER" contentDisplay="CENTER" text="Git账户" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Git账户" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -47,7 +47,7 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER" GridPane.columnIndex="1">
+            <HBox fx:id="defaultRepoBox" alignment="CENTER" GridPane.columnIndex="1">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" text="默认仓库目录" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
@@ -59,7 +59,7 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER" GridPane.columnIndex="2">
+            <HBox fx:id="startUseBox" alignment="CENTER" GridPane.columnIndex="2">
                <children>
                   <Label alignment="CENTER" text="开始使用" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
