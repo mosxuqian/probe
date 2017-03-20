@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:controller="com.blinkfox.learn.javafx.archon.StartController" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.StartController">
    <children>
       <HBox alignment="CENTER" layoutX="260.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0">
          <children>
@@ -170,16 +170,16 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="初始化新仓库" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                  <RadioButton mnemonicParsing="false" selected="true" text="初始化新仓库" userData="3-1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <toggleGroup>
                         <ToggleGroup fx:id="startType" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="克隆远程仓库" toggleGroup="$startType" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <RadioButton mnemonicParsing="false" text="打开已有仓库" toggleGroup="$startType" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                  <RadioButton mnemonicParsing="false" text="克隆远程仓库" toggleGroup="$startType" userData="3-2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <RadioButton mnemonicParsing="false" text="打开已有仓库" toggleGroup="$startType" userData="3-3" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <GridPane layoutX="212.0" layoutY="98.0" visible="false" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+            <GridPane fx:id="initRepoPane" layoutX="212.0" layoutY="98.0" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="203.0" minWidth="10.0" prefWidth="180.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.0" minWidth="10.0" prefWidth="302.0" />
@@ -217,7 +217,7 @@
                   </Button>
                </children>
             </GridPane>
-            <GridPane layoutX="209.0" layoutY="130.0" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0">
+            <GridPane fx:id="cloneRepoPane" layoutX="209.0" layoutY="130.0" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="197.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="323.0" />
@@ -227,7 +227,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="新仓库目录" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                  <Label text="远程仓库URL" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets right="5.0" />
                      </GridPane.margin>
@@ -239,7 +239,7 @@
                   </TextField>
                </children>
             </GridPane>
-            <GridPane layoutX="220.0" layoutY="130.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0">
+            <GridPane fx:id="openRepoPane" layoutX="220.0" layoutY="130.0" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="174.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="362.0" minWidth="10.0" prefWidth="305.0" />
@@ -270,6 +270,6 @@
       </AnchorPane>
       <Button fx:id="nextStepBtn" layoutX="591.0" layoutY="366.0" mnemonicParsing="false" onAction="#nextStepAction" text="下一步" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
       <TextField fx:id="hideStepField" prefHeight="23.0" prefWidth="44.0" promptText="判断到第几步的隐藏控件" text="1" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
-      <Button fx:id="prevStepBtn" onAction="#prevStepAction" layoutX="14.0" layoutY="378.0" mnemonicParsing="false" text="上一步" textAlignment="CENTER" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="10.0" />
+      <Button fx:id="prevStepBtn" layoutX="14.0" layoutY="378.0" mnemonicParsing="false" onAction="#prevStepAction" text="上一步" textAlignment="CENTER" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="10.0" />
    </children>
 </AnchorPane>
