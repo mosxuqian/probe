@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="com.blinkfox.learn.javafx.archon.StartController" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER" layoutX="260.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0">
          <children>
@@ -32,7 +32,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Git账户" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Label fx:id="gitAccountTab" alignment="CENTER" contentDisplay="CENTER" text="Git账户" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
@@ -64,7 +64,7 @@
             <Insets />
          </opaqueInsets>
       </GridPane>
-      <AnchorPane layoutX="9.0" layoutY="152.0" prefHeight="219.0" prefWidth="640.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
+      <AnchorPane fx:id="gitAccountPane" layoutX="9.0" layoutY="152.0" prefHeight="219.0" prefWidth="640.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
          <children>
             <HBox alignment="CENTER" layoutX="303.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -109,7 +109,7 @@
             </GridPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="19.0" layoutY="162.0" prefHeight="219.0" prefWidth="640.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
+      <AnchorPane fx:id="defaultRepoPane" layoutX="19.0" layoutY="162.0" prefHeight="219.0" prefWidth="640.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
          <children>
             <HBox alignment="CENTER" layoutX="303.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -149,7 +149,7 @@
             </GridPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="19.0" layoutY="162.0" prefHeight="219.0" prefWidth="640.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
+      <AnchorPane fx:id="startUsePane" layoutX="19.0" layoutY="162.0" prefHeight="219.0" prefWidth="640.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
          <children>
             <HBox alignment="CENTER" layoutX="303.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -268,7 +268,8 @@
             </GridPane>
          </children>
       </AnchorPane>
-      <Button layoutX="591.0" layoutY="366.0" mnemonicParsing="false" text="下一步" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
-      <Button layoutX="14.0" layoutY="378.0" mnemonicParsing="false" text="上一步" textAlignment="CENTER" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="10.0" />
+      <Button fx:id="nextStepBtn" layoutX="591.0" layoutY="366.0" mnemonicParsing="false" onAction="#nextStepAction" text="下一步" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
+      <TextField fx:id="hideStepField" prefHeight="23.0" prefWidth="44.0" promptText="判断到第几步的隐藏控件" text="1" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
+      <Button fx:id="prevStepBtn" onAction="#prevStepAction" layoutX="14.0" layoutY="378.0" mnemonicParsing="false" text="上一步" textAlignment="CENTER" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="10.0" />
    </children>
 </AnchorPane>
