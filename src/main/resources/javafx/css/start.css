@@ -1,3 +1,6 @@
 .selectedTab {
-
+    -fx-background-color: #f44336;
+}
+.whiteText {
+    -fx-text-fill: #ffffff;
 }
