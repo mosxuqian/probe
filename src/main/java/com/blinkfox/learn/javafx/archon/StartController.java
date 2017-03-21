@@ -1,8 +1,10 @@
 package com.blinkfox.learn.javafx.archon;
 
 import com.blinkfox.learn.javafx.archon.consts.Constant;
+import com.blinkfox.learn.jgit.ExecCmdHelper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
@@ -50,6 +52,11 @@ public class StartController {
     @FXML
     private GridPane openRepoPane;
 
+    @FXML
+    private TextField userNameField;
+    @FXML
+    private TextField userEmailField;
+
     /* 选中时的样式名称 */
     private static final String SELECTED_CSS_CLASS = "selectedBox";
 
@@ -58,9 +65,30 @@ public class StartController {
      */
     @FXML
     private void initialize() {
-        Logger.info("开始初始化加载...");
+        /* 一些初始化操作,分别是初始化Git用户信息、开始类型选中事件监听等 */
+        initGlobalUserInfo();
+        listenStartTypeRadio();
+    }
 
-        /* 监听第三步中的三个radio的change事件，好切换界面显示 */
+    /**
+     * 初始化全局的Git用户信息.
+     */
+    private void initGlobalUserInfo() {
+        // 通过命令行来获取git全局的用户信息，如果不为空则为其设置默认值
+        String userName = ExecCmdHelper.execCmd(Constant.GIT_USER_NAME);
+        String userEmail = ExecCmdHelper.execCmd(Constant.GIT_USER_EMAIL);
+        if (userName != null && !userName.isEmpty()) {
+            userNameField.setText(userName);
+        }
+        if (userEmail != null && !userEmail.isEmpty()) {
+            userEmailField.setText(userEmail);
+        }
+    }
+
+    /**
+     * 监听各种开始方式下的单选框事件.
+     */
+    private void listenStartTypeRadio() {
         startType.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             String newText = newValue.getUserData() == null ? "" : newValue.getUserData().toString();
             if (Constant.STEP_THREE_INIT.equals(newText)) {

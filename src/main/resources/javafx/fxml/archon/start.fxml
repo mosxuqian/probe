@@ -107,12 +107,12 @@
                         <Insets right="10.0" />
                      </padding>
                   </Label>
-                  <TextField promptText="填入您Git全局使用的用户名" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                  <TextField fx:id="userNameField" promptText="填入您Git全局使用的用户名" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField promptText="填入您Git全局使用的邮箱" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <TextField fx:id="userEmailField" promptText="填入您Git全局使用的邮箱" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin>

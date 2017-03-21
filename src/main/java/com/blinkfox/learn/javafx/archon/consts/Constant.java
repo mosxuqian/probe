@@ -24,6 +24,12 @@ public final class Constant {
     /* start第三步，打开已有 */
     public static final String STEP_THREE_OPEN = "3-3";
 
+    /* Git全局用户名的命令行常量 */
+    public static final String GIT_USER_NAME = "git config --global user.name";
+
+    /* Git全局用户邮箱的命令行常量 */
+    public static final String GIT_USER_EMAIL = "git config --global user.email";
+
     /**
      * 私有构造方法.
      */
