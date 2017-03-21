@@ -3,16 +3,18 @@ package com.blinkfox.learn.javafx.archon;
 import com.blinkfox.learn.javafx.archon.consts.Constant;
 import com.blinkfox.learn.javafx.archon.helpers.DialogHelper;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
+import com.blinkfox.zealot.helpers.StringHelper;
 import java.io.File;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
+import org.pmw.tinylog.Logger;
 
 /**
  * start界面的控制器.
@@ -54,12 +56,23 @@ public class StartController {
     @FXML
     private GridPane openRepoPane;
 
+    /* 各表单TextField的控件 */
     @FXML
     private TextField userNameField;
     @FXML
     private TextField userEmailField;
     @FXML
     private TextField defaultWorkDir;
+    @FXML
+    private TextField initDirField;
+    @FXML
+    private TextField initNameField;
+    @FXML
+    private TextField cloneUrlField;
+    @FXML
+    private TextField openDirField;
+    @FXML
+    private Label validMsgLabel; // 校验提示信息Label
 
     /* 选中时的样式名称 */
     private static final String SELECTED_CSS_CLASS = "selectedBox";
@@ -107,14 +120,17 @@ public class StartController {
                 initRepoPane.setVisible(true);
                 cloneRepoPane.setVisible(false);
                 openRepoPane.setVisible(false);
+                clearValidMsg();
             } else if (Constant.STEP_THREE_CLONE.equals(newText)) {
                 initRepoPane.setVisible(false);
                 cloneRepoPane.setVisible(true);
                 openRepoPane.setVisible(false);
+                clearValidMsg();
             } else if (Constant.STEP_THREE_OPEN.equals(newText)) {
                 initRepoPane.setVisible(false);
                 cloneRepoPane.setVisible(false);
                 openRepoPane.setVisible(true);
+                clearValidMsg();
             }
         });
     }
@@ -139,6 +155,9 @@ public class StartController {
             startUsePane.setVisible(true);
             nextStepBtn.setText("完成");
             hideStepField.setText(Constant.STEP_THREE_INIT);
+        } else if (isThirdStep(step)) {
+            // 如果是第三步，则开始校验数据和使用rchon
+            validAndStartUse();
         }
     }
 
@@ -155,9 +174,7 @@ public class StartController {
             gitAccountPane.setVisible(true);
             prevStepBtn.setVisible(false);
             hideStepField.setText(Constant.STEP_ONE);
-        } else if (Constant.STEP_THREE_INIT.equals(step)
-                || Constant.STEP_THREE_CLONE.equals(step)
-                || Constant.STEP_THREE_OPEN.equals(step)) {
+        } else if (isThirdStep(step)) {
             defaultRepoBox.getStyleClass().add(SELECTED_CSS_CLASS);
             startUseBox.getStyleClass().remove(SELECTED_CSS_CLASS);
             startUsePane.setVisible(false);
@@ -177,6 +194,63 @@ public class StartController {
         if (file != null) {
             defaultWorkDir.setText(file.getAbsolutePath());
         }
+    }
+
+    /**
+     * 判断是否是第三步了.
+     * @param step 开始的step字符串
+     * @return 布尔
+     */
+    private boolean isThirdStep(String step) {
+        return Constant.STEP_THREE_INIT.equals(step)
+                || Constant.STEP_THREE_CLONE.equals(step)
+                || Constant.STEP_THREE_OPEN.equals(step);
+    }
+
+    /**
+     * 清空校验的提示信息.
+     */
+    private void clearValidMsg() {
+        validMsgLabel.setText("");
+    }
+
+    /**
+     * 校验和使用Archon.
+     */
+    private void validAndStartUse() {
+        // 获取用户选择的具体使用方式步骤
+        Object stepObj = startType.getSelectedToggle().getUserData();
+        String step = stepObj == null ? Constant.STEP_THREE_INIT : stepObj.toString();
+        if (Constant.STEP_THREE_INIT.equals(step)) {
+            if (StringHelper.isBlank(initDirField.getText())) {
+                validMsgLabel.setText("新Git仓库所在的目录不能为空！");
+                return;
+            }
+            if (StringHelper.isBlank(initNameField.getText())) {
+                validMsgLabel.setText("新Git仓库的名称不能为空！");
+                return;
+            }
+            startUse();
+        } else if (Constant.STEP_THREE_CLONE.equals(step)) {
+            if (StringHelper.isBlank(cloneUrlField.getText())) {
+                validMsgLabel.setText("远程仓库的URL地址不能为空！");
+                return;
+            }
+            startUse();
+        } else if (Constant.STEP_THREE_OPEN.equals(step)) {
+            if (StringHelper.isBlank(openDirField.getText())) {
+                validMsgLabel.setText("所要打开的Git仓库目录不能为空！");
+                return;
+            }
+            startUse();
+        }
+    }
+
+    /**
+     * 开始使用.
+     */
+    private void startUse() {
+        Logger.info("开始使用Archon了...");
     }
 
 }

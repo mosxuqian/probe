@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="660.0" stylesheets="@../../css/start.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.StartController">
+<AnchorPane minHeight="420.0" minWidth="500.0" prefHeight="420.0" prefWidth="660.0" stylesheets="@../../css/start.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.StartController">
    <children>
       <HBox alignment="CENTER" layoutX="260.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0">
          <children>
@@ -32,7 +32,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <HBox fx:id="gitAccountBox" styleClass="selectedBox" alignment="CENTER">
+            <HBox fx:id="gitAccountBox" alignment="CENTER" styleClass="selectedBox">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" text="Git账户" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
@@ -144,7 +144,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button onAction="#chooseDefaultWorkDir" mnemonicParsing="false" text="选择目录" GridPane.columnIndex="2">
+                  <Button mnemonicParsing="false" onAction="#chooseDefaultWorkDir" text="选择目录" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
@@ -212,12 +212,12 @@
                         <Insets right="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField promptText="请选择您新Git仓库所在的目录" GridPane.columnIndex="1">
+                  <TextField fx:id="initDirField" promptText="请选择您新Git仓库所在的目录" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField promptText="请填写您新Git仓库的名称" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TextField fx:id="initNameField" promptText="请填写您新Git仓库的名称" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
@@ -244,7 +244,7 @@
                         <Insets right="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField promptText="请输入或粘贴远程仓库的URL地址" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                  <TextField fx:id="cloneUrlField" promptText="请输入或粘贴远程仓库的URL地址" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin>
@@ -266,7 +266,7 @@
                         <Insets right="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField promptText="请选择您要打开的仓库目录" GridPane.columnIndex="1">
+                  <TextField fx:id="openDirField" promptText="请选择您要打开的仓库目录" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
@@ -278,6 +278,11 @@
                   </Button>
                </children>
             </GridPane>
+            <HBox alignment="CENTER" prefHeight="44.0" prefWidth="620.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+               <children>
+                  <Label fx:id="validMsgLabel" alignment="CENTER" textAlignment="CENTER" textFill="#f44336" />
+               </children>
+            </HBox>
          </children>
       </AnchorPane>
       <Button fx:id="nextStepBtn" layoutX="591.0" layoutY="366.0" mnemonicParsing="false" onAction="#nextStepAction" text="下一步" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
