@@ -17,8 +17,16 @@ public class ArchonApplication extends Application {
     private static Stage primaryStage;
 
     /**
+     * primaryStage的setterfangfa.
+     * @param primaryStage 主stage
+     */
+    private static void setPrimaryStage(Stage primaryStage) {
+        ArchonApplication.primaryStage = primaryStage;
+    }
+
+    /**
      * 得到主stage.
-     * @return primaryStage
+     * @return primaryStage 主stage
      */
     public static Stage getPrimaryStage() {
         return primaryStage;
@@ -32,6 +40,7 @@ public class ArchonApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setScene(getStartScene());
+        setPrimaryStage(primaryStage);
         primaryStage.show();
     }
 

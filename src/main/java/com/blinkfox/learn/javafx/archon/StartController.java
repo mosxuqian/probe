@@ -1,6 +1,8 @@
 package com.blinkfox.learn.javafx.archon;
 
+import com.blinkfox.learn.javafx.archon.bean.GitInfo;
 import com.blinkfox.learn.javafx.archon.consts.Constant;
+import com.blinkfox.learn.javafx.archon.core.ArchonDataContainer;
 import com.blinkfox.learn.javafx.archon.helpers.DialogHelper;
 import com.blinkfox.learn.javafx.archon.helpers.FileHelper;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
@@ -15,6 +17,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -156,6 +161,13 @@ public class StartController {
             startUsePane.setVisible(true);
             nextStepBtn.setText("完成");
             hideStepField.setText(Constant.STEP_THREE_INIT);
+
+            // 如果默认的Git工作空间目录不为空，则创建目录且将默认的路径赋给初始化时的目录
+            String workDir = defaultWorkDir.getText();
+            if (StringHelper.isNotBlank(workDir)) {
+                FileHelper.makeDirs(workDir);
+                initDirField.setText(workDir);
+            }
         } else if (isThirdStep(step)) {
             // 如果是第三步，则开始校验数据和使用rchon
             validAndStartUse();
@@ -224,13 +236,8 @@ public class StartController {
      * @return file
      */
     private File openDefaultDirChooser() {
-        // 获取默认的Git仓库路径，创建默认Git工作路径的文件夹
-        String defaultPath = defaultWorkDir.getText();
-        boolean isSucc = FileHelper.makeDirs(defaultPath);
-        String dirPath = isSucc ? defaultPath : null;
-
         // 打开Git仓库文件目录选择窗口
-        DirectoryChooser chooser = DialogHelper.createDirChooser(dirPath);
+        DirectoryChooser chooser = DialogHelper.createDirChooser(defaultWorkDir.getText());
         return chooser.showDialog(ArchonApplication.getPrimaryStage());
     }
 
@@ -260,15 +267,18 @@ public class StartController {
         Object stepObj = startType.getSelectedToggle().getUserData();
         String step = stepObj == null ? Constant.STEP_THREE_INIT : stepObj.toString();
         if (Constant.STEP_THREE_INIT.equals(step)) {
-            if (StringHelper.isBlank(initDirField.getText())) {
+            String dirText = initDirField.getText();
+            if (StringHelper.isBlank(dirText)) {
                 validMsgLabel.setText("新Git仓库所在的目录不能为空！");
                 return;
             }
-            if (StringHelper.isBlank(initNameField.getText())) {
+
+            String nameText = initNameField.getText();
+            if (StringHelper.isBlank(nameText)) {
                 validMsgLabel.setText("新Git仓库的名称不能为空！");
                 return;
             }
-            startUse();
+            startInitUse(StringHelper.concat(dirText, File.separator, nameText));
         } else if (Constant.STEP_THREE_CLONE.equals(step)) {
             if (StringHelper.isBlank(cloneUrlField.getText())) {
                 validMsgLabel.setText("远程仓库的URL地址不能为空！");
@@ -289,6 +299,42 @@ public class StartController {
      */
     private void startUse() {
         Logger.info("开始使用Archon了...");
+    }
+
+    /**
+     * 保存Git的全局账户信息.
+     */
+    private void saveGitAccount() {
+        String userName = userNameField.getText();
+        String userEmail = userEmailField.getText();
+        if (StringHelper.isNotBlank(userName)) {
+            ExecCmdHelper.execCmd(StringHelper.concat(Constant.GIT_USER_NAME, " ", userName));
+        }
+        if (StringHelper.isNotBlank(userEmail)) {
+            ExecCmdHelper.execCmd(StringHelper.concat(Constant.GIT_USER_EMAIL, " ", userEmail));
+        }
+    }
+
+    /**
+     * 保存默认的Git工作空间路径.
+     */
+    private void saveDefaultWorkDir() {
+        Logger.info("开始持久化默认的Git工作目录...");
+    }
+
+    /**
+     * 开始初始化仓库并存储Git仓库信息等到DataContainer单例实例中.
+     */
+    private void startInitUse(String dirPath) {
+        saveGitAccount();
+        saveDefaultWorkDir();
+        try {
+            Git git = Git.init().setDirectory(new File(dirPath)).call();
+            Repository repo = git.getRepository();
+            ArchonDataContainer.INSTANCE.setGitInfo(new GitInfo().setGit(git).setRepo(repo));
+        } catch (GitAPIException e) {
+            Logger.error(e, "初始化Git仓库失败");
+        }
     }
 
 }
