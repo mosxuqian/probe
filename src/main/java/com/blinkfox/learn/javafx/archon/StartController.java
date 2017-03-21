@@ -2,6 +2,7 @@ package com.blinkfox.learn.javafx.archon;
 
 import com.blinkfox.learn.javafx.archon.consts.Constant;
 import com.blinkfox.learn.javafx.archon.helpers.DialogHelper;
+import com.blinkfox.learn.javafx.archon.helpers.FileHelper;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
 import java.io.File;
@@ -193,6 +194,24 @@ public class StartController {
         File file = chooser.showDialog(ArchonApplication.getPrimaryStage());
         if (file != null) {
             defaultWorkDir.setText(file.getAbsolutePath());
+        }
+    }
+
+    /**
+     * 选择新初始化的Git仓库目录.
+     */
+    @FXML
+    private void chooseInitDir() {
+        // 获取默认的Git仓库路径，创建默认Git工作路径的文件夹
+        String defaultPath = defaultWorkDir.getText();
+        boolean isSucc = FileHelper.makeDirs(defaultPath);
+        String dirPath = isSucc ? defaultPath : null;
+
+        // 打开Git仓库文件目录选择窗口
+        DirectoryChooser chooser = DialogHelper.createDirChooser(dirPath);
+        File file = chooser.showDialog(ArchonApplication.getPrimaryStage());
+        if (file != null) {
+            initDirField.setText(file.getAbsolutePath());
         }
     }
 
