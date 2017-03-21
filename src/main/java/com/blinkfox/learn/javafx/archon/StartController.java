@@ -1,15 +1,13 @@
 package com.blinkfox.learn.javafx.archon;
 
-import com.blinkfox.learn.javafx.archon.bean.GitInfo;
 import com.blinkfox.learn.javafx.archon.consts.Constant;
-import com.blinkfox.learn.javafx.archon.core.ArchonDataContainer;
 import com.blinkfox.learn.javafx.archon.helpers.DialogHelper;
 import com.blinkfox.learn.javafx.archon.helpers.FileHelper;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,7 +19,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.pmw.tinylog.Logger;
 
@@ -297,6 +294,7 @@ public class StartController {
                 validMsgLabel.setText("新Git仓库的名称不能为空！");
                 return;
             }
+
             startInitUse(StringHelper.concat(dirText, File.separator, nameText));
         } else if (Constant.STEP_THREE_CLONE.equals(step)) {
             String dirText = cloneDirField.getText();
@@ -313,11 +311,12 @@ public class StartController {
 
             startCloneUse(StringHelper.concat(dirText, File.separator, parseGitNameByUrl(url)), url);
         } else if (Constant.STEP_THREE_OPEN.equals(step)) {
-            if (StringHelper.isBlank(openDirField.getText())) {
+            String dirText = openDirField.getText();
+            if (StringHelper.isBlank(dirText)) {
                 validMsgLabel.setText("所要打开的Git仓库目录不能为空！");
                 return;
             }
-            startUse();
+            startOpenUse(dirText);
         }
     }
 
@@ -333,13 +332,6 @@ public class StartController {
         }
         String gitName = url.substring(url.lastIndexOf('/') + 1);
         return gitName.substring(0, gitName.lastIndexOf(".git"));
-    }
-
-    /**
-     * 开始使用.
-     */
-    private void startUse() {
-        Logger.info("开始使用Archon了...");
     }
 
     /**
@@ -371,8 +363,6 @@ public class StartController {
         saveDefaultWorkDir();
         try {
             Git git = Git.init().setDirectory(new File(dirPath)).call();
-            Repository repo = git.getRepository();
-            ArchonDataContainer.INSTANCE.setGitInfo(new GitInfo().setRepo(repo));
             git.close();
         } catch (GitAPIException e) {
             Logger.error(e, "初始化Git仓库失败");
@@ -381,20 +371,33 @@ public class StartController {
 
     /**
      * 开始初始化仓库并存储Git仓库信息等到DataContainer单例实例中.
-     * @param gitDir 新仓库目录全路径(含Git仓库名)
+     * @param dirPath 新仓库目录全路径(含Git仓库名)
      * @param url clone的URL地址
      */
-    private void startCloneUse(String gitDir, String url) {
+    private void startCloneUse(String dirPath, String url) {
         saveGitAccount();
         saveDefaultWorkDir();
         try {
             Git git = Git.cloneRepository().setURI(url)
-                    .setDirectory(new File(gitDir))
+                    .setDirectory(new File(dirPath))
                     .setProgressMonitor(new TextProgressMonitor(new PrintWriter(System.out))).call();
-            Repository repo = git.getRepository();
-            ArchonDataContainer.INSTANCE.setGitInfo(new GitInfo().setRepo(repo));
             git.close();
         } catch (GitAPIException e) {
+            Logger.error(e, "cloneGit仓库失败");
+        }
+    }
+
+    /**
+     * 开始初始化仓库并存储Git仓库信息等到DataContainer单例实例中.
+     * @param dirPath 要打开仓库的全路径(含.git标识)
+     */
+    private void startOpenUse(String dirPath) {
+        saveGitAccount();
+        saveDefaultWorkDir();
+        try {
+            Git git = Git.open(new File(dirPath));
+            git.close();
+        } catch (IOException e) {
             Logger.error(e, "cloneGit仓库失败");
         }
     }
