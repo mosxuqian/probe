@@ -202,6 +202,28 @@ public class StartController {
      */
     @FXML
     private void chooseInitDir() {
+        File file = this.openDefaultDirChooser();
+        if (file != null) {
+            initDirField.setText(file.getAbsolutePath());
+        }
+    }
+
+    /**
+     * 选择新初始化的Git仓库目录.
+     */
+    @FXML
+    private void chooseOpenDir() {
+        File file = this.openDefaultDirChooser();
+        if (file != null) {
+            openDirField.setText(file.getAbsolutePath());
+        }
+    }
+
+    /**
+     * 打开默认的git工作目录选择框.
+     * @return file
+     */
+    private File openDefaultDirChooser() {
         // 获取默认的Git仓库路径，创建默认Git工作路径的文件夹
         String defaultPath = defaultWorkDir.getText();
         boolean isSucc = FileHelper.makeDirs(defaultPath);
@@ -209,10 +231,7 @@ public class StartController {
 
         // 打开Git仓库文件目录选择窗口
         DirectoryChooser chooser = DialogHelper.createDirChooser(dirPath);
-        File file = chooser.showDialog(ArchonApplication.getPrimaryStage());
-        if (file != null) {
-            initDirField.setText(file.getAbsolutePath());
-        }
+        return chooser.showDialog(ArchonApplication.getPrimaryStage());
     }
 
     /**
