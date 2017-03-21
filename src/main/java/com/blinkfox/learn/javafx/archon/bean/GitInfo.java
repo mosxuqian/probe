@@ -1,6 +1,5 @@
 package com.blinkfox.learn.javafx.archon.bean;
 
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 
 /**
@@ -8,9 +7,6 @@ import org.eclipse.jgit.lib.Repository;
  * Created by blinkfox on 2017/3/21.
  */
 public class GitInfo {
-
-    // git对象
-    private Git git;
 
     // repo对象
     private Repository repo;
@@ -23,15 +19,6 @@ public class GitInfo {
     }
 
     /* getter 和 setter 方法 */
-    public Git getGit() {
-        return git;
-    }
-
-    public GitInfo setGit(Git git) {
-        this.git = git;
-        return this;
-    }
-
     public Repository getRepo() {
         return repo;
     }

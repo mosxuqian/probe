@@ -1,5 +1,6 @@
 package com.blinkfox.test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,6 +13,11 @@ import java.util.regex.Pattern;
 public class SubTagTest {
 
     public static void main(String[] args) {
+        String ss = "https://github.com/blinkfox/zealot.git";
+        String fileName = ss.substring(ss.lastIndexOf('/') + 1);
+        fileName = fileName.substring(0, fileName.lastIndexOf(".git"));
+        System.out.println("文件名为:" + fileName);
+
         // String testStr = "abc<icon>def</icon>deftfh<icon>a</icon>";
         String testStr = "abc#{bookName}deftfh#{money}";
         List<String> strs = match(testStr, "#\\{", "\\}");

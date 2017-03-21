@@ -8,6 +8,8 @@ import com.blinkfox.learn.javafx.archon.helpers.FileHelper;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
 import java.io.File;
+import java.io.PrintWriter;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +22,7 @@ import javafx.stage.DirectoryChooser;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -73,6 +76,8 @@ public class StartController {
     private TextField initDirField;
     @FXML
     private TextField initNameField;
+    @FXML
+    private TextField cloneDirField;
     @FXML
     private TextField cloneUrlField;
     @FXML
@@ -167,6 +172,7 @@ public class StartController {
             if (StringHelper.isNotBlank(workDir)) {
                 FileHelper.makeDirs(workDir);
                 initDirField.setText(workDir);
+                cloneDirField.setText(workDir);
             }
         } else if (isThirdStep(step)) {
             // 如果是第三步，则开始校验数据和使用rchon
@@ -214,10 +220,15 @@ public class StartController {
      */
     @FXML
     private void chooseInitDir() {
-        File file = this.openDefaultDirChooser();
-        if (file != null) {
-            initDirField.setText(file.getAbsolutePath());
-        }
+        setChooseText(initDirField);
+    }
+
+    /**
+     * 选择新初始化的Git仓库目录.
+     */
+    @FXML
+    private void chooseCloneDir() {
+        setChooseText(cloneDirField);
     }
 
     /**
@@ -225,9 +236,17 @@ public class StartController {
      */
     @FXML
     private void chooseOpenDir() {
+        setChooseText(openDirField);
+    }
+
+    /**
+     * 设置选择文件夹后框中的值.
+     * @param field 文本框对象
+     */
+    private void setChooseText(TextField field) {
         File file = this.openDefaultDirChooser();
         if (file != null) {
-            openDirField.setText(file.getAbsolutePath());
+            field.setText(file.getAbsolutePath());
         }
     }
 
@@ -280,11 +299,19 @@ public class StartController {
             }
             startInitUse(StringHelper.concat(dirText, File.separator, nameText));
         } else if (Constant.STEP_THREE_CLONE.equals(step)) {
-            if (StringHelper.isBlank(cloneUrlField.getText())) {
+            String dirText = cloneDirField.getText();
+            if (StringHelper.isBlank(dirText)) {
+                validMsgLabel.setText("将要克隆仓库的所在目录不能为空！");
+                return;
+            }
+
+            String url = cloneUrlField.getText();
+            if (StringHelper.isBlank(url)) {
                 validMsgLabel.setText("远程仓库的URL地址不能为空！");
                 return;
             }
-            startUse();
+
+            startCloneUse(StringHelper.concat(dirText, File.separator, parseGitNameByUrl(url)), url);
         } else if (Constant.STEP_THREE_OPEN.equals(step)) {
             if (StringHelper.isBlank(openDirField.getText())) {
                 validMsgLabel.setText("所要打开的Git仓库目录不能为空！");
@@ -292,6 +319,20 @@ public class StartController {
             }
             startUse();
         }
+    }
+
+    /**
+     * 从.git的url中提取出git仓库名称.
+     * 如：输入url为:https://github.com/blinkfox/zealot.git,输出zealot
+     * @param url git的url地址
+     * @return git仓库名称
+     */
+    private String parseGitNameByUrl(String url) {
+        if (url == null) {
+            return "";
+        }
+        String gitName = url.substring(url.lastIndexOf('/') + 1);
+        return gitName.substring(0, gitName.lastIndexOf(".git"));
     }
 
     /**
@@ -331,9 +372,30 @@ public class StartController {
         try {
             Git git = Git.init().setDirectory(new File(dirPath)).call();
             Repository repo = git.getRepository();
-            ArchonDataContainer.INSTANCE.setGitInfo(new GitInfo().setGit(git).setRepo(repo));
+            ArchonDataContainer.INSTANCE.setGitInfo(new GitInfo().setRepo(repo));
+            git.close();
         } catch (GitAPIException e) {
             Logger.error(e, "初始化Git仓库失败");
+        }
+    }
+
+    /**
+     * 开始初始化仓库并存储Git仓库信息等到DataContainer单例实例中.
+     * @param gitDir 新仓库目录全路径(含Git仓库名)
+     * @param url clone的URL地址
+     */
+    private void startCloneUse(String gitDir, String url) {
+        saveGitAccount();
+        saveDefaultWorkDir();
+        try {
+            Git git = Git.cloneRepository().setURI(url)
+                    .setDirectory(new File(gitDir))
+                    .setProgressMonitor(new TextProgressMonitor(new PrintWriter(System.out))).call();
+            Repository repo = git.getRepository();
+            ArchonDataContainer.INSTANCE.setGitInfo(new GitInfo().setRepo(repo));
+            git.close();
+        } catch (GitAPIException e) {
+            Logger.error(e, "cloneGit仓库失败");
         }
     }
 
