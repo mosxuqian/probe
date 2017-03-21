@@ -1,16 +1,18 @@
 package com.blinkfox.learn.javafx.archon;
 
 import com.blinkfox.learn.javafx.archon.consts.Constant;
+import com.blinkfox.learn.javafx.archon.helpers.DialogHelper;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
+import java.io.File;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import org.pmw.tinylog.Logger;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 /**
  * start界面的控制器.
@@ -56,6 +58,8 @@ public class StartController {
     private TextField userNameField;
     @FXML
     private TextField userEmailField;
+    @FXML
+    private TextField defaultWorkDir;
 
     /* 选中时的样式名称 */
     private static final String SELECTED_CSS_CLASS = "selectedBox";
@@ -67,6 +71,7 @@ public class StartController {
     private void initialize() {
         /* 一些初始化操作,分别是初始化Git用户信息、开始类型选中事件监听等 */
         initGlobalUserInfo();
+        initDefaultWorkDir();
         listenStartTypeRadio();
     }
 
@@ -83,6 +88,13 @@ public class StartController {
         if (userEmail != null && !userEmail.isEmpty()) {
             userEmailField.setText(userEmail);
         }
+    }
+
+    /**
+     * 初始化Git创建、读取仓库等操作的默认工作目录.
+     */
+    private void initDefaultWorkDir() {
+        defaultWorkDir.setText(System.getProperty("user.home") + File.separator + Constant.DEFAULT_GIT_DIR);
     }
 
     /**
@@ -152,6 +164,18 @@ public class StartController {
             defaultRepoPane.setVisible(true);
             nextStepBtn.setText("下一步");
             hideStepField.setText(Constant.STEP_TWO);
+        }
+    }
+
+    /**
+     * 选择默认的Git工作目录.并将选择的值赋给文本框
+     */
+    @FXML
+    private void chooseDefaultWorkDir() {
+        DirectoryChooser chooser = DialogHelper.createDirChooser();
+        File file = chooser.showDialog(ArchonApplication.getPrimaryStage());
+        if (file != null) {
+            defaultWorkDir.setText(file.getAbsolutePath());
         }
     }
 

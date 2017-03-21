@@ -134,17 +134,17 @@
             </HBox>
             <GridPane alignment="CENTER" layoutX="206.0" layoutY="54.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
                <children>
-                  <Label text="全局用户名" wrapText="true" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                  <Label text="Git默认工作目录" wrapText="true" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <padding>
                         <Insets right="10.0" />
                      </padding>
                   </Label>
-                  <TextField promptText="填入您Git全局使用的用户名" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                  <TextField fx:id="defaultWorkDir" promptText="请选择一个您Git仓库的默认工作目录" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" text="选择文件夹" GridPane.columnIndex="2">
+                  <Button onAction="#chooseDefaultWorkDir" mnemonicParsing="false" text="选择目录" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
@@ -222,7 +222,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="2">
+                  <Button mnemonicParsing="false" text="选择目录" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin>
@@ -271,7 +271,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" text="选 择" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                  <Button mnemonicParsing="false" text="选择目录" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin>

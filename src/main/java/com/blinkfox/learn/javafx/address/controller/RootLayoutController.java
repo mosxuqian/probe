@@ -33,7 +33,7 @@ public class RootLayoutController {
         // 得到文件选择器，并设置过滤.xml的扩展名
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter =
-                new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+                new FileChooser.ExtensionFilter("XML 文件(*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser;
     }

@@ -13,6 +13,17 @@ import org.pmw.tinylog.Logger;
  */
 public class ArchonApplication extends Application {
 
+    // 主stage
+    private static Stage primaryStage;
+
+    /**
+     * 得到主stage.
+     * @return primaryStage
+     */
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     /**
      * start方法.
      * @param primaryStage 主stage
