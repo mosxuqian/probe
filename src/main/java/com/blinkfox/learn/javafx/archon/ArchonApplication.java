@@ -1,11 +1,13 @@
 package com.blinkfox.learn.javafx.archon;
 
-import java.io.IOException;
+import com.blinkfox.learn.javafx.archon.commons.IController;
+import com.blinkfox.learn.javafx.archon.commons.IControllerFactory;
+import com.blinkfox.learn.javafx.archon.modules.Modules;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.pmw.tinylog.Logger;
 
 /**
  * Archon的主启动程序
@@ -15,6 +17,17 @@ public class ArchonApplication extends Application {
 
     // 主stage
     private static Stage primaryStage;
+
+    // Controller工厂实例
+    private final IControllerFactory controllerFactory;
+
+    /**
+     * 构造方法，初始化 controllerFactory.
+     */
+    public ArchonApplication() {
+        Injector injector = Guice.createInjector(new Modules());
+        this.controllerFactory = injector.getInstance(IControllerFactory.class);
+    }
 
     /**
      * primaryStage的setterfangfa.
@@ -49,14 +62,8 @@ public class ArchonApplication extends Application {
      * @return scene
      */
     private Scene getStartScene() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/fxml/archon/start.fxml"));
-        Scene scene = null;
-        try {
-            scene = new Scene(loader.load());
-        } catch (IOException e) {
-            Logger.info(e, "加载start scene出错！");
-        }
-        return scene;
+        IController controller = controllerFactory.loadController("/javafx/fxml/archon/start.fxml");
+        return new Scene(controller.getView());
     }
 
     /**

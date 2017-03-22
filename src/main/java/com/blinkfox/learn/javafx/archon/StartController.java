@@ -1,10 +1,16 @@
 package com.blinkfox.learn.javafx.archon;
 
+import com.blinkfox.learn.javafx.archon.commons.AbstractController;
+import com.blinkfox.learn.javafx.archon.commons.IControllerFactory;
 import com.blinkfox.learn.javafx.archon.consts.Constant;
 import com.blinkfox.learn.javafx.archon.helpers.DialogHelper;
 import com.blinkfox.learn.javafx.archon.helpers.FileHelper;
+import com.blinkfox.learn.javafx.archon.servivce.impl.AccountStepServiceImpl;
+import com.blinkfox.learn.javafx.archon.servivce.impl.DirStepServiceImpl;
+import com.blinkfox.learn.javafx.archon.servivce.impl.UseStepServiceImpl;
 import com.blinkfox.learn.jgit.ExecCmdHelper;
 import com.blinkfox.zealot.helpers.StringHelper;
+import com.google.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,7 +32,7 @@ import org.pmw.tinylog.Logger;
  * start界面的控制器.
  * Created by blinkfox on 2017-03-20.
  */
-public class StartController {
+public class StartController extends AbstractController {
 
     /* 上一步、下一步和隐藏文本字段的控件 */
     @FXML
@@ -85,62 +91,32 @@ public class StartController {
     /* 选中时的样式名称 */
     private static final String SELECTED_CSS_CLASS = "selectedBox";
 
+    @Inject
+    private IControllerFactory controllerFactory;
+
+    @Inject
+    private AccountStepServiceImpl accountStepService;
+
+    @Inject
+    private DirStepServiceImpl dirStepService;
+
+    @Inject
+    private UseStepServiceImpl useStepService;
+
     /**
      * 初始化时的相关操作.
      */
     @FXML
     private void initialize() {
-        /* 一些初始化操作,分别是初始化Git用户信息、开始类型选中事件监听等 */
-        initGlobalUserInfo();
-        initDefaultWorkDir();
-        listenStartTypeRadio();
-    }
+        /* 一些初始化操作,分别是初始化Git用户信息、默认工作空间、开始类型选中事件监听等 */
+        accountStepService.setUserNameField(userNameField).setUserEmailField(userEmailField);
+        accountStepService.init();
 
-    /**
-     * 初始化全局的Git用户信息.
-     */
-    private void initGlobalUserInfo() {
-        // 通过命令行来获取git全局的用户信息，如果不为空则为其设置默认值
-        String userName = ExecCmdHelper.execCmd(Constant.GIT_USER_NAME);
-        String userEmail = ExecCmdHelper.execCmd(Constant.GIT_USER_EMAIL);
-        if (userName != null && !userName.isEmpty()) {
-            userNameField.setText(userName);
-        }
-        if (userEmail != null && !userEmail.isEmpty()) {
-            userEmailField.setText(userEmail);
-        }
-    }
+        dirStepService.setDefaultWorkDir(defaultWorkDir).init();
 
-    /**
-     * 初始化Git创建、读取仓库等操作的默认工作目录.
-     */
-    private void initDefaultWorkDir() {
-        defaultWorkDir.setText(System.getProperty("user.home") + File.separator + Constant.DEFAULT_GIT_DIR);
-    }
-
-    /**
-     * 监听各种开始方式下的单选框事件.
-     */
-    private void listenStartTypeRadio() {
-        startType.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            String newText = newValue.getUserData() == null ? "" : newValue.getUserData().toString();
-            if (Constant.STEP_THREE_INIT.equals(newText)) {
-                initRepoPane.setVisible(true);
-                cloneRepoPane.setVisible(false);
-                openRepoPane.setVisible(false);
-                clearValidMsg();
-            } else if (Constant.STEP_THREE_CLONE.equals(newText)) {
-                initRepoPane.setVisible(false);
-                cloneRepoPane.setVisible(true);
-                openRepoPane.setVisible(false);
-                clearValidMsg();
-            } else if (Constant.STEP_THREE_OPEN.equals(newText)) {
-                initRepoPane.setVisible(false);
-                cloneRepoPane.setVisible(false);
-                openRepoPane.setVisible(true);
-                clearValidMsg();
-            }
-        });
+        useStepService.setStartType(startType).setInitRepoPane(initRepoPane).setCloneRepoPane(cloneRepoPane)
+                .setOpenRepoPane(openRepoPane).setValidMsgLabel(validMsgLabel);
+        useStepService.init();
     }
 
     /**
@@ -266,13 +242,6 @@ public class StartController {
         return Constant.STEP_THREE_INIT.equals(step)
                 || Constant.STEP_THREE_CLONE.equals(step)
                 || Constant.STEP_THREE_OPEN.equals(step);
-    }
-
-    /**
-     * 清空校验的提示信息.
-     */
-    private void clearValidMsg() {
-        validMsgLabel.setText("");
     }
 
     /**
