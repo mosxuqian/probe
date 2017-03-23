@@ -1,4 +1,4 @@
-package com.blinkfox.learn.javafx.mutlistage;
+package com.blinkfox.learn.javafx.others;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
