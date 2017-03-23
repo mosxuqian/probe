@@ -8,7 +8,6 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.pmw.tinylog.Logger;
 
 /**
@@ -17,7 +16,7 @@ import org.pmw.tinylog.Logger;
  */
 public class TimerTest {
 
-    private static final long ONE_DAY = 1000 * 60 * 60 * 24;
+    private static final long ONE_DAY = 1000 * 60 * 60 * 24L;
 
     /**
      * 私有构造方法.
@@ -29,7 +28,7 @@ public class TimerTest {
     /**
      * 延迟2秒执行.
      */
-    private static void time1() {
+    public static void time1() {
         Logger.info("开始执行time1任务，时间为:{}", LocalTime.now());
 
         // 延时两秒执行
@@ -46,7 +45,7 @@ public class TimerTest {
     /**
      * 延迟2秒之后每隔3秒循环执行.
      */
-    private static void time2() {
+    public static void time2() {
         Logger.info("开始执行time2任务，时间为:{}", LocalTime.now());
 
         // 延时两秒执行
@@ -63,7 +62,7 @@ public class TimerTest {
     /**
      * 延迟2秒之后每隔3秒循环执行，修复延迟对执行频率的影响.
      */
-    private static void time3() {
+    public static void time3() {
         Logger.info("开始执行time3任务，时间为:{}", LocalTime.now());
 
         // 延时两秒执行
@@ -80,7 +79,7 @@ public class TimerTest {
     /**
      * 延迟2秒之后每隔3秒循环执行，修复延迟对执行频率的影响.
      */
-    private static void time4() {
+    public static void time4() {
         // 初始化出执行任务的时间,此处为今天的12：00：00
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 12);
@@ -124,7 +123,6 @@ public class TimerTest {
      * @param args 数组参数
      */
     public static void main(String[] args) {
-        // time4();
         task();
     }
 
