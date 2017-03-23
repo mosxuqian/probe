@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="420.0" minWidth="500.0" prefHeight="420.0" prefWidth="660.0" stylesheets="@../../css/start.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.StartController">
+<AnchorPane minHeight="420.0" minWidth="500.0" prefHeight="420.0" prefWidth="660.0" stylesheets="@../../css/start.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.controller.StartController">
    <children>
       <HBox alignment="CENTER" layoutX="260.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0">
          <children>

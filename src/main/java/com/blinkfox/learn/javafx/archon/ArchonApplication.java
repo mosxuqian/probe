@@ -52,7 +52,7 @@ public class ArchonApplication extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(getStartScene());
+        primaryStage.setScene(getMainScene());
         setPrimaryStage(primaryStage);
         primaryStage.show();
     }
@@ -63,6 +63,15 @@ public class ArchonApplication extends Application {
      */
     private Scene getStartScene() {
         IController controller = controllerFactory.loadController("/javafx/fxml/archon/start.fxml");
+        return new Scene(controller.getView());
+    }
+
+    /**
+     * 获取start界面的scene.
+     * @return scene
+     */
+    private Scene getMainScene() {
+        IController controller = controllerFactory.loadController("/javafx/fxml/archon/main.fxml");
         return new Scene(controller.getView());
     }
 

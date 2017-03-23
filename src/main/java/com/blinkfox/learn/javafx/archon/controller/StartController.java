@@ -1,5 +1,6 @@
-package com.blinkfox.learn.javafx.archon;
+package com.blinkfox.learn.javafx.archon.controller;
 
+import com.blinkfox.learn.javafx.archon.ArchonApplication;
 import com.blinkfox.learn.javafx.archon.commons.AbstractController;
 import com.blinkfox.learn.javafx.archon.commons.IControllerFactory;
 import com.blinkfox.learn.javafx.archon.consts.Constant;
