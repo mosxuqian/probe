@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="700.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.controller.MainController">
+<BorderPane prefHeight="700.0" prefWidth="1150.0" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blinkfox.learn.javafx.archon.controller.MainController">
    <top>
       <AnchorPane prefHeight="48.0" prefWidth="1150.0" BorderPane.alignment="CENTER">
          <children>
@@ -14,18 +15,39 @@
                <image>
                   <Image url="@../../image/adept_logo.png" />
                </image></ImageView>
-            <Label layoutX="90.0" layoutY="22.0" text="Adept" textFill="#e41a1a" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="5.0">
+            <Label layoutX="90.0" layoutY="22.0" text="Adept" textAlignment="CENTER" textFill="#f44336" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="5.0">
                <font>
-                  <Font size="36.0" />
+                  <Font size="34.0" />
                </font>
             </Label>
+            <GridPane layoutX="950.0" layoutY="12.0" prefHeight="34.0" prefWidth="227.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <FontAwesomeIcon glyphStyleClass="iconGrey" iconName="GEAR" size="2em" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <FontAwesomeIcon glyphStyleClass="iconGrey" iconName="ARROW_DOWN" size="1.8em" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <FontAwesomeIcon glyphStyleClass="iconGrey" iconName="ARROW_CIRCLE_DOWN" size="1.8em" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <FontAwesomeIcon glyphStyleClass="iconGrey" iconName="ARROW_CIRCLE_UP" size="1.8em" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <FontAwesomeIcon glyphStyleClass="iconGrey" iconName="TH" size="1.8em" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <FontAwesomeIcon glyphStyleClass="iconGrey" iconName="ARROW_UP" size="1.8em" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+               </children>
+            </GridPane>
          </children>
       </AnchorPane>
    </top>
    <left>
       <VBox minWidth="-Infinity" prefHeight="640.0" prefWidth="240.0" BorderPane.alignment="CENTER">
          <children>
-            <TreeView prefHeight="200.0" prefWidth="200.0" />
+            <JFXTreeView />
          </children></VBox>
    </left>
    <center>
