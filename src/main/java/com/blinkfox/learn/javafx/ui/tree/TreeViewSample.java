@@ -1,4 +1,4 @@
-package com.blinkfox.learn.javafx.ui;
+package com.blinkfox.learn.javafx.ui.tree;
 
 import javafx.application.Application;
 import javafx.scene.Node;
