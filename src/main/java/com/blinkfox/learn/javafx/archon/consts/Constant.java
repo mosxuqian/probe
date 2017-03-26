@@ -27,6 +27,11 @@ public final class Constant {
     /* Git默认工作目录的目录名称常量 */
     public static final String DEFAULT_GIT_DIR = "gitwork";
 
+    /* 一些前台需要显示的常量，以 TEXT 开头 */
+    public static final String TEXT_WORK_SPACE = "工作空间";
+    public static final String TEXT_FILE_STATE = "文件状态";
+    public static final String TEXT_HISTORY = "历史记录";
+
     /**
      * 私有构造方法.
      */
