@@ -5,8 +5,6 @@ import static com.blinkfox.learn.javafx.archon.consts.Constant.TEXT_HISTORY;
 import static com.blinkfox.learn.javafx.archon.consts.Constant.TEXT_WORK_SPACE;
 
 import com.blinkfox.learn.javafx.archon.commons.AbstractController;
-import de.jensd.fx.glyphs.GlyphsDude;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
