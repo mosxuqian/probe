@@ -42,7 +42,7 @@ public class TreeViewSample2 extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // 根节点
-        TreeItem<String> rootNode = new TreeItem<>("公司人力资源", rootIcon);
+        TreeItem<String> rootNode = new TreeItem<>("公司员工分布", rootIcon);
         rootNode.setExpanded(true);
 
         // 遍历对人力资源按部门分组，生成对应的树节点
@@ -67,6 +67,8 @@ public class TreeViewSample2 extends Application {
         TreeView<String> treeView = new TreeView<>(rootNode);
         treeView.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> Logger.info("旧值：{}, 新值：{}", oldVal, newVal));
+        treeView.setEditable(true);
+        treeView.setCellFactory(param -> new TextFieldTreeCell());
 
         VBox box = new VBox();
         box.getChildren().add(treeView);
