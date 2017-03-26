@@ -54,6 +54,76 @@
       </VBox>
    </left>
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <top>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="23.0" prefWidth="88.0" text="历史记录" textAlignment="CENTER" textFill="#333333" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="hisRecordTableView" layoutX="75.0" layoutY="45.0" prefHeight="155.0" prefWidth="940.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+                    <columns>
+                      <TableColumn minWidth="30.0" prefWidth="563.0" text="提交信息" />
+                      <TableColumn minWidth="0.0" prefWidth="133.0" text="作者" />
+                        <TableColumn minWidth="0.0" prefWidth="127.0" text="日期" />
+                        <TableColumn prefWidth="114.0" text="提交" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </AnchorPane>
+         </top>
+         <left>
+            <AnchorPane maxWidth="800.0" prefHeight="446.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="87.0" text="提交信息" textFill="#333333" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <GridPane layoutX="14.0" layoutY="54.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="37.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="374.0" minWidth="10.0" prefWidth="333.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="作者" textFill="#666666" />
+                        <Label text="日期" textFill="#666666" GridPane.rowIndex="1" />
+                        <Label text="提交" textFill="#666666" GridPane.rowIndex="2" />
+                        <Label text="标签" textFill="#666666" GridPane.rowIndex="3" />
+                        <Label text="信息" textFill="#666666" GridPane.rowIndex="4" />
+                        <Label fx:id="hisAuthorLabel" textFill="#666666" GridPane.columnIndex="1" />
+                        <Label fx:id="hisDateLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="hisCommitLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="hisTagLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="hisMsgLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </left>
+         <center>
+            <AnchorPane prefHeight="446.0" prefWidth="573.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="变更文件" textAlignment="CENTER" textFill="#333333" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="hisChangeListView" layoutX="15.0" layoutY="54.0" prefHeight="253.0" prefWidth="510.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="55.0" />
+               </children>
+            </AnchorPane>
+         </center></BorderPane>
    </center>
 </BorderPane>

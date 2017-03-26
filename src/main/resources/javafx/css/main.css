@@ -1,4 +1,5 @@
 .root {
+    -fx-background-color: #F4F4F4;
     -fx-focus-color: transparent;
 }
 .iconGrey {
@@ -15,4 +16,14 @@
 .treeView .tree-cell:selected {
     -fx-background-color: #00aced ;
     -fx-text-fill: #FFFFFF  ;
+}
+#hisRecordTableView {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: #F4F4F4;
+}
+#hisChangeListView {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: #F4F4F4;
 }
