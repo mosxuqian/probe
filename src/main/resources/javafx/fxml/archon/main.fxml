@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import com.jfoenix.controls.*?>
@@ -48,7 +49,7 @@
    <left>
       <VBox minWidth="-Infinity" prefHeight="640.0" prefWidth="210.0" BorderPane.alignment="CENTER">
          <children>
-            <TreeView fx:id="workTreeView" prefHeight="200.0" prefWidth="200.0" />
+            <TreeView fx:id="workTreeView" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="treeView" />
          </children>
       </VBox>
    </left>

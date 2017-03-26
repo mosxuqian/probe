@@ -1,3 +1,18 @@
+.root {
+    -fx-focus-color: transparent;
+}
 .iconGrey {
     -fx-fill: #999;
+}
+.treeView {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
+.treeView .tree-cell {
+    -fx-background-color: #F4F4F4 ;
+    -fx-text-fill: #444 ;
+}
+.treeView .tree-cell:selected {
+    -fx-background-color: #00aced ;
+    -fx-text-fill: #FFFFFF  ;
 }
