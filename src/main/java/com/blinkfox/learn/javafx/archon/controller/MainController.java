@@ -7,23 +7,20 @@ import static com.blinkfox.learn.javafx.archon.consts.Constant.TEXT_WORK_SPACE;
 import com.blinkfox.learn.javafx.archon.commons.AbstractController;
 import com.blinkfox.learn.javafx.archon.model.CommitRecord;
 import com.blinkfox.test.other.TimeUtils;
+import java.io.File;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.pmw.tinylog.Logger;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * 主界面的控制器.
@@ -36,6 +33,16 @@ public class MainController extends AbstractController {
 
     @FXML
     private TableView<CommitRecord> hisRecordTableView; // 历史提交记录table
+
+    /* 历史记录各列数据 */
+    @FXML
+    private TableColumn<CommitRecord, String> shortMsgColumn;
+    @FXML
+    private TableColumn<CommitRecord, String> authorNameColumn;
+    @FXML
+    private TableColumn<CommitRecord, String> commitTimeColumn;
+    @FXML
+    private TableColumn<CommitRecord, String> shortCommitColumn;
 
     // 可观察的 CommitRecord 集合
     private ObservableList<CommitRecord> commitRecords = FXCollections.observableArrayList();
@@ -66,8 +73,9 @@ public class MainController extends AbstractController {
         workTreeView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (TEXT_HISTORY.equals(newVal.getValue())) {
                 Logger.info("开始读取git历史记录信息...");
-                setHisRecordTableData();
-                hisRecordTableView.setItems(commitRecords);
+                this.setHisRecordTableData();
+                this.hisRecordTableView.setItems(commitRecords);
+                this.setHisRecordTableColumnData();
             } else {
                 Logger.info("显示文件状态的右侧列表数据...");
             }
@@ -78,7 +86,7 @@ public class MainController extends AbstractController {
      * 设置历史提交记录列表的数据.
      */
     private void setHisRecordTableData() {
-        try (Git git = Git.open(new File("F:\\gitrepo\\probe"))) {
+        try (Git git = Git.open(new File("/Users/blinkfox/Documents/dev/gitrepo/probe"))) {
             Iterable<RevCommit> commits = git.log().call();
             if (commits == null) {
                 return;
@@ -96,6 +104,16 @@ public class MainController extends AbstractController {
         } catch (Exception e) {
             Logger.error(e, "读取git历史提交记录信息失败!");
         }
+    }
+
+    /**
+     * 设置设置历史提交记录列表各列的数据..
+     */
+    private void setHisRecordTableColumnData() {
+        shortMsgColumn.setCellValueFactory(cellData -> cellData.getValue().shortMsgProperty());
+        authorNameColumn.setCellValueFactory(cellData -> cellData.getValue().authorNameProperty());
+        commitTimeColumn.setCellValueFactory(cellData -> cellData.getValue().commitTimeProperty());
+        shortCommitColumn.setCellValueFactory(cellData -> cellData.getValue().shortCommitProperty());
     }
 
 }

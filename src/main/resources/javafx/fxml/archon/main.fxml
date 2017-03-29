@@ -65,14 +65,11 @@
                   </Label>
                   <TableView fx:id="hisRecordTableView" layoutX="75.0" layoutY="45.0" prefHeight="155.0" prefWidth="940.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                     <columns>
-                      <TableColumn minWidth="30.0" prefWidth="563.0" text="提交信息" />
-                      <TableColumn minWidth="0.0" prefWidth="133.0" text="作者" />
-                        <TableColumn minWidth="0.0" prefWidth="127.0" text="日期" />
-                        <TableColumn prefWidth="114.0" text="提交" />
+                      <TableColumn fx:id="shortMsgColumn" editable="false" minWidth="30.0" prefWidth="530.0" text="提交信息" />
+                        <TableColumn fx:id="commitTimeColumn" editable="false" minWidth="0.0" prefWidth="172.0" text="日期" />
+                      <TableColumn fx:id="authorNameColumn" editable="false" minWidth="0.0" prefWidth="118.0" text="作者" />
+                        <TableColumn fx:id="shortCommitColumn" editable="false" prefWidth="79.0" text="提交" />
                     </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
                   </TableView>
                </children>
             </AnchorPane>
