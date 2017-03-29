@@ -5,14 +5,25 @@ import static com.blinkfox.learn.javafx.archon.consts.Constant.TEXT_HISTORY;
 import static com.blinkfox.learn.javafx.archon.consts.Constant.TEXT_WORK_SPACE;
 
 import com.blinkfox.learn.javafx.archon.commons.AbstractController;
+import com.blinkfox.learn.javafx.archon.model.CommitRecord;
+import com.blinkfox.test.other.TimeUtils;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.pmw.tinylog.Logger;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 主界面的控制器.
@@ -21,7 +32,13 @@ import org.pmw.tinylog.Logger;
 public class MainController extends AbstractController {
 
     @FXML
-    private TreeView<String> workTreeView;
+    private TreeView<String> workTreeView; // 左侧工作空间树
+
+    @FXML
+    private TableView<CommitRecord> hisRecordTableView; // 历史提交记录table
+
+    // 可观察的 CommitRecord 集合
+    private ObservableList<CommitRecord> commitRecords = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
@@ -48,11 +65,37 @@ public class MainController extends AbstractController {
         workTreeView.setRoot(rootItem);
         workTreeView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (TEXT_HISTORY.equals(newVal.getValue())) {
-                Logger.info("显示历史记录的右侧列表数据...");
+                Logger.info("开始读取git历史记录信息...");
+                setHisRecordTableData();
+                hisRecordTableView.setItems(commitRecords);
             } else {
                 Logger.info("显示文件状态的右侧列表数据...");
             }
         });
+    }
+
+    /**
+     * 设置历史提交记录列表的数据.
+     */
+    private void setHisRecordTableData() {
+        try (Git git = Git.open(new File("F:\\gitrepo\\probe"))) {
+            Iterable<RevCommit> commits = git.log().call();
+            if (commits == null) {
+                return;
+            }
+
+            // 先清空集合信息，再设置到集合中
+            commitRecords.clear();
+            for (RevCommit commit : commits) {
+                CommitRecord record = new CommitRecord(commit.getShortMessage(), commit.getFullMessage(),
+                        commit.getAuthorIdent().getName(), commit.getAuthorIdent().getEmailAddress(),
+                        TimeUtils.timeToStr(commit.getCommitTime()), commit.getName());
+                commitRecords.add(record);
+            }
+            git.close();
+        } catch (Exception e) {
+            Logger.error(e, "读取git历史提交记录信息失败!");
+        }
     }
 
 }
