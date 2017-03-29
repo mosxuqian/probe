@@ -7,15 +7,13 @@ import static com.blinkfox.learn.javafx.archon.consts.Constant.TEXT_WORK_SPACE;
 import com.blinkfox.learn.javafx.archon.commons.AbstractController;
 import com.blinkfox.learn.javafx.archon.model.CommitRecord;
 import com.blinkfox.test.other.TimeUtils;
+import com.blinkfox.zealot.helpers.StringHelper;
 import java.io.File;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.eclipse.jgit.api.Git;
@@ -44,13 +42,23 @@ public class MainController extends AbstractController {
     @FXML
     private TableColumn<CommitRecord, String> shortCommitColumn;
 
+    /* 被选中某一行历史记录表的数据之后显示的Label数据 */
+    @FXML
+    private Label hisAuthorLabel;
+    @FXML
+    private Label hisDateLabel;
+    @FXML
+    private Label hisCommitLabel;
+    @FXML
+    private Label hisMsgLabel;
+
     // 可观察的 CommitRecord 集合
     private ObservableList<CommitRecord> commitRecords = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-        Logger.info("MainController初始化开始...");
         initWorkTreeView();
+        initHisRecordTable();
     }
 
     /**
@@ -74,12 +82,19 @@ public class MainController extends AbstractController {
             if (TEXT_HISTORY.equals(newVal.getValue())) {
                 Logger.info("开始读取git历史记录信息...");
                 this.setHisRecordTableData();
-                this.hisRecordTableView.setItems(commitRecords);
-                this.setHisRecordTableColumnData();
             } else {
                 Logger.info("显示文件状态的右侧列表数据...");
             }
         });
+    }
+
+    /**
+     * 初始化历史记录表格相关数据.
+     */
+    private void initHisRecordTable() {
+        this.hisRecordTableView.setItems(commitRecords);
+        this.setHisRecordTableColumnData();
+        listenSelectHisRecord();
     }
 
     /**
@@ -114,6 +129,26 @@ public class MainController extends AbstractController {
         authorNameColumn.setCellValueFactory(cellData -> cellData.getValue().authorNameProperty());
         commitTimeColumn.setCellValueFactory(cellData -> cellData.getValue().commitTimeProperty());
         shortCommitColumn.setCellValueFactory(cellData -> cellData.getValue().shortCommitProperty());
+    }
+
+    /**
+     * 监听某一行历史记录被选中时的操作.
+     */
+    private void listenSelectHisRecord() {
+        hisRecordTableView.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldVal, newVal) -> this.setHisSelectedLabel(newVal));
+    }
+
+    /**
+     * 设置历史记录表格中，被选中一行的显示Label信息.
+     */
+    private void setHisSelectedLabel(CommitRecord record) {
+        if (record != null) {
+            hisAuthorLabel.setText(StringHelper.concat(record.getAuthorName(), "<", record.getAuthorEmail() , ">"));
+            hisDateLabel.setText(record.getCommitTime());
+            hisCommitLabel.setText(record.getFullCommit());
+            hisMsgLabel.setText(record.getFullMsg());
+        }
     }
 
 }
