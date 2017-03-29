@@ -1,15 +1,10 @@
 package com.blinkfox.learn.jgit;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import com.blinkfox.test.other.TimeUtils;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -45,9 +40,10 @@ public class JgitHistoryTest {
         Git git = Git.open(new File("F:\\gitrepo\\probe"));
         Iterable<RevCommit> commits = git.log().call();
         for (RevCommit commit: commits) {
-            Logger.info("提交信息：{}；作者：{}<{}>；时间：{}；提交：{}", commit.getFullMessage(),
-                    commit.getAuthorIdent().getName(),commit.getAuthorIdent().getEmailAddress(),
-                    TimeUtils.timeToStr(commit.getCommitTime()), commit.name().substring(0, 7));
+            Logger.info("短提交信息：{}；全提交信息：{}；作者：{}<{}>；时间：{}；提交：{}",
+                    commit.getShortMessage(), commit.getFullMessage(), commit.getAuthorIdent().getName(),
+                    commit.getAuthorIdent().getEmailAddress(), TimeUtils.timeToStr(commit.getCommitTime()),
+                    commit.getName().substring(0, 7));
         }
         git.close();
     }
