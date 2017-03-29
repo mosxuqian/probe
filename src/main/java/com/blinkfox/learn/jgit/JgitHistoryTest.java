@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import com.blinkfox.test.other.TimeUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -41,18 +42,12 @@ public class JgitHistoryTest {
      * 使用revWalk方法.
      */
     private static void gitLog() throws Exception {
-        Git git = Git.open(new File("/Users/blinkfox/Documents/dev/gitrepo/probe"));
+        Git git = Git.open(new File("F:\\gitrepo\\probe"));
         Iterable<RevCommit> commits = git.log().call();
         for (RevCommit commit: commits) {
-            // 处理日期
-            int time = commit.getCommitTime();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(time);
-            String timeStr = sdf.format(calendar.getTime());
-
             Logger.info("提交信息：{}；作者：{}<{}>；时间：{}；提交：{}", commit.getFullMessage(),
                     commit.getAuthorIdent().getName(),commit.getAuthorIdent().getEmailAddress(),
-                    timeStr, commit.getId());
+                    TimeUtils.timeToStr(commit.getCommitTime()), commit.name().substring(0, 7));
         }
         git.close();
     }

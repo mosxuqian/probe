@@ -48,9 +48,9 @@ public class MainController extends AbstractController {
         workTreeView.setRoot(rootItem);
         workTreeView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (TEXT_HISTORY.equals(newVal.getValue())) {
-                Logger.info("显示文件状态的右侧列表数据...");
-            } else {
                 Logger.info("显示历史记录的右侧列表数据...");
+            } else {
+                Logger.info("显示文件状态的右侧列表数据...");
             }
         });
     }
