@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
@@ -94,22 +95,17 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="作者" textFill="#666666" />
-                        <Label text="日期" textFill="#666666" GridPane.rowIndex="1" />
-                        <Label text="提交" textFill="#666666" GridPane.rowIndex="2" />
-                        <Label text="标签" textFill="#666666" GridPane.rowIndex="3" />
-                        <Label text="信息" textFill="#666666" GridPane.rowIndex="4" />
+                        <Label text="作者" textFill="#333333" />
+                        <Label text="日期" textFill="#333333" GridPane.rowIndex="1" />
+                        <Label text="提交" textFill="#333333" GridPane.rowIndex="2" />
                         <Label fx:id="hisAuthorLabel" textFill="#666666" GridPane.columnIndex="1" />
                         <Label fx:id="hisDateLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="hisCommitLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="hisTagLabel" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label fx:id="hisMsgLabel" text="StringProperty [value: Merge remote-tracking branch 'origin/master'# Conflicts:#src/main/webapp/doc/Mac中安装MariaDB数据库.md]" textFill="#666666" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
+                  <Label fx:id="hisMsgLabel" maxWidth="385.0" text="新增了JavaFx在FXML中使用FontawesomFx的图标，删除了Java的使用方法" textFill="#666666" wrapText="true" AnchorPane.leftAnchor="52.0" AnchorPane.topAnchor="148.0" />
                </children>
             </AnchorPane>
          </left>

@@ -52,6 +52,8 @@ public class MainController extends AbstractController {
     @FXML
     private Label hisMsgLabel;
 
+    private static final String REPO = "F:\\gitrepo\\probe";
+
     // 可观察的 CommitRecord 集合
     private ObservableList<CommitRecord> commitRecords = FXCollections.observableArrayList();
 
@@ -101,7 +103,7 @@ public class MainController extends AbstractController {
      * 设置历史提交记录列表的数据.
      */
     private void setHisRecordTableData() {
-        try (Git git = Git.open(new File("/Users/blinkfox/Documents/dev/gitrepo/probe"))) {
+        try (Git git = Git.open(new File(REPO))) {
             Iterable<RevCommit> commits = git.log().call();
             if (commits == null) {
                 return;

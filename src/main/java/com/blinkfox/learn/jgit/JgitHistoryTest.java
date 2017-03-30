@@ -16,8 +16,6 @@ import org.pmw.tinylog.Logger;
  */
 public class JgitHistoryTest {
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     /**
      * 私有构造方法.
      */

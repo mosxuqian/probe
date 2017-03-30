@@ -5,6 +5,10 @@
 .iconGrey {
     -fx-fill: #999;
 }
+.copyable-label, .copyable-label:focused {
+    -fx-background-color: transparent ;
+    -fx-background-insets: 0px ;
+}
 .treeView {
     -fx-padding: 0;
     -fx-background-insets: 0;
