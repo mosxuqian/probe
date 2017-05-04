@@ -19,7 +19,7 @@ public class HugeFileSort {
      * @throws IOException 异常
      */
     private static void sort(String inputFileName, String outputFileName) throws IOException {
-        TextFileSorter sorter = new TextFileSorter(new SortConfig());
+        TextFileSorter sorter = new TextFileSorter(new SortConfig().withMaxMemoryUsage(48*1024*1024));
         sorter.sort(new FileInputStream(inputFileName), new FileOutputStream(outputFileName));
     }
 
