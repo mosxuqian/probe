@@ -1,6 +1,7 @@
 package com.blinkfox.test.sorts.others;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.pmw.tinylog.Logger;
@@ -25,7 +26,7 @@ public class StringsCompareTest {
         Logger.info("sort before list:" + list.toString());
 
         // 降序排列
-        list.sort(new Comparator<String>() {
+        Collections.sort(list, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 return o2.compareTo(o1);
