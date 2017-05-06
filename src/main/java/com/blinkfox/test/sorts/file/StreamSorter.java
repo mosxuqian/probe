@@ -145,7 +145,6 @@ public class StreamSorter {
         BufferedWriter writer = null;
         ComparatorDelegate delegate = new ComparatorDelegate();
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(os));
             for (int i = 0; i < outputs.size(); i++) {
                 BufferedReader reader = new BufferedReader(new FileReader(outputs.get(i)));
                 readers.add(reader);
@@ -155,10 +154,11 @@ public class StreamSorter {
                 }
             }
 
-            ///continue to loop until no more lines lefts
+            // continue to loop until no more lines lefts
+            writer = new BufferedWriter(new OutputStreamWriter(os));
             List<StringWrapper> sorted = new LinkedList<StringWrapper>(map.keySet());
             while (map.size() > 0) {
-                Collections.sort(sorted, delegate);
+                sorted.sort(delegate);
                 StringWrapper line = sorted.remove(0);
                 writer.write(line.string);
                 writer.write("\n");

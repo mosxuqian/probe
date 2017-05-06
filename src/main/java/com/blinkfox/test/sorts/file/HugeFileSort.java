@@ -29,7 +29,8 @@ public class HugeFileSort {
      */
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
-        sort("/Users/blinkfox/Downloads/phonenum.txt", "/Users/blinkfox/Downloads/phonenum2.txt");
+        // sort("/Users/blinkfox/Downloads/phonenum.txt", "/Users/blinkfox/Downloads/phonenum2.txt");
+        sort("H:\\programs\\phonenum\\phonenum.txt", "H:\\programs\\phonenum\\phonenum_sort.txt");
         System.out.println("排序完成!，耗时:" + (System.currentTimeMillis() - startTime) + " ms");
     }
 
