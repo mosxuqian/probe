@@ -26,7 +26,7 @@ public class LongsCompareTest {
         Logger.info("sort before list:" + list.toString());
 
         // 降序排序
-        Collections.sort(list, new LongComparator());
+        Collections.sort(list, LongComparator.getInstance());
         /*Collections.sort(list, new Comparator<Long>() {
             @Override
             public int compare(Long o1, Long o2) {
