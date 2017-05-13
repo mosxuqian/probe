@@ -12,7 +12,7 @@ import org.pmw.tinylog.Logger;
  */
 public final class CookHelper {
 
-    private static final String GIT_DIR = "/Users/blinkfox/Downloads/gittest/";
+    public static final String GIT_DIR = "/Users/blinkfox/Downloads/gittest/";
 
     /**
      * 私有构造方法.
