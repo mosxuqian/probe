@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用marked解析markdown的示例</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/hackcss/hack.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/hackcss/dark-grey.css">
+</head>
+<body class="hack dark-grey">
+
+<div id="content" class="container"></div>
+
+<div id="md_content" style="display: none;">
+    Marked Demo
+    ======================
+
+    这是一个Marked库使用的例子。 http://blog.fens.me/nodejs-markdown-marked/
+
+    > A full-featured markdown parser and compiler, written in JavaScript. Built
+    > for speed.
+
+    [![NPM version](https://badge.fury.io/js/marked.png)][badge]
+
+    ## Install
+
+    ``` bash
+    npm install marked --save
+    ```
+
+    ## 列表测试
+
+    + 列表测试，行1
+    + 列表测试，行2
+    + 列表测试，行3
+    + 列表测试，行4
+
+    ## 表格测试
+
+    A | B | C
+    --|--|--
+    A1 | B1 | C1
+    A2 | B2 | C2
+    A3 | B3 | C3
+</div>
+
+<script type="text/javascript" src="https://cdn.staticfile.org/marked/0.3.6/marked.min.js"></script>
+<script type="text/javascript">
+    var text = document.getElementById('md_content').innerHTML;
+    text = text.replace(/^ +/gm, '');
+    console.log(text);
+    document.getElementById('content').innerHTML = marked(text);
+</script>
+</body>
+</html>
