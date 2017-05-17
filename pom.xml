@@ -35,6 +35,14 @@
 			<version>2.3.1</version>
 			<scope>provided</scope>
 		</dependency>
+
+        <!-- spring shell -->
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell</artifactId>
+            <version>1.2.0.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
