@@ -14,13 +14,13 @@ import org.pmw.tinylog.Logger;
  * UserDao.
  * Created by blinkfox on 2017/5/21.
  */
-public class UserDao {
+public class UserDaoTest1 {
 
     /**
      * 插入用户信息.
      */
     private static void insertUser() {
-        Connection conn = DaoFactory.getConnection();
+        Connection conn = JdbcDaoHelper.getConnection();
         if (conn == null) {
             return;
         }
@@ -39,7 +39,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "执行插入user信息出错！");
         } finally {
-            DaoFactory.close(conn, ps);
+            JdbcDaoHelper.close(conn, ps);
         }
     }
 
@@ -47,7 +47,7 @@ public class UserDao {
      * 更新用户信息.
      */
     private static void updateUser() {
-        Connection conn = DaoFactory.getConnection();
+        Connection conn = JdbcDaoHelper.getConnection();
         if (conn == null) {
             return;
         }
@@ -67,7 +67,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "执行更新user信息出错！");
         } finally {
-            DaoFactory.close(conn, ps);
+            JdbcDaoHelper.close(conn, ps);
         }
     }
 
@@ -75,7 +75,7 @@ public class UserDao {
      * 删除用户信息.
      */
     private static void deleteUser() {
-        Connection conn = DaoFactory.getConnection();
+        Connection conn = JdbcDaoHelper.getConnection();
         if (conn == null) {
             return;
         }
@@ -90,7 +90,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "删除更新user信息出错！");
         } finally {
-            DaoFactory.close(conn, ps);
+            JdbcDaoHelper.close(conn, ps);
         }
     }
 
@@ -98,7 +98,7 @@ public class UserDao {
      * 删除用户信息.
      */
     private static void queryUsers() {
-        Connection conn = DaoFactory.getConnection();
+        Connection conn = JdbcDaoHelper.getConnection();
         if (conn == null) {
             return;
         }
@@ -127,7 +127,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "查询user信息出错！");
         } finally {
-            DaoFactory.close(conn, ps, rs);
+            JdbcDaoHelper.close(conn, ps, rs);
         }
     }
 

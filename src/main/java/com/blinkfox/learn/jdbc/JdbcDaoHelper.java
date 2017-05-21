@@ -10,7 +10,7 @@ import org.pmw.tinylog.Logger;
  * 数据库访问空间类.
  * Created by blinkfox on 2017/5/21.
  */
-public class DaoFactory {
+public class JdbcDaoHelper {
 
     /* MariaDB驱动... */
     private static String driver = "";
