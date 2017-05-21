@@ -50,4 +50,13 @@ public final class DataSourceHelper {
         }
     }
 
+    /**
+     * 关闭数据源.
+     */
+    public static void close() {
+        if (ds != null) {
+            ds.close();
+        }
+    }
+
 }
