@@ -1,9 +1,10 @@
 package com.blinkfox.learn.jdbc.dbpool;
 
 import com.blinkfox.utils.others.PropHelper;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.util.Properties;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -12,7 +13,7 @@ import org.pmw.tinylog.Logger;
  */
 public final class DataSourceHelper {
 
-    private static BasicDataSource ds = null;
+    private static HikariDataSource ds = null;
 
     /**
      * 私有构造方法.
@@ -22,19 +23,19 @@ public final class DataSourceHelper {
     }
 
     static {
-        ds = new BasicDataSource();
         Properties props = PropHelper.INSTANCE.loadPropFile("props/config.properties");
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(props.getProperty("driver"));
+        config.setJdbcUrl(props.getProperty("url"));
+        config.setUsername(props.getProperty("username"));
+        config.setPassword(props.getProperty("password"));
+        config.setMaximumPoolSize(Integer.parseInt(props.getProperty("maxTotal", "20")));
+        config.setMinimumIdle(Integer.parseInt(props.getProperty("minIdle", "5")));
 
-        // 设置基本连接属性
-        ds.setDriverClassName(props.getProperty("driver"));
-        ds.setUrl(props.getProperty("url"));
-        ds.setUsername(props.getProperty("username"));
-        ds.setPassword(props.getProperty("password"));
-
-        ds.setMaxTotal(Integer.parseInt(props.getProperty("maxTotal", "20")));
-        ds.setMaxIdle(Integer.parseInt(props.getProperty("maxIdle", "10")));
-        ds.setMinIdle(Integer.parseInt(props.getProperty("minIdle", "5")));
-        ds.setInitialSize(Integer.parseInt(props.getProperty("initSize", "10")));
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds = new HikariDataSource(config);
     }
 
     /**
