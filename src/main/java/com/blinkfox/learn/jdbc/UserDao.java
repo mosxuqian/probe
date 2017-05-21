@@ -39,8 +39,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "执行插入user信息出错！");
         } finally {
-            DaoFactory.close(ps);
-            DaoFactory.close(conn);
+            DaoFactory.close(conn, ps);
         }
     }
 
@@ -68,8 +67,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "执行更新user信息出错！");
         } finally {
-            DaoFactory.close(ps);
-            DaoFactory.close(conn);
+            DaoFactory.close(conn, ps);
         }
     }
 
@@ -92,8 +90,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "删除更新user信息出错！");
         } finally {
-            DaoFactory.close(ps);
-            DaoFactory.close(conn);
+            DaoFactory.close(conn, ps);
         }
     }
 
@@ -130,9 +127,7 @@ public class UserDao {
         } catch (SQLException e) {
             Logger.error(e, "查询user信息出错！");
         } finally {
-            DaoFactory.close(rs);
-            DaoFactory.close(ps);
-            DaoFactory.close(conn);
+            DaoFactory.close(conn, ps, rs);
         }
     }
 

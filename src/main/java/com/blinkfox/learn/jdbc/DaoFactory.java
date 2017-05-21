@@ -83,6 +83,28 @@ public class DaoFactory {
     }
 
     /**
+     * 关闭各种资源.
+     * @param conn connection实例
+     * @param ps PreparedStatement实例
+     */
+    public static void close(Connection conn, PreparedStatement ps) {
+        close(ps);
+        close(conn);
+    }
+
+    /**
+     * 关闭各种资源.
+     * @param conn connection实例
+     * @param ps PreparedStatement实例
+     * @param rs PreparedStatement实例
+     */
+    public static void close(Connection conn, PreparedStatement ps, ResultSet rs) {
+        close(rs);
+        close(ps);
+        close(conn);
+    }
+
+    /**
      * main方法.
      * @param args 数组参数
      */
