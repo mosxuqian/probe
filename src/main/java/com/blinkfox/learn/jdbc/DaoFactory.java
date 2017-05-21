@@ -1,9 +1,8 @@
 package com.blinkfox.learn.jdbc;
 
 import com.blinkfox.utils.others.PropHelper;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.Properties;
 import org.pmw.tinylog.Logger;
 
@@ -45,12 +44,40 @@ public class DaoFactory {
      * 关闭数据库连接.
      * @param conn 数据库连接
      */
-    public static void closeConnection(Connection conn) {
+    public static void close(Connection conn) {
         if (conn != null) {
             try {
                 conn.close();
             } catch (SQLException e) {
                 Logger.error(e, "关闭数据库连接失败！");
+            }
+        }
+    }
+
+    /**
+     * 关闭PreparedStatement.
+     * @param ps PreparedStatement
+     */
+    public static void close(PreparedStatement ps) {
+        if (ps != null) {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                Logger.error(e, "关闭PreparedStatement失败！");
+            }
+        }
+    }
+
+    /**
+     * 关闭ResultSet.
+     * @param rs PreparedStatement
+     */
+    public static void close(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                Logger.error(e, "关闭ResultSet失败！");
             }
         }
     }
@@ -62,7 +89,7 @@ public class DaoFactory {
     public static void main(String[] args) {
         Connection conn = getConnection();
         Logger.info("conn:{}", conn);
-        closeConnection(conn);
+        close(conn);
     }
 
 }
