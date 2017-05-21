@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.blinkfox.learn.jdbc.dbpool.DataSourceHelper;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -98,7 +100,8 @@ public class UserDaoTest1 {
      * 删除用户信息.
      */
     private static void queryUsers() {
-        Connection conn = JdbcDaoHelper.getConnection();
+        // Connection conn = JdbcDaoHelper.getConnection();
+        Connection conn = DataSourceHelper.getConnection();
         if (conn == null) {
             return;
         }
