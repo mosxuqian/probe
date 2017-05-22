@@ -1,7 +1,6 @@
 package com.blinkfox.learn.jdbc;
 
 import com.blinkfox.utils.others.PropHelper;
-
 import java.sql.*;
 import java.util.Properties;
 import org.pmw.tinylog.Logger;

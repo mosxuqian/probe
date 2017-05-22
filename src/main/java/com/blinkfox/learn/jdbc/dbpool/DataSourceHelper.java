@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.util.Properties;
+import javax.sql.DataSource;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -36,6 +37,14 @@ public final class DataSourceHelper {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         ds = new HikariDataSource(config);
+    }
+
+    /**
+     * 获取数据源.
+     * @return DataSource唯一实例.
+     */
+    public static DataSource getDataSource() {
+        return ds;
     }
 
     /**

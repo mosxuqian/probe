@@ -1,5 +1,6 @@
 package com.blinkfox.learn.jdbc;
 
+import com.blinkfox.learn.jdbc.dbpool.DataSourceHelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.blinkfox.learn.jdbc.dbpool.DataSourceHelper;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -97,7 +96,7 @@ public class UserDaoTest1 {
     }
 
     /**
-     * 删除用户信息.
+     * 查询用户信息.
      */
     private static void queryUsers() {
         // Connection conn = JdbcDaoHelper.getConnection();
