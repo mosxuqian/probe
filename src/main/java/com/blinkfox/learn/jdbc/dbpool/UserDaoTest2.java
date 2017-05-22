@@ -1,14 +1,10 @@
 package com.blinkfox.learn.jdbc.dbpool;
 
+import com.blinkfox.learn.jdbc.JdbcDaoHelper;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.blinkfox.learn.jdbc.JdbcDaoHelper;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.pmw.tinylog.Logger;
