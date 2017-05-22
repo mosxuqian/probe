@@ -104,6 +104,20 @@ public class JdbcDaoHelper {
     }
 
     /**
+     * 回滚.
+     * @param conn 数据库连接.
+     */
+    public static void rollback(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException e) {
+                Logger.error(e, "回滚失败！");
+            }
+        }
+    }
+
+    /**
      * main方法.
      * @param args 数组参数
      */
