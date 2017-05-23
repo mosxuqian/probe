@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
+import org.apache.commons.dbutils.AsyncQueryRunner;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
@@ -136,6 +138,35 @@ public class UserDaoTest2 {
     }
 
     /**
+     * 测试使用AsyncQueryRunner来异步查询用户信息.
+     */
+    private static void queryUsers3() {
+        //创建一个线程池
+        ExecutorService executorService = new ThreadPoolExecutor(8, 8,
+                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100000),
+                new ThreadPoolExecutor.CallerRunsPolicy());
+        AsyncQueryRunner asyncRunner = new AsyncQueryRunner(executorService,
+                new QueryRunner(DataSourceHelper.getDataSource()));
+
+        long start = System.currentTimeMillis();
+        List<Map<String, Object>> resultMaps = null;
+        // 没查询一条数据延时5秒钟
+        String sql = "SELECT SLEEP(5), u.* FROM user AS u WHERE u.age > ?";
+        try {
+            Future<List<Map<String, Object>>> callback = asyncRunner.query(sql, new MapListHandler(), 19);
+            Logger.info("得到callback耗时：{} ms", (System.currentTimeMillis() - start));
+
+            long start2 = System.currentTimeMillis();
+            resultMaps = callback.get(); // 这一步是同步的耗时的操作
+            Logger.info("从callback中获取数据耗时：{} ms", (System.currentTimeMillis() - start2));
+        } catch (Exception e) {
+            Logger.error(e, "查询user信息3出错！");
+        }
+        Logger.info("查询用户信息3成功!, resultMaps:{},\n最终耗时：{} ms",
+                resultMaps, (System.currentTimeMillis() - start));
+    }
+
+    /**
      * main方法.
      * @param args 数组参数
      */
@@ -144,7 +175,8 @@ public class UserDaoTest2 {
         // updateUser();
         // updateUser2();
         // deleteUser();
-        queryUsers2();
+        // queryUsers2();
+        queryUsers3();
     }
 
 }
