@@ -2,10 +2,14 @@ package com.blinkfox.learn.jdbc.dbpool;
 
 import com.blinkfox.learn.jdbc.JdbcDaoHelper;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.pmw.tinylog.Logger;
 
@@ -100,15 +104,47 @@ public class UserDaoTest2 {
     }
 
     /**
+     * 查询用户信息2.
+     */
+    private static void queryUsers2() {
+        ResultSetHandler<List<Object[]>> handler = new ResultSetHandler<List<Object[]>>() {
+            @Override
+            public List<Object[]> handle(ResultSet rs) throws SQLException {
+                List<Object[]> results = new ArrayList<>();
+                while (rs.next()) {
+                    ResultSetMetaData metaData = rs.getMetaData();
+                    int cols = metaData.getColumnCount();
+                    Object[] objArr = new Object[cols];
+                    for (int i = 0; i < cols; i++) {
+                        objArr[i] = rs.getObject(i + 1);
+                    }
+                    results.add(objArr);
+                }
+
+                return results;
+            }
+        };
+
+        String sql = "SELECT * FROM user AS u WHERE u.age > ?";
+        QueryRunner runner = new QueryRunner(DataSourceHelper.getDataSource());
+        try {
+            List<Object[]> resultArrs = runner.query(sql, handler, 19);
+            Logger.info("查询用户信息2成功!, resultMaps:{}", resultArrs);
+        } catch (SQLException e) {
+            Logger.error(e, "查询user信息2出错！");
+        }
+    }
+
+    /**
      * main方法.
      * @param args 数组参数
      */
     public static void main(String[] args) {
         // insertUser();
         // updateUser();
-        updateUser2();
+        // updateUser2();
         // deleteUser();
-        queryUsers();
+        queryUsers2();
     }
 
 }
