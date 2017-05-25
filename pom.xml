@@ -79,6 +79,11 @@
             <artifactId>commons-dbutils</artifactId>
             <version>1.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.sql2o</groupId>
+            <artifactId>sql2o</artifactId>
+            <version>1.5.4</version>
+        </dependency>
         <!--
         <dependency>
             <groupId>mysql</groupId>
