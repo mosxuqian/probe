@@ -15,6 +15,13 @@ public class StringUtilsDemo {
      */
     public static void main(String[] args) {
         Logger.info(StringUtils.isEmpty(""));
+        Logger.info("truncate1:{}", StringUtils.truncate("ab", 4));
+
+        Logger.info("trim:{}", StringUtils.trim(" ab \b \r \n \t \f "));
+
+        Logger.info("strip:{}", StringUtils.strip(" ab \b \r \n \t \f "));
+
+        Logger.info("indexOf:{}", StringUtils.indexOf("abc", "de"));
     }
 
 }
