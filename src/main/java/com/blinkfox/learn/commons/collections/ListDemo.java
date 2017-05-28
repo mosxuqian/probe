@@ -1,4 +1,4 @@
-package com.blinkfox.commons.collections;
+package com.blinkfox.learn.commons.collections;
 
 import org.apache.commons.collections.CollectionUtils;
 
