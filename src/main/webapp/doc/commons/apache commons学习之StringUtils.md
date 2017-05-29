@@ -4,6 +4,8 @@
 
 ---
 
+> 码农不识Apache，码尽一生也枉然。
+
 ## 判断空字符串
 
 ### isEmpty(CharSequence cs)
@@ -188,6 +190,66 @@ StringUtils.truncate("abcdefghij", 3, -1) = throws an IllegalArgumentException
 StringUtils.truncate("abcdefghij", -2, 4) = throws an IllegalArgumentException
 ```
 
+### left(String str, int len)
+
+得到一个字符串最左边的len个字符
+
+```java
+StringUtils.left("abc", 0)   = ""
+StringUtils.left("abc", 2)   = "ab"
+StringUtils.left("abc", 4)   = "abc"
+```
+
+### right(String str, int len)
+
+同`left(String str, int len)`相反，从右边截取len个字符。
+
+### mid(String str, int pos, int len)
+
+得到一个字符串中间的len个字符。
+
+```java
+StringUtils.mid("abc", 0, 2)   = "ab"
+StringUtils.mid("abc", 0, 4)   = "abc"
+StringUtils.mid("abc", 2, 4)   = "c"
+StringUtils.mid("abc", 4, 2)   = ""
+StringUtils.mid("abc", -2, 2)  = "ab"
+```
+
+### substringBefore(String str, String separator)
+
+得到一个字符串第一个分隔符字符串之前的字符串。
+
+```java
+StringUtils.substringBefore("abc", "a")   = ""
+StringUtils.substringBefore("abcba", "b") = "a"
+StringUtils.substringBefore("abc", "c")   = "ab"
+StringUtils.substringBefore("abc", "d")   = "abc"
+StringUtils.substringBefore("abc", "")    = ""
+StringUtils.substringBefore("abc", null)  = "abc"
+```
+
+### substringAfter(String str, String separator)
+
+同`substringBefore(String str, String separator)`相反。得到一个字符串第一个分隔符字符串之后的字符串。
+
+### substringBetween(String str, String open, String close)
+
+得到一个字符串两个字符串之间字符串。
+
+```java
+StringUtils.substringBetween("", "", "")          = ""
+StringUtils.substringBetween("", "", "]")         = null
+StringUtils.substringBetween("", "[", "]")        = null
+StringUtils.substringBetween("yabcz", "", "")     = ""
+StringUtils.substringBetween("yabcz", "y", "z")   = "abc"
+StringUtils.substringBetween("yabczyabcz", "y", "z")   = "abc"
+```
+
+### substringBetween(String str, String tag)
+
+是`substringBetween(String str, String open, String close)`的特殊情形。得到一个字符串中同一个字符串之间的字符串。
+
 ## 比较字符串
 
 ### equals(CharSequence cs1, CharSequence cs2)
@@ -357,3 +419,422 @@ StringUtils.containsNone("abab", "xyz") = true
 StringUtils.containsNone("ab1", "xyz")  = true
 StringUtils.containsNone("abz", "xyz")  = false
 ```
+
+## 分割字符串
+
+### split(String str, String separatorChars)
+
+将某字符串按字符分割成数组，默认按空格分组。
+
+```java
+StringUtils.split("abc def", null) = ["abc", "def"]
+StringUtils.split("abc def", " ")  = ["abc", "def"]
+StringUtils.split("abc  def", " ") = ["abc", "def"]
+StringUtils.split("ab:cd:ef", ":") = ["ab", "cd", "ef"]
+```
+
+### split(String str, String separatorChars, int max)
+
+将某字符串按字符分割成最大max长度的数组，默认按空格分组。
+
+```java
+StringUtils.split("ab cd ef", null, 0)   = ["ab", "cd", "ef"]
+StringUtils.split("ab   cd ef", null, 0) = ["ab", "cd", "ef"]
+StringUtils.split("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
+StringUtils.split("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
+```
+
+### splitByCharacterType(final String str)
+
+按字符串类型划分字符串为数组。
+
+```java
+StringUtils.splitByCharacterType(null)         = null
+StringUtils.splitByCharacterType("")           = []
+StringUtils.splitByCharacterType("ab de fg")   = ["ab", " ", "de", " ", "fg"]
+StringUtils.splitByCharacterType("ab   de fg") = ["ab", "   ", "de", " ", "fg"]
+StringUtils.splitByCharacterType("ab:cd:ef")   = ["ab", ":", "cd", ":", "ef"]
+StringUtils.splitByCharacterType("number5")    = ["number", "5"]
+StringUtils.splitByCharacterType("fooBar")     = ["foo", "B", "ar"]
+StringUtils.splitByCharacterType("foo200Bar")  = ["foo", "200", "B", "ar"]
+StringUtils.splitByCharacterType("ASFRules")   = ["ASFR", "ules"]
+```
+
+## 连接字符串
+
+### join(T... elements)
+
+无连接符连接字符串。
+
+```java
+StringUtils.join(null)            = null
+StringUtils.join([])              = ""
+StringUtils.join([null])          = ""
+StringUtils.join(["a", "b", "c"]) = "abc"
+StringUtils.join([null, "", "a"]) = "a"
+```
+
+### join(Object[] array, String separator)
+
+将提供的数组按连接符连成字符串。
+
+```java
+StringUtils.join(null, *)               = null
+StringUtils.join([], *)                 = ""
+StringUtils.join([null], *)             = ""
+StringUtils.join(["a", "b", "c"], ';')  = "a;b;c"
+StringUtils.join(["a", "b", "c"], null) = "abc"
+StringUtils.join([null, "", "a"], ';')  = ";;a"
+```
+
+## 删除字符串
+
+### deleteWhitespace(String str)
+
+删除空白字符。
+
+```java
+StringUtils.deleteWhitespace(null)         = null
+StringUtils.deleteWhitespace("")           = ""
+StringUtils.deleteWhitespace("abc")        = "abc"
+StringUtils.deleteWhitespace("   ab  c  ") = "abc"
+```
+
+### removeStart(String str, String remove)
+
+删除指定字符串前缀的字符串。
+
+```java
+StringUtils.removeStart("www.domain.com", "www.")   = "domain.com"
+StringUtils.removeStart("domain.com", "www.")       = "domain.com"
+StringUtils.removeStart("www.domain.com", "domain") = "www.domain.com"
+StringUtils.removeStart("abc", "")    = "abc"
+```
+
+### removeStartIgnoreCase(String str, String remove)
+
+同`removeStart(String str, String remove)`相似，忽略大小写。
+
+### removeEnd(String str, String remove)
+
+同`removeStart(String str, String remove)`相反。
+
+### removeEndIgnoreCase(String str, String remove)
+
+同`removeEnd(String str, String remove)`相似，忽略大小写。
+
+### remove(String str, String remove)
+
+移除字符串中指定的字符串。
+
+```java
+StringUtils.remove("queued", "ue") = "qd"
+StringUtils.remove("queued", "zz") = "queued"
+```
+
+### removeIgnoreCase(String str, String remove)
+
+同`remove(String str, String remove)`相似，忽略大小写。
+
+## 替换字符串
+
+### replace(String text, String searchString, String replacement)
+
+替换某字符串为另一个字符串。
+
+```java
+StringUtils.replace("aba", "a", null)  = "aba"
+StringUtils.replace("aba", "a", "")    = "b"
+StringUtils.replace("aba", "a", "z")   = "zbz"
+```
+
+### replaceIgnoreCase(String text, String searchString, String replacement)
+
+同`replace(String text, String searchString, String replacement)`相似，忽略大小写。
+
+### replace(String text, String searchString, String replacement, int max)
+
+替换某字符串为另一个字符串,从左到右替换最大max次。
+
+```java
+StringUtils.replace("abaa", "a", null, -1) = "abaa"
+StringUtils.replace("abaa", "a", "", -1)   = "b"
+StringUtils.replace("abaa", "a", "z", 0)   = "abaa"
+StringUtils.replace("abaa", "a", "z", 1)   = "zbaa"
+StringUtils.replace("abaa", "a", "z", 2)   = "zbza"
+StringUtils.replace("abaa", "a", "z", -1)  = "zbzz"
+```
+
+### replaceEach(String text, String[] searchList, String[] replacementList)
+
+替换某些字符串为另一些字符串。
+
+```java
+StringUtils.replaceEach("aba", null, null) = "aba"
+StringUtils.replaceEach("aba", new String[0], null) = "aba"
+StringUtils.replaceEach("aba", null, new String[0]) = "aba"
+StringUtils.replaceEach("aba", new String[]{"a"}, null)  = "aba"
+StringUtils.replaceEach("aba", new String[]{"a"}, new String[]{""})  = "b"
+StringUtils.replaceEach("aba", new String[]{null}, new String[]{"a"})  = "aba"
+StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"})  = "wcte"
+StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"})  = "dcte"
+```
+
+## 填充字符串
+
+### repeat(final String str, final int repeat)
+
+生成重复的字符串，repeat代表生成次数。
+
+```java
+StringUtils.repeat(null, 2) = null
+StringUtils.repeat("", 0)   = ""
+StringUtils.repeat("", 2)   = ""
+StringUtils.repeat("a", 3)  = "aaa"
+StringUtils.repeat("ab", 2) = "abab"
+StringUtils.repeat("a", -2) = ""
+```
+
+### repeat(String str, String separator, int repeat)
+
+生成重复的字符串，repeat代表生成次数。
+
+```java
+StringUtils.repeat(null, null, 2) = null
+StringUtils.repeat(null, "x", 2)  = null
+StringUtils.repeat("", null, 0)   = ""
+StringUtils.repeat("", "", 2)     = ""
+StringUtils.repeat("", "x", 3)    = "xxx"
+StringUtils.repeat("?", ", ", 3)  = "?, ?, ?"
+```
+
+## 字符串计数
+
+### countMatches(CharSequence str, CharSequence sub)
+
+计算某字符串在字符串中的出现次数。
+
+```java
+StringUtils.countMatches("abba", null)  = 0
+StringUtils.countMatches("abba", "")    = 0
+StringUtils.countMatches("abba", "a")   = 2
+StringUtils.countMatches("abba", "ab")  = 1
+StringUtils.countMatches("abba", "xxx") = 0
+```
+
+## 字符测试
+
+### isAlpha(CharSequence cs)
+
+判断字符串是否是Unicode字母。
+
+```java
+StringUtils.isAlpha(null)   = false
+StringUtils.isAlpha("")     = false
+StringUtils.isAlpha("  ")   = false
+StringUtils.isAlpha("abc")  = true
+StringUtils.isAlpha("ab2c") = false
+StringUtils.isAlpha("ab-c") = false
+```
+
+### isAlphaSpace(CharSequence cs)
+
+同`isAlpha(CharSequence cs)`相似。判断字符串是否是Unicode字母或空格。
+
+```java
+StringUtils.isAlphaSpace(null)   = false
+StringUtils.isAlphaSpace("")     = true
+StringUtils.isAlphaSpace("  ")   = true
+StringUtils.isAlphaSpace("abc")  = true
+StringUtils.isAlphaSpace("ab c") = true
+StringUtils.isAlphaSpace("ab2c") = false
+StringUtils.isAlphaSpace("ab-c") = false
+```
+
+### isAlphanumeric(CharSequence cs)
+
+同`isAlpha(CharSequence cs)`相似。判断字符串是否是Unicode字母或数字。
+
+### isAlphanumericSpace(CharSequence cs)
+
+同`isAlpha(CharSequence cs)`相似。判断字符串是否是Unicode字母、空格或数字。
+
+### isNumeric(CharSequence cs)
+
+判断字符串是否是数字。
+
+```java
+StringUtils.isNumeric("123")  = true
+StringUtils.isNumeric("12 3") = false
+StringUtils.isNumeric("ab2c") = false
+StringUtils.isNumeric("12-3") = false
+StringUtils.isNumeric("12.3") = false
+StringUtils.isNumeric("-123") = false
+StringUtils.isNumeric("+123") = false
+```
+
+### isNumericSpace(CharSequence cs)
+
+同`isNumeric(CharSequence cs)`相似。判断字符串是否是空格或数字。
+
+### getDigits(String str)
+
+从字符串中提取出数字为字符串。
+
+```java
+StringUtils.getDigits(null)  = null
+StringUtils.getDigits("")    = ""
+StringUtils.getDigits("abc") = ""
+StringUtils.getDigits("1000$") = "1000"
+StringUtils.getDigits("1123~45") = "12345"
+StringUtils.getDigits("(541) 754-3010") = "5417543010"
+```
+
+### isWhitespace(CharSequence cs)
+
+判断是否是空格。
+
+```java
+StringUtils.isWhitespace(null)   = false
+StringUtils.isWhitespace("")     = true
+StringUtils.isWhitespace("  ")   = true
+StringUtils.isWhitespace("abc")  = false
+StringUtils.isWhitespace("ab2c") = false
+StringUtils.isWhitespace("ab-c") = false
+```
+
+### isAllLowerCase(CharSequence cs)
+
+判断字符串是否都是小写。
+
+```java
+StringUtils.isAllLowerCase(null)   = false
+StringUtils.isAllLowerCase("")     = false
+StringUtils.isAllLowerCase("  ")   = false
+StringUtils.isAllLowerCase("abc")  = true
+StringUtils.isAllLowerCase("abC")  = false
+StringUtils.isAllLowerCase("ab c") = false
+StringUtils.isAllLowerCase("ab1c") = false
+StringUtils.isAllLowerCase("ab/c") = false
+```
+
+### isAllUpperCase(CharSequence cs)
+
+同`isAllLowerCase`相反。判断字符串是否都是大写。
+
+### isMixedCase(CharSequence cs)
+
+同`isAllLowerCase`相似。判断字符串是否大小写都有。
+
+## 默认字符串
+
+### defaultString(String str)
+
+得到默认字符串，默认空字符串。
+
+```java
+StringUtils.defaultString(null)  = ""
+StringUtils.defaultString("")    = ""
+StringUtils.defaultString("bat") = "bat"
+```
+
+### defaultString(String str, String defaultStr)
+
+如果是null，则得到默认字符串。
+
+```java
+StringUtils.defaultString(null, "NULL")  = "NULL"
+StringUtils.defaultString("", "NULL")    = ""
+StringUtils.defaultString("bat", "NULL") = "bat"
+```
+
+### defaultIfEmpty(T str, T defaultStr)
+
+同`defaultString(String str, String defaultStr)`相似。如果是空字符串，则得到默认字符串。
+
+## 反转字符串
+
+### reverse(final String str)
+
+反转字符串。
+
+```java
+StringUtils.reverse(null)  = null
+StringUtils.reverse("")    = ""
+StringUtils.reverse("bat") = "tab"
+```
+
+## 缩写字符串
+
+### abbreviate(String str, int maxWidth)
+
+缩写字符串为最大maxWidth长度的字符串，使用`...`作为缩写的后缀，maxWidth不能小于等于3。
+
+```java
+StringUtils.abbreviate("", 4)        = ""
+StringUtils.abbreviate("abcdefg", 6) = "abc..."
+StringUtils.abbreviate("abcdefg", 7) = "abcdefg"
+StringUtils.abbreviate("abcdefg", 8) = "abcdefg"
+StringUtils.abbreviate("abcdefg", 4) = "a..."
+StringUtils.abbreviate("abcdefg", 3) = IllegalArgumentException
+```
+
+### abbreviate(String str, String abbrevMarker, int maxWidth)
+
+缩写字符串为最大maxWidth长度的字符串，使用`abbrevMarker`作为缩写的后缀，maxWidth不能小于等于`abbrevMarker`的长度。
+
+```java
+StringUtils.abbreviate("", "...", 4)        = ""
+StringUtils.abbreviate("abcdefg", ".", 5)   = "abcd."
+StringUtils.abbreviate("abcdefg", ".", 7)   = "abcdefg"
+StringUtils.abbreviate("abcdefg", ".", 8)   = "abcdefg"
+StringUtils.abbreviate("abcdefg", "..", 4)  = "ab.."
+StringUtils.abbreviate("abcdefg", "..", 3)  = "a.."
+StringUtils.abbreviate("abcdefg", "..", 2)  = IllegalArgumentException
+StringUtils.abbreviate("abcdefg", "...", 3) = IllegalArgumentException
+```
+
+## 字符串钱后缀
+
+### startsWith(CharSequence str, CharSequence prefix)
+
+判断某字符串是否包含有指定前缀的字符串。
+
+```java
+StringUtils.startsWith(null, null)      = true
+StringUtils.startsWith(null, "abc")     = false
+StringUtils.startsWith("abcdef", null)  = false
+StringUtils.startsWith("abcdef", "abc") = true
+StringUtils.startsWith("ABCDEF", "abc") = false
+```
+
+### startsWithIgnoreCase(CharSequence str, CharSequence prefix)
+
+同`startsWith(CharSequence str, CharSequence prefix)`相似。忽略大小写。
+
+### startsWithAny(CharSequence sequence, CharSequence... searchStrings)
+
+判断某字符串是否包含有其后任意一个指定前缀的字符串。
+
+```java
+StringUtils.startsWithAny(null, null)      = false
+StringUtils.startsWithAny(null, new String[] {"abc"})  = false
+StringUtils.startsWithAny("abcxyz", null)     = false
+StringUtils.startsWithAny("abcxyz", new String[] {""}) = true
+StringUtils.startsWithAny("abcxyz", new String[] {"abc"}) = true
+StringUtils.startsWithAny("abcxyz", new String[] {null, "xyz", "abc"}) = true
+StringUtils.startsWithAny("abcxyz", null, "xyz", "ABCX") = false
+StringUtils.startsWithAny("ABCXYZ", null, "xyz", "abc") = false
+```
+
+### endsWith(CharSequence str, CharSequence suffix)
+
+同`startsWith(CharSequence str, CharSequence prefix)`相反。
+
+### endsWithIgnoreCase(CharSequence str, CharSequence suffix)
+
+同`startsWithIgnoreCase(CharSequence str, CharSequence prefix)`相反。
+
+### endsWithAny(CharSequence sequence, CharSequence... searchStrings)
+
+同`startsWithAny(CharSequence sequence, CharSequence... searchStrings)`相反。
