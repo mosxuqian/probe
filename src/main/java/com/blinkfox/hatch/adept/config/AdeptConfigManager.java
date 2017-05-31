@@ -49,7 +49,7 @@ public enum AdeptConfigManager {
      * @param config 配置类
      */
     private void load(AbstractAdeptConfig config) {
-        config.configDataSource();
+        // config.configDataSource();
         Logger.info("Adept的配置信息加载完成!");
     }
 
