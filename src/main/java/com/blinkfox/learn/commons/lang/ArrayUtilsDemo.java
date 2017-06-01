@@ -23,7 +23,7 @@ public class ArrayUtilsDemo {
         int a = ArrayUtils.indexOf(new String[]{"aa","bb","bb"},"bb",2);
         Logger.info("索引a:{}", a);
 
-        String[] arr4 = (String[]) ArrayUtils.addAll(new String[]{"aa", "bb"}, new String[]{"cc"}, new String[]{"dd"});
+        String[] arr4 = ArrayUtils.addAll(new String[]{"aa", "bb"}, new String[]{"cc"});
         Logger.info("arr4:{}", Arrays.toString(arr4));
     }
 
