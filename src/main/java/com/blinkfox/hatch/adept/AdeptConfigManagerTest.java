@@ -16,7 +16,7 @@ public class AdeptConfigManagerTest {
 
     @BeforeClass
     public static void init() {
-        AdeptConfigManager.INSTANCE.initLoad("com.blinkfox.hatch.adept.test.MyAdeptConfig");
+        AdeptConfigManager.initLoad("com.blinkfox.hatch.adept.test.MyAdeptConfig");
     }
 
     @Test
@@ -27,7 +27,7 @@ public class AdeptConfigManagerTest {
 
     @AfterClass
     public static void destroy() {
-        AdeptConfigManager.INSTANCE.destroy();
+        AdeptConfigManager.destroy();
     }
 
 }
