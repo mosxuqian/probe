@@ -9,6 +9,9 @@ import org.pmw.tinylog.Logger;
  */
 public class AdeptConfigManager {
 
+    /* AdeptConfigManager的唯一实例 */
+    private static final AdeptConfigManager manager = new AdeptConfigManager();
+
     /* 配置信息 */
     private static final ConfigInfo configInfo = ConfigInfo.getInstance();
 
@@ -20,18 +23,34 @@ public class AdeptConfigManager {
     }
 
     /**
+     * 获取AdeptConfigManager的唯一实例.
+     * @return AdeptConfigManager实例
+     */
+    public static AdeptConfigManager getInstance() {
+        return manager;
+    }
+
+    /**
      * 初始化加载Adept的配置信息到内存缓存中.
      * @param configClass 系统中Adept的class全路径
      */
-    public static void initLoad(String configClass) {
-        getAndLoadConfig(configClass);
+    public void initLoad(String configClass) {
+        this.getAndLoadConfig(configClass);
         Logger.info("Adept的配置信息加载完成!");
+    }
+
+    /**
+     * 初始化加载Adept的配置信息到内存缓存中.
+     * @param clazz Adept的配置类
+     */
+    public void initLoad(Class<? extends AbstractAdeptConfig> clazz) {
+        this.initLoad(clazz.getName());
     }
 
     /**
      * 从内存缓存中清楚Adept的相关数据.
      */
-    public static void destroy() {
+    public void destroy() {
         configInfo.clear();
         Logger.info("清除了Adept的配置信息！");
     }
@@ -40,7 +59,7 @@ public class AdeptConfigManager {
      * 获取AdeptConfig的实例.
      * @param configClass 配置类的class路径
      */
-    private static void getAndLoadConfig(String configClass) {
+    private void getAndLoadConfig(String configClass) {
         Logger.info("Adept开始加载，Zealot配置类为:{}", configClass);
         if (configClass == null || configClass.length() == 0) {
             throw new LoadAdeptConfigException("未获取到 AdeptConfig 配置信息!");
@@ -56,15 +75,15 @@ public class AdeptConfigManager {
 
         // 判断获取到的类是否是AbstractZealotConfig的子类，如果是，则加载xml和自定义标签
         if (adeptConfig != null && adeptConfig instanceof AbstractAdeptConfig) {
-            load((AbstractAdeptConfig) adeptConfig);
+            this.load((AbstractAdeptConfig) adeptConfig);
         }
     }
 
     /**
-     * 加载 AdeptConfig 的子类信息，并将配置信息加载到内存缓存中.
+     * 加载AdeptConfig的子类信息，并将配置信息加载到内存缓存中.
      * @param config 配置类
      */
-    private static void load(AbstractAdeptConfig config) {
+    private void load(AbstractAdeptConfig config) {
         config.configDataSource(configInfo);
     }
 

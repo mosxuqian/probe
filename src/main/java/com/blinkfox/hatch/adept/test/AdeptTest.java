@@ -1,8 +1,7 @@
-package com.blinkfox.hatch.adept;
+package com.blinkfox.hatch.adept.test;
 
 import com.blinkfox.hatch.adept.config.AdeptConfigManager;
-import com.blinkfox.hatch.adept.config.ConfigInfo;
-import com.blinkfox.hatch.adept.test.MyAdeptConfig;
+import com.blinkfox.hatch.adept.core.Adept;
 import javax.sql.DataSource;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -10,10 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * HelloWorld.
- * Created by blinkfox on 2017/5/30.
+ * Adept测试类.
+ * Created by blinkfox on 2017/6/5.
  */
-public class AdeptConfigManagerTest {
+public class AdeptTest {
 
     @BeforeClass
     public static void init() {
@@ -22,7 +21,7 @@ public class AdeptConfigManagerTest {
 
     @Test
     public void testGetDataSource() {
-        DataSource ds = ConfigInfo.getInstance().getDataSource();
+        DataSource ds = Adept.getDataSource();
         Assert.assertNotNull(ds);
     }
 

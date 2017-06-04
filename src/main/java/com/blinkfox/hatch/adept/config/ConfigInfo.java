@@ -6,9 +6,9 @@ import javax.sql.DataSource;
  * Adept封装配置信息的实体类.
  * Created by blinkfox on 2017/5/31.
  */
-public class ConfigInfo {
+public final class ConfigInfo {
 
-    /* 单例 */
+    /* ConfigInfo的唯一实例 */
     private static final ConfigInfo configInfo = new ConfigInfo();
 
     /* 数据源 */
