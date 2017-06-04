@@ -14,7 +14,7 @@ import java.util.Properties;
 public class MyAdeptConfig extends AbstractAdeptConfig {
 
     /**
-     * 配置自己的数据库连接池.
+     * 配置数据库连接池.
      */
     @Override
     public void configDataSource(ConfigInfo info) {

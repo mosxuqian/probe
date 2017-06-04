@@ -12,12 +12,24 @@ public enum AdeptConfigManager {
     /** 唯一实例. */
     INSTANCE;
 
+    /* 配置信息 */
+    private static final ConfigInfo configInfo = ConfigInfo.getInstance();
+
     /**
      * 初始化加载Adept的配置信息到内存缓存中.
      * @param configClass 系统中Adept的class全路径
      */
     public void initLoad(String configClass) {
         this.getAndLoadConfig(configClass);
+        Logger.info("Adept的配置信息加载完成!");
+    }
+
+    /**
+     * 从内存缓存中清楚Adept的相关数据.
+     */
+    public void destroy() {
+        configInfo.clear();
+        Logger.info("清除了Adept的配置信息！");
     }
 
     /**
@@ -49,8 +61,7 @@ public enum AdeptConfigManager {
      * @param config 配置类
      */
     private void load(AbstractAdeptConfig config) {
-        // config.configDataSource();
-        Logger.info("Adept的配置信息加载完成!");
+        config.configDataSource(configInfo);
     }
 
 }

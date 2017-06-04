@@ -1,7 +1,5 @@
 package com.blinkfox.hatch.adept.config;
 
-import javax.sql.DataSource;
-
 /**
  * Adept的抽象配置类.
  * Created by blinkfox on 2017/5/30.

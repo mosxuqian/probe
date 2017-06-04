@@ -8,8 +8,33 @@ import javax.sql.DataSource;
  */
 public class ConfigInfo {
 
+    /* 单例 */
+    private static final ConfigInfo configInfo = new ConfigInfo();
+
     /* 数据源 */
     private DataSource dataSource;
+
+    /**
+     * 私有构造方法.
+     */
+    private ConfigInfo() {
+        super();
+    }
+
+    /**
+     * 得到ConfigInfo的唯一实例.
+     * @return ConfigInfo实例
+     */
+    public static ConfigInfo getInstance() {
+        return configInfo;
+    }
+
+    /**
+     * 清除配置信息.
+     */
+    public void clear() {
+        dataSource = null;
+    }
 
     /* getter and setter */
     public DataSource getDataSource() {
