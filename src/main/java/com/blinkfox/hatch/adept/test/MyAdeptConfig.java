@@ -3,7 +3,6 @@ package com.blinkfox.hatch.adept.test;
 import com.blinkfox.hatch.adept.config.AbstractAdeptConfig;
 import com.blinkfox.hatch.adept.config.ConfigInfo;
 import com.blinkfox.utils.others.PropHelper;
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Properties;
 
@@ -19,12 +18,9 @@ public class MyAdeptConfig extends AbstractAdeptConfig {
     @Override
     public void configDataSource(ConfigInfo info) {
         Properties props = PropHelper.INSTANCE.loadPropFile("props/config.properties");
-        HikariConfig config = new HikariConfig();
-        config.setDriverClassName(props.getProperty("driver"));
-        config.setJdbcUrl(props.getProperty("url"));
-        config.setUsername(props.getProperty("username"));
-        config.setPassword(props.getProperty("password"));
-        info.setDataSource(new HikariDataSource(config));
+        HikariDataSource hds = info.useDefaultDataSource(props.getProperty("driver"), props.getProperty("url"),
+                props.getProperty("username"), props.getProperty("password"));
+        hds.setMaximumPoolSize(20);
     }
 
 }

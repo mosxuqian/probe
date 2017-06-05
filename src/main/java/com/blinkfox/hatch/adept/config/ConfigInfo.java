@@ -1,5 +1,7 @@
 package com.blinkfox.hatch.adept.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 
 /**
@@ -30,18 +32,40 @@ public final class ConfigInfo {
     }
 
     /**
+     * 使用默认的数据库连接池.
+     * @return HikariDataSource实例
+     */
+    public HikariDataSource useDefaultDataSource(String driver, String url, String user, String password) {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(driver);
+        config.setJdbcUrl(url);
+        config.setUsername(user);
+        config.setPassword(password);
+        HikariDataSource hds = new HikariDataSource(config);
+        this.setDataSource(hds);
+        return hds;
+    }
+
+    /**
      * 清除配置信息.
      */
     public void clear() {
         dataSource = null;
     }
 
-    /* getter and setter */
+    /**
+     * 获取数据源.
+     * @return 数据源
+     */
     public DataSource getDataSource() {
         return dataSource;
     }
 
-    public void setDataSource(DataSource dataSource) {
+    /**
+     * 仅仅子类可设置数据源的setter方法.
+     * @param dataSource 数据源
+     */
+    protected void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
