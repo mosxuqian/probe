@@ -16,6 +16,9 @@ public final class Adept {
     /* 配置信息 */
     private static final ConfigInfo configInfo = ConfigInfo.getInstance();
 
+    /* 数据库连接 */
+    private static Connection conn;
+
     /**
      * 私有构造方法.
      */
@@ -65,6 +68,16 @@ public final class Adept {
             Logger.error(e, "从数据源（连接池）中获取数据库连接失败.");
             return null;
         }
+    }
+
+    /**
+     * 从数据源中获取连接执行数据库相关操作.
+     * @return Adept实例.
+     */
+    public static Adept newInstance() {
+        Adept adept = new Adept();
+        conn = getConnection();
+        return adept;
     }
 
 }
