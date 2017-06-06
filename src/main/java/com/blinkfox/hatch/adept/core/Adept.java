@@ -5,6 +5,8 @@ import com.blinkfox.hatch.adept.exception.NoDataSourceException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+
+import com.blinkfox.hatch.adept.exception.NullConnectionException;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -77,7 +79,19 @@ public final class Adept {
     public static Adept newInstance() {
         Adept adept = new Adept();
         conn = getConnection();
+        if (conn == null) {
+            throw new NullConnectionException("数据库连接Connection为null");
+        }
         return adept;
+    }
+
+    /**
+     * 执行数据库查询.
+     * @param sql sql语句
+     * @param params 不定参数
+     */
+    public void query(String sql , Object... params) {
+        // TODO
     }
 
 }

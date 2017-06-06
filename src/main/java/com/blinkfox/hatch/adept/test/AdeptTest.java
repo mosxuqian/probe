@@ -51,6 +51,15 @@ public class AdeptTest {
     }
 
     /**
+     * 测试获取实例.
+     */
+    @Test
+    public void testNewInstance() {
+        Adept adept = Adept.newInstance();
+        Assert.assertNotNull(adept);
+    }
+
+    /**
      * 清除配置信息.
      */
     @AfterClass
