@@ -6,6 +6,7 @@ import com.blinkfox.hatch.adept.exception.NullConnectionException;
 import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.pmw.tinylog.Logger;
@@ -22,11 +23,30 @@ public final class Adept {
     /* 数据库连接 */
     private static Connection conn;
 
+    /* ResultSet结果集 */
+    private static ResultSet rs;
+
     /**
      * 私有构造方法.
      */
     private Adept() {
         super();
+    }
+
+    /**
+     * rs的getter方法.
+     * @return ResultSet实例.
+     */
+    public static ResultSet getRs() {
+        return rs;
+    }
+
+    /**
+     * rs的setter方法.
+     * @param rs ResultSet实例.
+     */
+    private static void setRs(ResultSet rs) {
+        Adept.rs = rs;
     }
 
     /**
@@ -73,20 +93,24 @@ public final class Adept {
      * 执行数据库查询.
      * @param sql sql语句
      * @param params 不定参数
+     * @return ResultSet实例
      */
-    public void query(String sql , Object... params) {
+    public Adept query(String sql , Object... params) {
         if (sql == null || sql.length() == 0) {
             JdbcHelper.close(conn);
+            return this;
         }
 
         PreparedStatement pstmt = null;
         try {
             pstmt = JdbcHelper.getPreparedStatement(conn, sql, params);
+            setRs(pstmt.executeQuery());
         } catch (SQLException e) {
             Logger.error(e, "执行SQL语句失败！");
         } finally {
             JdbcHelper.close(pstmt);
         }
+        return this;
     }
 
 }
