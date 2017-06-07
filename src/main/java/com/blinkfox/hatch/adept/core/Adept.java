@@ -2,11 +2,12 @@ package com.blinkfox.hatch.adept.core;
 
 import com.blinkfox.hatch.adept.config.ConfigInfo;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
+import com.blinkfox.hatch.adept.exception.NullConnectionException;
+import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-
-import com.blinkfox.hatch.adept.exception.NullConnectionException;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -44,7 +45,7 @@ public final class Adept {
      * @return Connection实例.
      */
     public static Connection getConnection() {
-        return getDataSourceConnection(getDataSource());
+        return JdbcHelper.getConnection(getDataSource());
     }
 
     /**
@@ -52,24 +53,7 @@ public final class Adept {
      * @return Connection实例
      */
     public static Connection getConnection(DataSource ds) {
-        if (ds == null) {
-            throw new NoDataSourceException("未传递有效的数据源参数实例!");
-        }
-        return getDataSourceConnection(ds);
-    }
-
-    /**
-     * 从不为空的数据源中获取数据库连接.
-     * @param ds 数据源
-     * @return Connection实例
-     */
-    private static Connection getDataSourceConnection(DataSource ds) {
-        try {
-            return ds.getConnection();
-        } catch (SQLException e) {
-            Logger.error(e, "从数据源（连接池）中获取数据库连接失败.");
-            return null;
-        }
+        return JdbcHelper.getConnection(ds);
     }
 
     /**
@@ -91,7 +75,18 @@ public final class Adept {
      * @param params 不定参数
      */
     public void query(String sql , Object... params) {
-        // TODO
+        if (sql == null || sql.length() == 0) {
+            JdbcHelper.close(conn);
+        }
+
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = JdbcHelper.getPreparedStatement(conn, sql, params);
+        } catch (SQLException e) {
+            Logger.error(e, "执行SQL语句失败！");
+        } finally {
+            JdbcHelper.close(pstmt);
+        }
     }
 
 }
