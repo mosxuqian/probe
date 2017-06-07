@@ -3,6 +3,7 @@ package com.blinkfox.hatch.adept.test;
 import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import javax.sql.DataSource;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -33,30 +34,22 @@ public class AdeptTest {
     }
 
     /**
-     * 测试获取默认的数据库连接池.
-     */
-    @Test
-    public void testGetConnection() {
-        Connection conn = Adept.getConnection();
-        Assert.assertNotNull(conn);
-    }
-
-    /**
-     * 测试从指定的数据源获取数据库连接池.
-     */
-    @Test
-    public void testGetConnectionFromDataSource() {
-        Connection conn = Adept.getConnection(Adept.getDataSource());
-        Assert.assertNotNull(conn);
-    }
-
-    /**
      * 测试获取实例.
      */
     @Test
     public void testNewInstance() {
         Adept adept = Adept.newInstance();
         Assert.assertNotNull(adept);
+    }
+
+    /**
+     * 测试获取实例.
+     */
+    @Test
+    public void testQuery() {
+        String sql = "SELECT * FROM user AS u WHERE u.age > ?";
+        ResultSet rs = Adept.quickStart().query(sql, 19).getRs();
+        Assert.assertNotNull(rs);
     }
 
     /**

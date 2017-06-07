@@ -24,7 +24,7 @@ public final class Adept {
     private static Connection conn;
 
     /* ResultSet结果集 */
-    private static ResultSet rs;
+    private ResultSet rs;
 
     /**
      * 私有构造方法.
@@ -37,7 +37,7 @@ public final class Adept {
      * rs的getter方法.
      * @return ResultSet实例.
      */
-    public static ResultSet getRs() {
+    public ResultSet getRs() {
         return rs;
     }
 
@@ -45,8 +45,8 @@ public final class Adept {
      * rs的setter方法.
      * @param rs ResultSet实例.
      */
-    private static void setRs(ResultSet rs) {
-        Adept.rs = rs;
+    private void setRs(ResultSet rs) {
+        this.rs = rs;
     }
 
     /**
@@ -61,28 +61,20 @@ public final class Adept {
     }
 
     /**
-     * 从数据源（连接池）中获取数据库连接.
-     * @return Connection实例.
-     */
-    public static Connection getConnection() {
-        return JdbcHelper.getConnection(getDataSource());
-    }
-
-    /**
-     * 从数据源（连接池）中获取数据库连接.
-     * @return Connection实例
-     */
-    public static Connection getConnection(DataSource ds) {
-        return JdbcHelper.getConnection(ds);
-    }
-
-    /**
-     * 从数据源中获取连接执行数据库相关操作.
+     * 创建新的Adept实例.
      * @return Adept实例.
      */
     public static Adept newInstance() {
+        return new Adept();
+    }
+
+    /**
+     * 快速开始，即创建Adept实例并从数据源中获取数据库连接.
+     * @return Adept实例.
+     */
+    public static Adept quickStart() {
         Adept adept = new Adept();
-        conn = getConnection();
+        conn = JdbcHelper.getConnection(getDataSource());
         if (conn == null) {
             throw new NullConnectionException("数据库连接Connection为null");
         }
@@ -104,7 +96,7 @@ public final class Adept {
         PreparedStatement pstmt = null;
         try {
             pstmt = JdbcHelper.getPreparedStatement(conn, sql, params);
-            setRs(pstmt.executeQuery());
+            this.setRs(pstmt.executeQuery());
         } catch (SQLException e) {
             Logger.error(e, "执行SQL语句失败！");
         } finally {
