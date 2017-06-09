@@ -2,7 +2,6 @@ package com.blinkfox.hatch.adept.test;
 
 import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
