@@ -1,7 +1,11 @@
 package com.blinkfox.learn.jdbc;
 
 import com.blinkfox.utils.others.PropHelper;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 import org.pmw.tinylog.Logger;
 

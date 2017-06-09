@@ -1,8 +1,11 @@
 package com.blinkfox.hatch.adept.helpers;
 
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import javax.sql.DataSource;
 import org.pmw.tinylog.Logger;
 
@@ -95,12 +98,12 @@ public final class JdbcHelper {
 
     /**
      * 关闭PreparedStatement.
-     * @param ps PreparedStatement
+     * @param pstmt PreparedStatement
      */
-    public static void close(PreparedStatement ps) {
-        if (ps != null) {
+    public static void close(PreparedStatement pstmt) {
+        if (pstmt != null) {
             try {
-                ps.close();
+                pstmt.close();
             } catch (SQLException e) {
                 Logger.error(e, "关闭PreparedStatement失败！");
             }
@@ -119,6 +122,18 @@ public final class JdbcHelper {
                 Logger.error(e, "关闭ResultSet失败！");
             }
         }
+    }
+
+    /**
+     * 关闭各种资源.
+     * @param conn connection实例
+     * @param pstmt PreparedStatement实例
+     * @param rs PreparedStatement实例
+     */
+    public static void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+        close(rs);
+        close(pstmt);
+        close(conn);
     }
 
 }

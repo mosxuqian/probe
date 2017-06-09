@@ -4,6 +4,8 @@ import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -50,6 +52,16 @@ public class AdeptTest {
         String sql = "SELECT * FROM user AS u WHERE u.age > ?";
         ResultSet rs = Adept.quickStart().query(sql, 19).getRs();
         Assert.assertNotNull(rs);
+    }
+
+    /**
+     * 测试获取实例.
+     */
+    @Test
+    public void testToMapList() {
+        String sql = "SELECT * FROM user AS u WHERE u.age > ?";
+        List<Map<String, Object>> maps = Adept.quickStart().query(sql, 19).end();
+        Assert.assertNotNull(maps);
     }
 
     /**
