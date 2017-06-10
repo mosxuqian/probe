@@ -1,5 +1,7 @@
 package com.blinkfox.hatch.adept.helpers;
 
+import com.blinkfox.hatch.adept.exception.BuildStatementException;
+import com.blinkfox.hatch.adept.exception.ExecuteSqlException;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,16 +48,13 @@ public final class JdbcHelper {
      * @param sql SQL语句
      * @param params 不定长参数
      * @return PreparedStatement实例
-     * @throws SQLException SQL异常
      */
-    public static PreparedStatement getPreparedStatement(Connection conn, String sql, Object... params)
-            throws SQLException {
-        PreparedStatement pstmt =  conn.prepareStatement(sql);
-        if (pstmt == null) {
-            throw new SQLException("PreparedStatement is null");
+    public static PreparedStatement getPreparedStatement(Connection conn, String sql, Object... params) {
+        try {
+            return setPreparedStatementParams(conn.prepareStatement(sql), params);
+        } catch (Exception e) {
+            throw new BuildStatementException("", e);
         }
-
-        return setPreparedStatementParams(pstmt, params);
     }
 
     /**
@@ -80,6 +79,19 @@ public final class JdbcHelper {
             }
         }
         return pstmt;
+    }
+
+    /**
+     * 得到查询SQL语句的ResultSet结果集.
+     * @param pstmt PreparedStatement实例.
+     * @return ResultSet实例
+     */
+    public static ResultSet getQueryResultSet(PreparedStatement pstmt) {
+        try {
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            throw new ExecuteSqlException("执行查询的SQL语句出错!", e);
+        }
     }
 
     /**

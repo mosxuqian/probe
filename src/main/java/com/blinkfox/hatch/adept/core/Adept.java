@@ -9,12 +9,9 @@ import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
-
-import org.pmw.tinylog.Logger;
 
 /**
  * Adept核心调用类.
@@ -53,8 +50,9 @@ public final class Adept {
      * rs的setter方法.
      * @param rs ResultSet实例.
      */
-    private void setRs(ResultSet rs) {
+    private Adept setRs(ResultSet rs) {
         this.rs = rs;
+        return this;
     }
 
     /**
@@ -97,7 +95,7 @@ public final class Adept {
     }
 
     /**
-     * 得到map集合结果集并关闭资源.
+     * 得到并返回'map的List集合'结果集,同时关闭资源.
      * @return maps集合
      */
     public List<Map<String, Object>> end() {
@@ -113,18 +111,15 @@ public final class Adept {
      * @return ResultSet实例
      */
     public Adept query(String sql , Object... params) {
+        // SQL为空则关闭连接，直接返回Adept实例.
         if (sql == null || sql.length() == 0) {
             JdbcHelper.close(conn);
             return this;
         }
 
-        try {
-            pstmt = JdbcHelper.getPreparedStatement(conn, sql, params);
-            this.setRs(pstmt.executeQuery());
-        } catch (SQLException e) {
-            Logger.error(e, "执行SQL语句失败！");
-        }
-        return this;
+        // 根据数据库连接、SQL语句及参数得到PreparedStatement实例，然后再得到ResultSet实例.
+        pstmt = JdbcHelper.getPreparedStatement(conn, sql, params);
+        return this.setRs(JdbcHelper.getQueryResultSet(pstmt));
     }
 
 }
