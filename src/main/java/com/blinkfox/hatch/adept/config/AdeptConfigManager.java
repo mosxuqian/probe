@@ -1,6 +1,7 @@
 package com.blinkfox.hatch.adept.config;
 
 import com.blinkfox.hatch.adept.exception.LoadAdeptConfigException;
+import com.blinkfox.hatch.adept.helpers.ClassHelper;
 import org.pmw.tinylog.Logger;
 
 /**
@@ -65,15 +66,8 @@ public class AdeptConfigManager {
             throw new LoadAdeptConfigException("未获取到 AdeptConfig 配置信息!");
         }
 
-        // 根据class类名得到初始化实例
-        Object adeptConfig;
-        try {
-            adeptConfig = Class.forName(configClass).newInstance();
-        } catch (Exception e) {
-            throw new LoadAdeptConfigException("初始化AdeptConfig实例失败,配置类名称为:" + configClass, e);
-        }
-
-        // 判断获取到的类是否是AbstractZealotConfig的子类，如果是，则加载xml和自定义标签
+        // 根据class类名得到初始化实例,判断获取到的类是否是AbstractAdeptConfig的子类，如果是，则加载配置信息
+        Object adeptConfig = ClassHelper.newInstanceByClassName(configClass);
         if (adeptConfig != null && adeptConfig instanceof AbstractAdeptConfig) {
             this.load((AbstractAdeptConfig) adeptConfig);
         }

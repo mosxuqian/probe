@@ -16,13 +16,6 @@ import java.util.Map;
 public class MapListHandler implements ResultsHandler<List<Map<String, Object>>> {
 
     /**
-     * 私有构造方法.
-     */
-    private MapListHandler() {
-        super();
-    }
-
-    /**
      * 获得新的新实例.
      * @return MapListHandler实例
      */

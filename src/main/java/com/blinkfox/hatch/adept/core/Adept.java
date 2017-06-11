@@ -101,7 +101,7 @@ public final class Adept {
     }
 
     /**
-     * 得到并返回'map的List集合'结果集,同时关闭资源.
+     * 得到并返回默认为'map的List集合'的结果.
      * @return maps集合
      */
     public List<Map<String, Object>> end() {
@@ -109,7 +109,7 @@ public final class Adept {
     }
 
     /**
-     * 得到并返回泛型T的结果集,同时关闭资源.
+     * 得到并返回泛型T的结果,同时关闭资源.
      * @param handler 处理器
      * @param otherParams 不定参数,对应Handler中transform()方法中的不定参数
      * @return 泛型T
@@ -125,17 +125,17 @@ public final class Adept {
     }
 
     /**
-     * 得到并返回泛型T的结果集,同时关闭资源.
+     * 得到并返回Object型的结果,由于会通过反射创建实例，需要Handler的构造方法不是private的.
      * @param handlerClazz ResultsHandler的Class
      * @param otherParams 不定参数,对应Handler中transform()方法中的不定参数
-     * @return 泛型T
+     * @return Object实例
      */
     @SuppressWarnings("unchecked")
-    public <T> T end(Class<T> handlerClazz, Object... otherParams) {
-        // 实例化class的实例为handler,如果handler不为空且是ResultsHandler的子实例，则得到查询结果.
+    public Object end(Class<?> handlerClazz, Object... otherParams) {
+        // 实例化class的实例为handler,如果handler不为空且是ResultsHandler的子实例，则可执行查询转换结果.
         Object handler = ClassHelper.newInstanceByClass(handlerClazz);
         if (handler != null && handler instanceof ResultsHandler) {
-            return this.end((ResultsHandler<T>) handler, otherParams);
+            return this.end((ResultsHandler) handler, otherParams);
         }
         throw  new AdeptRuntimeException("实例化后的handler为空或不是ResultsHandler的实现类.");
     }

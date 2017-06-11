@@ -19,6 +19,9 @@ import org.junit.Test;
  */
 public class AdeptTest {
 
+    /* 查询所有用户的SQL语句. */
+    private static final String ALL_USER_SQL = "SELECT * FROM user";
+
     /**
      * 初始化加载Adept配置.
      */
@@ -77,6 +80,16 @@ public class AdeptTest {
         // 获取用户总数，并断言数量
         long userCount = (long) map.get("user_count");
         Assert.assertEquals(6L, userCount);
+    }
+
+    /**
+     * 测试获取mapList的实例.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testEndByClass() {
+        Map<String, Object> map = (Map<String, Object>) Adept.quickStart().query(ALL_USER_SQL).end(MapHandler.class);
+        Assert.assertNotNull(map);
     }
 
     /**

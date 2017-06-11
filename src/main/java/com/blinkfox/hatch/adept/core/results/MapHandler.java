@@ -13,13 +13,6 @@ import java.util.Map;
  */
 public class MapHandler implements ResultsHandler<Map<String, Object>> {
 
-    /**
-     * 私有构造方法.
-     */
-    private MapHandler() {
-        super();
-    }
-
     public static MapHandler newInstance() {
         return new MapHandler();
     }
