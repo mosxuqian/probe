@@ -2,16 +2,22 @@ package com.blinkfox.hatch.adept.core;
 
 import com.blinkfox.hatch.adept.config.ConfigInfo;
 import com.blinkfox.hatch.adept.core.results.MapListHandler;
+import com.blinkfox.hatch.adept.core.results.ResultsHandler;
+import com.blinkfox.hatch.adept.exception.AdeptRuntimeException;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
 import com.blinkfox.hatch.adept.exception.NullConnectionException;
+import com.blinkfox.hatch.adept.helpers.ClassHelper;
 import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+
+import org.pmw.tinylog.Logger;
 
 /**
  * Adept核心调用类.
@@ -99,9 +105,39 @@ public final class Adept {
      * @return maps集合
      */
     public List<Map<String, Object>> end() {
-        List<Map<String, Object>> maps = MapListHandler.newInstance().transform(rs);
-        this.closeSource();
-        return maps;
+        return this.end(MapListHandler.newInstance());
+    }
+
+    /**
+     * 得到并返回泛型T的结果集,同时关闭资源.
+     * @param handler 处理器
+     * @param otherParams 不定参数,对应Handler中transform()方法中的不定参数
+     * @return 泛型T
+     */
+    public <T> T end(ResultsHandler<T> handler, Object... otherParams) {
+        // 如果handler为null，执行转换并返回转换后的结果，最后关闭资源。否则抛出异常.
+        if (handler != null) {
+            T t = handler.transform(rs, otherParams);
+            this.closeSource();
+            return t;
+        }
+        throw new AdeptRuntimeException("ResultsHandler实例为null");
+    }
+
+    /**
+     * 得到并返回泛型T的结果集,同时关闭资源.
+     * @param handlerClazz ResultsHandler的Class
+     * @param otherParams 不定参数,对应Handler中transform()方法中的不定参数
+     * @return 泛型T
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T end(Class<T> handlerClazz, Object... otherParams) {
+        // 实例化class的实例为handler,如果handler不为空且是ResultsHandler的子实例，则得到查询结果.
+        Object handler = ClassHelper.newInstanceByClass(handlerClazz);
+        if (handler != null && handler instanceof ResultsHandler) {
+            return this.end((ResultsHandler<T>) handler, otherParams);
+        }
+        throw  new AdeptRuntimeException("实例化后的handler为空或不是ResultsHandler的实现类.");
     }
 
     /**
@@ -118,6 +154,7 @@ public final class Adept {
         }
 
         // 根据数据库连接、SQL语句及参数得到PreparedStatement实例，然后再得到ResultSet实例.
+        Logger.info("执行的sql:{}\n参数params:{}", sql, Arrays.toString(params));
         pstmt = JdbcHelper.getPreparedStatement(conn, sql, params);
         return this.setRs(JdbcHelper.getQueryResultSet(pstmt));
     }
