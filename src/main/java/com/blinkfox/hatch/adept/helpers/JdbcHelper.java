@@ -3,13 +3,18 @@ package com.blinkfox.hatch.adept.helpers;
 import com.blinkfox.hatch.adept.exception.BuildStatementException;
 import com.blinkfox.hatch.adept.exception.ExecuteSqlException;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import javax.sql.DataSource;
+
 import org.pmw.tinylog.Logger;
+
+
 
 /**
  * Connection工具类.
@@ -92,6 +97,18 @@ public final class JdbcHelper {
         } catch (SQLException e) {
             throw new ExecuteSqlException("执行查询的SQL语句出错!", e);
         }
+    }
+
+    /**
+     * 根据ResultSetMetaData实例获取指定列数colNum的列名.
+     * <p>如果sql列查询有`AS`，则采用`getColumnLabel`获取，否则则获取列本身的名称，即通过`getColumnName`来获取</p>
+     * @param rsmd 结果集元数据
+     * @param colNum 列数
+     * @return 列名
+     */
+    public static String getColumn(ResultSetMetaData rsmd, int colNum) throws SQLException {
+        String columnName = rsmd.getColumnLabel(colNum);
+        return columnName == null || columnName.length() == 0 ? rsmd.getColumnName(colNum) : columnName;
     }
 
     /**

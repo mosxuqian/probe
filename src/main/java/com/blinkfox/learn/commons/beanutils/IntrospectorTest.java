@@ -1,13 +1,13 @@
 package com.blinkfox.learn.commons.beanutils;
 
 import com.blinkfox.bean.UserInfo;
-import org.pmw.tinylog.Logger;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.Arrays;
+
+import org.pmw.tinylog.Logger;
 
 /**
  * InstospectorTest.

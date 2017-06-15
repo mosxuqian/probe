@@ -1,6 +1,7 @@
 package com.blinkfox.hatch.adept.core.results;
 
 import com.blinkfox.hatch.adept.exception.ResultsTransformException;
+import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -35,7 +36,7 @@ public class MapHandler implements ResultsHandler<Map<String, Object>> {
             ResultSetMetaData rsmd = rs.getMetaData();
             if (rs.next() && rs.first()) {
                 for (int i = 0, cols = rsmd.getColumnCount(); i < cols; i++)  {
-                    map.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
+                    map.put(JdbcHelper.getColumn(rsmd, i + 1), rs.getObject(i + 1));
                 }
             }
         } catch (Exception e) {

@@ -5,12 +5,12 @@ import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
 import com.blinkfox.hatch.adept.core.results.BeanHandler;
 import com.blinkfox.hatch.adept.core.results.MapHandler;
+
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
-import com.blinkfox.model.User;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -66,7 +66,7 @@ public class AdeptTest {
      */
     @Test
     public void testToMapList() {
-        String sql = "SELECT * FROM user AS u WHERE u.age > ?";
+        String sql = "SELECT id AS bh, name AS myName, email AS myEmail, birthday FROM user AS u WHERE u.age > ?";
         List<Map<String, Object>> maps = Adept.quickStart().query(sql, 19).end();
         Assert.assertNotNull(maps);
     }
@@ -92,7 +92,7 @@ public class AdeptTest {
     @SuppressWarnings("unchecked")
     public void testEndByClass() {
         Map<String, Object> map = (Map<String, Object>) Adept.quickStart().query(ALL_USER_SQL).end(MapHandler.class);
-        Adept.quickStart().query("").end(BeanHandler.newInstance(User.class));
+        Adept.quickStart().query("").end(BeanHandler.newInstance(UserInfo.class));
         Assert.assertNotNull(map);
     }
 
