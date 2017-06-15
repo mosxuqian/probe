@@ -1,13 +1,16 @@
 package com.blinkfox.hatch.adept.test;
 
+import com.blinkfox.bean.UserInfo;
 import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
+import com.blinkfox.hatch.adept.core.results.BeanHandler;
 import com.blinkfox.hatch.adept.core.results.MapHandler;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
+import com.blinkfox.model.User;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -89,6 +92,7 @@ public class AdeptTest {
     @SuppressWarnings("unchecked")
     public void testEndByClass() {
         Map<String, Object> map = (Map<String, Object>) Adept.quickStart().query(ALL_USER_SQL).end(MapHandler.class);
+        Adept.quickStart().query("").end(BeanHandler.newInstance(User.class));
         Assert.assertNotNull(map);
     }
 

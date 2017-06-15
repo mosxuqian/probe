@@ -33,16 +33,13 @@ public class MapHandler implements ResultsHandler<Map<String, Object>> {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         try {
             ResultSetMetaData rsmd = rs.getMetaData();
-            while (rs.next()) {
-                if (rs.first()) {
-                    for (int i = 0, cols = rsmd.getColumnCount(); i < cols; i++)  {
-                        map.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
-                    }
-                    break;
+            if (rs.next() && rs.first()) {
+                for (int i = 0, cols = rsmd.getColumnCount(); i < cols; i++)  {
+                    map.put(rsmd.getColumnName(i + 1), rs.getObject(i + 1));
                 }
             }
         } catch (Exception e) {
-            throw new ResultsTransformException("将'ResultSet'结果集转换为'map的List集合'出错!", e);
+            throw new ResultsTransformException("将'ResultSet'结果集转换为'有序Map'出错!", e);
         }
 
         return map;
