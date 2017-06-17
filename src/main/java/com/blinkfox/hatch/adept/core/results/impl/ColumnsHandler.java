@@ -14,7 +14,7 @@ import java.util.List;
 public class ColumnsHandler implements ResultHandler<List<Object>> {
 
     /**
-     * 获得新的新实例.
+     * 获得新的实例.
      * @return ColumnsHandler实例
      */
     public static ColumnsHandler newInstance() {
@@ -33,7 +33,7 @@ public class ColumnsHandler implements ResultHandler<List<Object>> {
             return null;
         }
 
-        // 遍历Resultset和元数据，将每一行各列的数据存到Map中，然后将各行数据add到List集合中
+        // 遍历Resultset，将第一列数据存到List集合中.
         List<Object> columns = new ArrayList<Object>();
         try {
             while (rs.next()) {

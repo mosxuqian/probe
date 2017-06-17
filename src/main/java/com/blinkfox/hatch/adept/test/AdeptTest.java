@@ -3,10 +3,7 @@ package com.blinkfox.hatch.adept.test;
 import com.blinkfox.bean.UserInfo;
 import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
-import com.blinkfox.hatch.adept.core.results.impl.BeanHandler;
-import com.blinkfox.hatch.adept.core.results.impl.BeanListHandler;
-import com.blinkfox.hatch.adept.core.results.impl.ColumnsHandler;
-import com.blinkfox.hatch.adept.core.results.impl.MapHandler;
+import com.blinkfox.hatch.adept.core.results.impl.*;
 
 import java.sql.ResultSet;
 import java.util.List;
@@ -134,6 +131,17 @@ public class AdeptTest {
                 .end(ColumnsHandler.newInstance());
         Assert.assertNotNull(nickNames);
         Logger.info(nickNames);
+    }
+
+    /**
+     * 测试通过`SingleHandler`来生成得到单个对象的实例.
+     */
+    @Test
+    public void testToSingle() {
+        long count = (long) Adept.quickStart()
+                .query("SELECT COUNT(*) FROM user AS u")
+                .end(SingleHandler.newInstance());
+        Assert.assertEquals(6L, count);
     }
 
     /**
