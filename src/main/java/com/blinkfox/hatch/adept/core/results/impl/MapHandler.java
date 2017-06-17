@@ -15,6 +15,10 @@ import java.util.Map;
  */
 public class MapHandler implements ResultHandler<Map<String, Object>> {
 
+    /**
+     * 获得新的新实例.
+     * @return MapHandler实例
+     */
     public static MapHandler newInstance() {
         return new MapHandler();
     }

@@ -20,7 +20,7 @@ public class BeanHandler implements ResultHandler {
     private Class<?> beanClass;
 
     /**
-     * 公有构造方法.
+     * 传入JavaBean class的构造方法.
      * @param beanClass beanClass
      */
     public BeanHandler(Class<?> beanClass) {

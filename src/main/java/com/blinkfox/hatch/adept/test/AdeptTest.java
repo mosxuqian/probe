@@ -5,6 +5,7 @@ import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
 import com.blinkfox.hatch.adept.core.results.impl.BeanHandler;
 import com.blinkfox.hatch.adept.core.results.impl.BeanListHandler;
+import com.blinkfox.hatch.adept.core.results.impl.ColumnsHandler;
 import com.blinkfox.hatch.adept.core.results.impl.MapHandler;
 
 import java.sql.ResultSet;
@@ -121,6 +122,18 @@ public class AdeptTest {
                 .end(BeanListHandler.newInstance(UserInfo.class));
         Assert.assertNotNull(userInfos);
         Logger.info(userInfos);
+    }
+
+    /**
+     * 测试通过`ColumnsHandler`来生成得到List集合的实例.
+     */
+    @Test
+    public void testToColumnList() {
+        List<Object> nickNames = Adept.quickStart()
+                .query("SELECT id FROM user AS u")
+                .end(ColumnsHandler.newInstance());
+        Assert.assertNotNull(nickNames);
+        Logger.info(nickNames);
     }
 
     /**
