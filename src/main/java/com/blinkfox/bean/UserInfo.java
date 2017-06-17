@@ -82,4 +82,16 @@ public class UserInfo {
         this.birthday = birthday;
     }
 
+    @Override
+    public String toString() {
+        return "UserInfo{"
+                + "id='" + id + '\''
+                + ", name='" + name + '\''
+                + ", nickname='" + nickname + '\''
+                + ", email='" + email + '\''
+                + ", sex=" + sex
+                + ", birthday=" + birthday
+                + '}';
+    }
+
 }

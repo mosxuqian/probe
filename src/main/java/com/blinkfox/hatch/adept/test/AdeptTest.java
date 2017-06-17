@@ -15,6 +15,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.pmw.tinylog.Logger;
 
 /**
  * Adept测试类.
@@ -86,14 +87,26 @@ public class AdeptTest {
     }
 
     /**
-     * 测试获取mapList的实例.
+     * 测试通过`MapHandler.class`来生成得到Map的实例.
      */
     @Test
     @SuppressWarnings("unchecked")
     public void testEndByClass() {
         Map<String, Object> map = (Map<String, Object>) Adept.quickStart().query(ALL_USER_SQL).end(MapHandler.class);
-        Adept.quickStart().query("").end(BeanHandler.newInstance(UserInfo.class));
         Assert.assertNotNull(map);
+    }
+
+    /**
+     * 测试通过`BeanHandler`来生成得到Bean的实例.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testToBean() {
+        UserInfo userInfo = (UserInfo) Adept.quickStart()
+                .query("SELECT id, name, nickname AS nickname, email AS email, sex, birthday FROM user AS u limit 0, 1")
+                .end(BeanHandler.newInstance(UserInfo.class));
+        Assert.assertNotNull(userInfo);
+        Logger.info(userInfo);
     }
 
     /**

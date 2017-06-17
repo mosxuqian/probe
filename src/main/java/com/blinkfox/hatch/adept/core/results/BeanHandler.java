@@ -1,14 +1,14 @@
 package com.blinkfox.hatch.adept.core.results;
 
+import com.blinkfox.hatch.adept.core.IntrospectorManager;
 import com.blinkfox.hatch.adept.exception.ResultsTransformException;
 import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.Map;
 
 import org.pmw.tinylog.Logger;
 
@@ -53,32 +53,30 @@ public class BeanHandler implements ResultsHandler {
         // 遍历Resultset和元数据，将第一行各列的数据存到'Java Bean'中
         Object beanObj = null;
         try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(this.beanClass);
-            PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
             ResultSetMetaData rsmd = rs.getMetaData();
             if (rs.next() && rs.first()) {
                 beanObj = beanClass.newInstance();
+                Map<String, PropertyDescriptor> propMap = IntrospectorManager.newInstance().getPropMap(beanClass);
 
                 for (int i = 0, cols = rsmd.getColumnCount(); i < cols; i++)  {
                     String columnName = JdbcHelper.getColumn(rsmd, i + 1);
-                    for (PropertyDescriptor prop: props) {
-                        if (columnName.equalsIgnoreCase(prop.getName())) {
-                            Class<?> propType = prop.getPropertyType();
-                            String propTypeName = propType.getName();
-                            Object value = rs.getObject(i + 1);
-                            Logger.info("propTypeName:{}, value:{}", propTypeName, value);
+                    if (propMap.containsKey(columnName)) {
+                        PropertyDescriptor prop = propMap.get(columnName);
+                        Class<?> propType = prop.getPropertyType();
+                        String propTypeName = propType.getName();
+                        Object value = rs.getObject(i + 1);
+                        Logger.info("propTypeName:{}, value:{}", propTypeName, value);
 
-                            // 获取setter方法.
-                            Method propSetter = prop.getWriteMethod();
-                            if (propSetter == null || propSetter.getParameterTypes().length != 1) {
-                                break;
-                            }
-
-                            // 调用setter方法.
-                            Class<?> param = propSetter.getParameterTypes()[0];
-                            propSetter.invoke(beanObj, param);
-                            break;
+                        // 获取setter方法.
+                        Method propSetter = prop.getWriteMethod();
+                        if (propSetter == null || propSetter.getParameterTypes().length != 1) {
+                            Logger.warn("类'{}'的属性'{}'没有标准的setter方法", beanClass.getName(), columnName);
+                            continue;
                         }
+
+                        // 调用setter方法.
+                        // Class<?> param = propSetter.getParameterTypes()[0];
+                        propSetter.invoke(beanObj, value);
                     }
                 }
             }
