@@ -1,8 +1,8 @@
 package com.blinkfox.hatch.adept.core;
 
 import com.blinkfox.hatch.adept.config.ConfigInfo;
-import com.blinkfox.hatch.adept.core.results.MapListHandler;
-import com.blinkfox.hatch.adept.core.results.ResultsHandler;
+import com.blinkfox.hatch.adept.core.results.impl.MapListHandler;
+import com.blinkfox.hatch.adept.core.results.ResultHandler;
 import com.blinkfox.hatch.adept.exception.AdeptRuntimeException;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
 import com.blinkfox.hatch.adept.exception.NullConnectionException;
@@ -114,7 +114,7 @@ public final class Adept {
      * @param otherParams 不定参数,对应Handler中transform()方法中的不定参数
      * @return 泛型T
      */
-    public <T> T end(ResultsHandler<T> handler, Object... otherParams) {
+    public <T> T end(ResultHandler<T> handler, Object... otherParams) {
         // 如果handler为null，执行转换并返回转换后的结果，最后关闭资源。否则抛出异常.
         if (handler != null) {
             T t = handler.transform(rs, otherParams);
@@ -134,8 +134,8 @@ public final class Adept {
     public Object end(Class<?> handlerClazz, Object... otherParams) {
         // 实例化class的实例为handler,如果handler不为空且是ResultsHandler的子实例，则可执行查询转换结果.
         Object handler = ClassHelper.newInstanceByClass(handlerClazz);
-        if (handler != null && handler instanceof ResultsHandler) {
-            return this.end((ResultsHandler) handler, otherParams);
+        if (handler != null && handler instanceof ResultHandler) {
+            return this.end((ResultHandler) handler, otherParams);
         }
         throw  new AdeptRuntimeException("实例化后的handler为空或不是ResultsHandler的实现类.");
     }

@@ -1,5 +1,6 @@
-package com.blinkfox.hatch.adept.core.results;
+package com.blinkfox.hatch.adept.core.results.impl;
 
+import com.blinkfox.hatch.adept.core.results.ResultHandler;
 import com.blinkfox.hatch.adept.exception.ResultsTransformException;
 import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * 将'ResultSet'结果集转换为'Map的List集合'的处理器实现.
  * Created by blinkfox on 2017/6/11.
  */
-public class MapListHandler implements ResultsHandler<List<Map<String, Object>>> {
+public class MapListHandler implements ResultHandler<List<Map<String, Object>>> {
 
     /**
      * 获得新的新实例.

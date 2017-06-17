@@ -1,5 +1,6 @@
-package com.blinkfox.hatch.adept.core.results;
+package com.blinkfox.hatch.adept.core.results.impl;
 
+import com.blinkfox.hatch.adept.core.results.ResultHandler;
 import com.blinkfox.hatch.adept.exception.ResultsTransformException;
 import com.blinkfox.hatch.adept.helpers.JdbcHelper;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  * 将'ResultSet'结果集的第一行数据转换为'有序Map'的处理器实现.
  * Created by blinkfox on 2017/6/11.
  */
-public class MapHandler implements ResultsHandler<Map<String, Object>> {
+public class MapHandler implements ResultHandler<Map<String, Object>> {
 
     public static MapHandler newInstance() {
         return new MapHandler();

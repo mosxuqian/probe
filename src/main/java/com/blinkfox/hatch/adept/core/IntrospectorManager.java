@@ -1,9 +1,13 @@
 package com.blinkfox.hatch.adept.core;
 
+import com.blinkfox.hatch.adept.core.columns.impl.PrimitiveHandler;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 

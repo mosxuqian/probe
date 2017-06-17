@@ -3,8 +3,9 @@ package com.blinkfox.hatch.adept.test;
 import com.blinkfox.bean.UserInfo;
 import com.blinkfox.hatch.adept.config.AdeptConfigManager;
 import com.blinkfox.hatch.adept.core.Adept;
-import com.blinkfox.hatch.adept.core.results.BeanHandler;
-import com.blinkfox.hatch.adept.core.results.MapHandler;
+import com.blinkfox.hatch.adept.core.results.impl.BeanHandler;
+import com.blinkfox.hatch.adept.core.results.impl.BeanListHandler;
+import com.blinkfox.hatch.adept.core.results.impl.MapHandler;
 
 import java.sql.ResultSet;
 import java.util.List;
@@ -107,6 +108,19 @@ public class AdeptTest {
                 .end(BeanHandler.newInstance(UserInfo.class));
         Assert.assertNotNull(userInfo);
         Logger.info(userInfo);
+    }
+
+    /**
+     * 测试通过`BeanListHandler`来生成得到Bean List集合的实例.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testToBeanList() {
+        List<UserInfo> userInfos = (List<UserInfo>) Adept.quickStart()
+                .query("SELECT id, name, nickname AS nickname, email AS email, sex, birthday FROM user AS u")
+                .end(BeanListHandler.newInstance(UserInfo.class));
+        Assert.assertNotNull(userInfos);
+        Logger.info(userInfos);
     }
 
     /**

@@ -32,7 +32,7 @@ public class BeanUtilsDemo {
 
     private static void setUserInfoProperty(List<UserInfo> userInfos) throws InvocationTargetException, IllegalAccessException {
         UserInfo userInfo = new UserInfo();
-        BeanUtils.setProperty(userInfo, "id", "1");
+        BeanUtils.setProperty(userInfo, "id", 1);
         BeanUtils.setProperty(userInfo, "name", "zhangsan");
         BeanUtils.setProperty(userInfo, "nickname", "张三");
         BeanUtils.setProperty(userInfo, "email", "zhansan@163.com");
@@ -43,7 +43,7 @@ public class BeanUtilsDemo {
 
     private static void setUserInfo(List<UserInfo> userInfos) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setId("2");
+        userInfo.setId(2);
         userInfo.setName("lisi");
         userInfo.setNickname("李四");
         userInfo.setEmail("lisi@163.com");
@@ -54,7 +54,7 @@ public class BeanUtilsDemo {
 
     private static void setUserInfoByMap(List<Map<String, Object>> userMaps) {
         Map<String, Object> userMap = new HashMap<String, Object>();
-        userMap.put("id", "3");
+        userMap.put("id", 3);
         userMap.put("name", "wangwu");
         userMap.put("nickname", "王五");
         userMap.put("wangwu", "wangwu@163.com");

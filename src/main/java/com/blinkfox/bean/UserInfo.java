@@ -9,7 +9,7 @@ import java.util.Date;
 public class UserInfo {
 
     /* 唯一标识 */
-    private String id;
+    private int id;
 
     /* 姓名name */
     private String name;
@@ -34,11 +34,11 @@ public class UserInfo {
     }
 
     /* getter和setter方法. */
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

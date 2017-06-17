@@ -1,15 +1,20 @@
 package com.blinkfox.hatch.adept.helpers;
 
+import com.blinkfox.hatch.adept.core.columns.ColumnHandlerChain;
 import com.blinkfox.hatch.adept.exception.BuildStatementException;
 import com.blinkfox.hatch.adept.exception.ExecuteSqlException;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Map;
 import javax.sql.DataSource;
 
 import org.pmw.tinylog.Logger;
@@ -109,6 +114,42 @@ public final class JdbcHelper {
     public static String getColumn(ResultSetMetaData rsmd, int colNum) throws SQLException {
         String columnName = rsmd.getColumnLabel(colNum);
         return columnName == null || columnName.length() == 0 ? rsmd.getColumnName(colNum) : columnName;
+    }
+
+    /**
+     * 将ResultSet转换为指定class的Bean.
+     * @param rs ResultSet实例
+     * @param rsmd ResultSet元数据
+     * @param beanClass Bean的class
+     * @param propMap Bean属性对应的Map
+     * @return 值
+     * @throws IllegalAccessException IllegalAccessException
+     * @throws InstantiationException InstantiationException
+     * @throws SQLException SQLException
+     * @throws InvocationTargetException InvocationTargetException
+     */
+    public static Object getBeanValue(ResultSet rs, ResultSetMetaData rsmd, Class<?> beanClass, Map<String,
+            PropertyDescriptor> propMap) throws IllegalAccessException, InstantiationException,
+            SQLException, InvocationTargetException {
+        Object beanObj = beanClass.newInstance();
+        for (int i = 0, cols = rsmd.getColumnCount(); i < cols; i++) {
+            String columnName = JdbcHelper.getColumn(rsmd, i + 1);
+            if (propMap.containsKey(columnName)) {
+                PropertyDescriptor prop = propMap.get(columnName);
+                // 获取并调用setter方法.
+                Method propSetter = prop.getWriteMethod();
+                if (propSetter == null || propSetter.getParameterTypes().length != 1) {
+                    Logger.warn("类'{}'的属性'{}'没有标准的setter方法", beanClass.getName(), columnName);
+                    continue;
+                }
+
+                // 得到属性类型并将该数据库列值转成Java对应类型的值
+                Class<?> propType = prop.getPropertyType();
+                Object value = ColumnHandlerChain.newInstance().getColumnValue(rs, i + 1, propType);
+                propSetter.invoke(beanObj, value);
+            }
+        }
+        return beanObj;
     }
 
     /**
