@@ -1,6 +1,6 @@
-package com.blinkfox.hatch.adept.core.columns;
+package com.blinkfox.hatch.adept.core.fields;
 
-import com.blinkfox.hatch.adept.core.columns.impl.PrimitiveHandler;
+import com.blinkfox.hatch.adept.core.fields.impl.PrimitiveHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,17 +9,17 @@ import java.sql.SQLException;
  * 列值处理器的链类.
  * Created by blinkfox on 2017/6/17.
  */
-public final class ColumnHandlerChain {
+public final class FieldHandlerChain {
 
     /**
      * 私有构造方法.
      */
-    private ColumnHandlerChain() {
+    private FieldHandlerChain() {
         super();
     }
 
-    public static ColumnHandlerChain newInstance() {
-        return new ColumnHandlerChain();
+    public static FieldHandlerChain newInstance() {
+        return new FieldHandlerChain();
     }
 
     /**

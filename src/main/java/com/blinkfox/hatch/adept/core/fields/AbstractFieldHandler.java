@@ -1,4 +1,4 @@
-package com.blinkfox.hatch.adept.core.columns;
+package com.blinkfox.hatch.adept.core.fields;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,16 +7,16 @@ import java.sql.SQLException;
  * 将数据查询出的某一列属性转换成Java对应类型结果的处理器抽象.
  * Created by blinkfox on 2017/6/17.
  */
-public abstract class AbstractColumnHandler {
+public abstract class AbstractFieldHandler {
 
     /** 下一个`ColumnHandler`处理器. */
-    private AbstractColumnHandler nextColumnHandler;
+    private AbstractFieldHandler nextColumnHandler;
 
     /**
      * nextColumnHandler的getter方法.
      * @return AbstractColumnHandler实例
      */
-    public AbstractColumnHandler getNextColumnHandler() {
+    public AbstractFieldHandler getNextColumnHandler() {
         return nextColumnHandler;
     }
 
@@ -24,7 +24,7 @@ public abstract class AbstractColumnHandler {
      * nextColumnHandler的setter方法.
      * @param nextColumnHandler nextColumnHandler实例
      */
-    public void setNextColumnHandler(AbstractColumnHandler nextColumnHandler) {
+    public void setNextColumnHandler(AbstractFieldHandler nextColumnHandler) {
         this.nextColumnHandler = nextColumnHandler;
     }
 

@@ -1,6 +1,6 @@
-package com.blinkfox.hatch.adept.core.columns.impl;
+package com.blinkfox.hatch.adept.core.fields.impl;
 
-import com.blinkfox.hatch.adept.core.columns.AbstractColumnHandler;
+import com.blinkfox.hatch.adept.core.fields.AbstractFieldHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,13 +9,13 @@ import java.sql.SQLException;
  * Java 8种原始类型对应的JDBC结果处理器实现类.
  * @author blinkfox on 2017/6/17.
  */
-public class PrimitiveHandler extends AbstractColumnHandler {
+public class PrimitiveHandler extends AbstractFieldHandler {
 
     /**
      * 获取新的`PrimitiveHandler`实例.
      * @return `PrimitiveHandler`实例
      */
-    public static AbstractColumnHandler newInstance() {
+    public static AbstractFieldHandler newInstance() {
         return new PrimitiveHandler();
     }
 

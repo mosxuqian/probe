@@ -1,6 +1,6 @@
 package com.blinkfox.hatch.adept.helpers;
 
-import com.blinkfox.hatch.adept.core.columns.ColumnHandlerChain;
+import com.blinkfox.hatch.adept.core.fields.FieldHandlerChain;
 import com.blinkfox.hatch.adept.exception.BuildStatementException;
 import com.blinkfox.hatch.adept.exception.ExecuteSqlException;
 import com.blinkfox.hatch.adept.exception.NoDataSourceException;
@@ -128,8 +128,8 @@ public final class JdbcHelper {
      * @throws SQLException SQLException
      * @throws InvocationTargetException InvocationTargetException
      */
-    public static Object getBeanValue(ResultSet rs, ResultSetMetaData rsmd, Class<?> beanClass, Map<String,
-            PropertyDescriptor> propMap) throws IllegalAccessException, InstantiationException,
+    public static Object getBeanValue(ResultSet rs, ResultSetMetaData rsmd, Class<?> beanClass,
+            Map<String, PropertyDescriptor> propMap) throws IllegalAccessException, InstantiationException,
             SQLException, InvocationTargetException {
         Object beanObj = beanClass.newInstance();
         for (int i = 0, cols = rsmd.getColumnCount(); i < cols; i++) {
@@ -145,7 +145,7 @@ public final class JdbcHelper {
 
                 // 得到属性类型并将该数据库列值转成Java对应类型的值
                 Class<?> propType = prop.getPropertyType();
-                Object value = ColumnHandlerChain.newInstance().getColumnValue(rs, i + 1, propType);
+                Object value = FieldHandlerChain.newInstance().getColumnValue(rs, i + 1, propType);
                 propSetter.invoke(beanObj, value);
             }
         }
