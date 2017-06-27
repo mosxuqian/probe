@@ -253,6 +253,11 @@
             <artifactId>poi-tl</artifactId>
             <version>0.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>3.16</version>
+        </dependency>
     </dependencies>
 
     <build>
