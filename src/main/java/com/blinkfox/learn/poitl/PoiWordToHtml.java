@@ -76,6 +76,7 @@ public class PoiWordToHtml {
         outStream.close();
         String content = new String(outStream.toByteArray());
         FileUtils.write(new File(path, "1.html"), content, "utf-8");
+        input.close();
     }
 
 }
