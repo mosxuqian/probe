@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zealots>
-    
+
+    <zealot id="common">
+        <equal field="id" value="id" />
+    </zealot>
+
     <!-- 根据动态条件查询用户信息 -->
     <zealot id="queryUserInfo">
         select * from user where
-        <like field="nickname" value="nickName"></like>
-        <andLike match="?email != empty" field="email" value="email"></andLike>
-        <andBetween match="?startAge != null || ?endAge != null" field="age" start="startAge" end="endAge"></andBetween>
-        <andBetween match="?startBirthday != null || ?endBirthday != null" field="birthday" start="startBirthday" end="endBirthday"></andBetween>
-        <andIn match="?sexs != empty" field="sex" value="sexs"></andIn>
+        <like field="nickname" value="nickName" />
+        <include zealotId="common" />
+        <andLike match="?email != empty" field="email" value="email" />
+        <andBetween match="?startAge != null || ?endAge != null" field="age" start="startAge" end="endAge" />
+        <andBetween match="?startBirthday != null || ?endBirthday != null" field="birthday" start="startBirthday" end="endBirthday" />
+        <andIn match="?sexs != empty" field="sex" value="sexs" />
         order by id desc 
     </zealot>
 
     <!-- 根据Id查询用户信息 -->
     <zealot id="queryUserById">
         select * from user where
-        <equal field="id" value="id"></equal>
+        <equal field="id" value="id" />
     </zealot>
 
     <!-- 根据id和email来实现自定义条件查询用户信息 -->
     <zealot id="queryUserWithIdEmail">
         select * from user where
         <userIdEmail match="userId != empty || userEmail != empty" idField="id" emailField="email"
-                idValue="userId" emailValue="userEmail"></userIdEmail>
+                idValue="userId" emailValue="userEmail" />
     </zealot>
     
 </zealots>

@@ -1,8 +1,9 @@
 package com.blinkfox.config;
 
 import com.blinkfox.handler.UserIdEmailHandler;
-import com.blinkfox.zealot.bean.XmlContext;
 import com.blinkfox.zealot.config.AbstractZealotConfig;
+import com.blinkfox.zealot.config.entity.NormalConfig;
+import com.blinkfox.zealot.config.entity.XmlContext;
 
 /**
  * 我继承的zealotConfig配置类
@@ -11,6 +12,11 @@ import com.blinkfox.zealot.config.AbstractZealotConfig;
 public class MyZealotConfig extends AbstractZealotConfig {
 
     public static final String USER_ZEALOT = "user_zealot";
+
+    @Override
+    public void configNormal(NormalConfig normalConfig) {
+        normalConfig.setPrintSqlInfo(true);
+    }
 
     @Override
     public void configXml(XmlContext ctx) {
