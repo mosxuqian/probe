@@ -2,12 +2,12 @@ package com.blinkfox.test.other;
 
 import com.blinkfox.zealot.consts.ZealotConst;
 import com.blinkfox.zealot.helpers.XmlNodeHelper;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.pmw.tinylog.Logger;
 
 import java.util.List;
+
+import org.dom4j.Document;
+import org.dom4j.Node;
+import org.pmw.tinylog.Logger;
 
 /**
  * Dom4j测试类.
@@ -40,8 +40,6 @@ public class Dom4jTest {
             } else if (ZealotConst.NODETYPE_ELEMENT.equals(n.getNodeTypeName())) {
                 if (n.getName().equals("include")) {
                     Logger.info("include标签:{}", n.getName());
-                    Element e = (Element) node;
-                    e.add(XmlNodeHelper.getZealotNodeById(doc, "common"));
                 }
                 Logger.info("这是元素节点.节点内容为:{}", n.getName());
             }
