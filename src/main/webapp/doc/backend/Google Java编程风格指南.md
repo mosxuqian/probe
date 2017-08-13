@@ -121,3 +121,72 @@
 ##### 3.4.2.1 重载：永不分离
 
 当一个类有多个构造函数，或是多个同名方法，这些方法应该按顺序出现在一起，中间不要放进其它方法。
+
+## 4 格式
+
+> **术语说明**：块状结构(`block-­like construct`)指的是一个类，方法或构造函数的主体。需要注意的是，数组初始化中的初始值可被选择性地视为块状结构(4.8.3.1节)。
+
+### 4.1 大括号
+
+#### 4.1.1 使用大括号(即使是可选的)
+
+大括号一般用在`if`, `else`, `for`, `do`, `while`等语句，即使只有一条语句(或是空)，也应该把大括号写上。
+
+#### 4.1.2 非空语句块采用`K&R`风格
+
+对于非空语句块，大括号遵循`Kernighan`和`Ritchie`风格 ([Egyptian brackets](https://blog.codinghorror.com/new-programming-jargon/)):
+
+- 左大括号前不换行
+- 左大括号后换行
+- 右大括号前换行
+- 如果右大括号结束是一个`语句块`或者`方法体`、`构造函数体`或者`有命名的类体`，则需要换行。当右括号后面接`else`或者`逗号`时，不应该换行。
+
+示例：
+
+```java
+return () -> {
+    while (condition()) {
+        method();
+    }
+};
+
+return new MyClass() {
+    @Override public void method() {
+        if (condition()) {
+            try {
+                something();
+            } catch (ProblemException e) {
+                recover();
+            }
+        } else if (otherCondition()) {
+            somethingElse();
+        } else {
+            lastThing();
+        }
+    }
+};
+```
+
+一些例外的情况，将在`4.8.1`节讲`枚举类型`的时候讲到。
+
+#### 4.1.3 空语句块：使代码更简洁
+
+一个空的语句块，可以在左大括号之后直接接右大括号，中间不需要空格或换行。但是当一个由几个语句块联合组成的语句块时，则需要换行。（例如：`if/else` 或者`try/catch/finally`）.
+
+示例：
+
+```java
+// 这是可接受的
+void doNothing() {}
+
+// 这同样是可接受的
+void doNothingElse() {
+}
+```
+
+```java
+// 这是不可接受的：多块语句中没有简洁的空语句块
+try {
+    doSomething();
+} catch (Exception e) {}
+```
