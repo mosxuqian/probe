@@ -6,6 +6,7 @@ import com.blinkfox.zealot.helpers.XmlNodeHelper;
 import java.util.List;
 
 import org.dom4j.Document;
+import org.dom4j.Element;
 import org.dom4j.Node;
 import org.pmw.tinylog.Logger;
 
@@ -40,6 +41,9 @@ public class Dom4jTest {
             } else if (ZealotConst.NODETYPE_ELEMENT.equals(n.getNodeTypeName())) {
                 if (n.getName().equals("include")) {
                     Logger.info("include标签:{}", n.getName());
+                    Element e = (Element) n;
+                    String zealotId = e.attributeValue("zealotId");
+                    Logger.info("zealotId:{}", zealotId);
                 }
                 Logger.info("这是元素节点.节点内容为:{}", n.getName());
             }
