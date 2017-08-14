@@ -460,3 +460,115 @@ public protected private abstract default static final transient volatile synchr
 #### 4.8.8 数字字面量
 
 长整型的数字字面量使用大写的`L`作为后缀，不得使用小写（以免与数字1混淆）。例如：使用`3000000000L`，而不是`3000000000l`。
+
+## 5 命名约定
+
+### 5.1 对所有标识符都通用的规则
+
+标识符只能使用`ASCII`字母和数字，因此每个有效的标识符名称都能匹配正则表达式`\w+`。
+
+在Google其它编程语言风格中使用的特殊前缀或后缀，如`name_`, `mName`, `s_name`和`kName`，在Java编程风格中都不再使用。
+
+### 5.2 标识符类型的规则
+
+#### 5.2.1 包名
+
+包名全部小写，连续的单词只是简单地连接起来，不使用下划线。例如：使用`com.example.deepspace`，而不是`com.example.deepSpace`或者`com.example.deep_space`。
+
+#### 5.2.2 类名
+
+类名都以`UpperCamelCase`风格编写。
+
+类名通常是名词或名词短语。例如：`Character`或者`ImmutableList`。接口名称也可以是名词或名词短语（例如：`List`），但有时可能是形容词或形容词短语（例如：`Readable`）。现在还没有特定的规则或行之有效的约定来命名注解类型。
+
+测试类的命名以它要测试的类的名称开始，以`Test`结束。例如：`HashTest`或`HashIntegrationTest`。
+
+#### 5.2.3 方法名
+
+方法名都以`lowerCamelCase`风格编写。
+
+方法名通常是动词或动词短语。例如：`sendMessage`或者`stop`。
+
+下划线可能出现在JUnit测试方法名称中用以分隔名称的逻辑组件。一个典型的模式是：`test<MethodUnderTest>_<state>`，例如：`testPop_emptyStack`。 并不存在唯一正确的方式来命名测试方法。
+
+#### 5.2.4 常量名
+
+常量名命名模式为`CONSTANT_CASE`，全部字母大写，用下划线分隔单词。那到底什么算是一个常量呢？
+
+每个常量都是一个静态`final`字段，其内容是不可变的，且没有可检测的副作用。这包括原始类型、字符串、不可变类型和不可变类型的不可变集合。如果任何一个实例的观测状态是可变的，则它肯定不会是一个常量。只是永远不打算改变对象也是不够的。例如：
+
+```java
+// 常量
+static final int NUMBER = 5;
+static final ImmutableList<String> NAMES = ImmutableList.of("Ed", "Ann");
+static final ImmutableMap<String, Integer> AGES = ImmutableMap.of("Ed", 35, "Ann", 32);
+static final Joiner COMMA_JOINER = Joiner.on(','); // 因为Joiner是不可变的
+static final SomeMutableType[] EMPTY_ARRAY = {};
+enum SomeEnum { ENUM_CONSTANT }
+
+// 非常量
+static String nonFinal = "non-final";
+final String nonStatic = "non-static";
+static final Set<String> mutableCollection = new HashSet<String>();
+static final ImmutableSet<SomeMutableType> mutableElements = ImmutableSet.of(mutable);
+static final ImmutableMap<String, SomeMutableType> mutableValues =
+    ImmutableMap.of("Ed", mutableInstance, "Ann", mutableInstance2);
+static final Logger logger = Logger.getLogger(MyClass.getName());
+static final String[] nonEmptyArray = {"these", "can", "change"};
+```
+
+这些常量的名字通常是名词或名词短语。
+
+#### 5.2.5 非常量字段名
+
+非常量字段名以`lowerCamelCase`风格编写。
+
+这些名字通常是名词或名词短语。例如：`computedValues`或者`index`。
+
+#### 5.2.6 参数名
+
+参数名以`lowerCamelCase`风格编写。
+
+参数应该避免用单个字符命名。
+
+#### 5.2.7 局部变量名
+
+局部变量名以`lowerCamelCase`风格编写。
+
+即使局部变量是`final`和`不可改变`的，也不应该把它示为常量，当然也就不能用常量的规则去命名它。
+
+#### 5.2.8 类型变量名
+
+类型变量可用以下两种风格之一进行命名：
+
+- 单个的大写字母，后面可以视具体情况跟一个数字(如：`E`, `T`, `X`, `T2`)。
+- 以类命名方式(5.2.2节)，后面加个大写的T(如：`RequestT`, `FooBarT`)。
+
+### 5.3 驼峰式命名法(CamelCase)
+
+**驼峰式命名法**分大驼峰式命名法(`UpperCamelCase`)和小驼峰式命名法(`lowerCamelCase`)。有时，我们有不只一种合理的方式将一个英语词组转换成驼峰形式，如缩略语或不寻常的结构(例如：`IPv6`或`iOS`)。Google指定了以下的转换方案。
+
+名字从散文形式(prose form)开始:
+
+- 把短语转换为纯`ASCII`码，并且移除任何单引号。例如：`Müller’s algorithm`将变成`Muellers algorithm`。
+- 把这个结果切分成单词，在空格或其它标点符号(通常是连字符)处分割开。
+  - **推荐**：如果某个单词已经有了常用的驼峰表示形式，按它的组成将它分割开(如`AdWords`将分割成`ad words`)。 
+  - 需要注意的是iOS并不是一个真正的驼峰表示形式，因此该推荐对它并不适用。
+- 现在将所有字母都小写(包括缩写)，然后将单词的第一个字母大写：
+  - 每个单词的第一个字母都大写，来得到大驼峰式命名。
+  - 除了第一个单词，每个单词的第一个字母都大写，来得到小驼峰式命名。
+- 最后将所有的单词连接起来得到一个标识符。
+
+示例：
+
+| 散文形式  | 正确  | 不正确  |
+| ------------ | ------------ | ------------ |
+| "XML HTTP request"  | XmlHttpRequest  | XMLHTTPRequest  |
+| "new customer ID"  | newCustomerId  | newCustomerID  |
+| "inner stopwatch"  | innerStopwatch  | innerStopWatch  |
+| "supports IPv6 on iOS?"  | supportsIpv6OnIos  | supportsIPv6OnIOS  |
+| "YouTube importer"  | YouTubeImporter YoutubeImporter^  | 无   |
+
+加`^`号处表示可以，但不推荐。
+
+> **注意**：在英语中，某些带有连字符的单词形式不唯一。例如：`nonempty`和`non-empty`都是正确的，因此方法名`checkNonempty`和`checkNonEmpty`也都是正确的。
