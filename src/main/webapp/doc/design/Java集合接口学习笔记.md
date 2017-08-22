@@ -2,6 +2,8 @@
 
 - `Collection`接口继承了`Iterable`接口，依赖了`Predicate`、`Spliterator`、`Stream`接口（这些均为`Java8`新增），`Iterable`接口依赖了`Iterator`接口。
   - `List`接口继承自`Collection`接口,依赖了`UnaryOperator`接口（`Java8`新增）、`ListIterator`、`Comparator`接口
+  - `Queue`接口继承了`Collection`接口
+    - `Deque`接口继承了`Queue`接口
   - `AbstractCollection`抽象类实现了`Collection`接口，
     - `AbstractList`抽象类继承了`AbstractCollection`抽象类，实现了`List`接口，依赖了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
       - `ArrayList`类继承了`AbstractList`抽象类，实现了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
@@ -25,7 +27,11 @@
     - `WeakHashMap`类继承了`AbstractMap`抽象类，实现了`Map`接口，依赖了`Collection`、`Set`、`Consumer`、`BiConsumer`、`BiFunction`接口
   - `SortedMap`接口继承自`Map`接口，依赖了`Set`、`Collection`、`Comparator`接口
     - `NavigableMap`接口继承了`SortedMap`接口，依赖了`NavigableSet`接口
+  - `ConcurrentMap`接口继承了`Map`接口，依赖了`BiConsumer`、`BiFunction`接口
   - `Hashtable`类继承了`Dictionary`抽象类，实现了`Map`、`Cloneable`、`Serializable`接口，聚合了`Collection`、`Set`接口，依赖了`Enumeration`、`BiConsumer`、`BiFunction`接口
+    - `Properties`类继承了`Hashtable`类
+- `Collections`是`Collection`的辅助工具类，依赖了上述大多数接口和类
+- `Arrays`类，工具类，依赖了上述大多数接口和类
 
 ## Collection接口中的抽象方法
 
