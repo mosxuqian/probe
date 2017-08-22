@@ -1,16 +1,31 @@
 # Java集合接口学习笔记
 
 - `Collection`接口继承了`Iterable`接口，依赖了`Predicate`、`Spliterator`、`Stream`接口（这些均为`Java8`新增），`Iterable`接口依赖了`Iterator`接口。
-- `AbstractCollection`抽象类实现了`AbstractCollection`接口，
-- `List`接口继承自`Collection`接口,依赖了`UnaryOperator`接口（`Java8`新增）、`ListIterator`、`Comparator`接口
-- `AbstractList`抽象类继承了`AbstractCollection`抽象类，实现了`List`接口，依赖了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
-- `AbstractSequentialList`抽象类继承了`AbstractList`抽象类
-- `ArrayList`继承了`AbstractList`抽象类，实现了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
-- `LinkedList`继承了`AbstractSequentialList`抽象类，实现了`List`、`Deque`、`Cloneable`、`Serializable`接口
+  - `List`接口继承自`Collection`接口,依赖了`UnaryOperator`接口（`Java8`新增）、`ListIterator`、`Comparator`接口
+  - `AbstractCollection`抽象类实现了`Collection`接口，
+    - `AbstractList`抽象类继承了`AbstractCollection`抽象类，实现了`List`接口，依赖了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
+      - `ArrayList`类继承了`AbstractList`抽象类，实现了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
+      - `AbstractSequentialList`抽象类继承了`AbstractList`抽象类
+        - `LinkedList`类继承了`AbstractSequentialList`抽象类，实现了`List`、`Deque`、`Cloneable`、`Serializable`接口
+      - `Vector`类继承了`AbstractList`抽象类，实现了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
+        - `Stack`类继承了`Vector`类
 - `Set`接口继承自`Collection`接口
+  - `AbstractSet`抽象类继承了`AbstractCollection`抽象类，实现了`Set`接口
+    - `HashSet`类继承了`AbstractSet`抽象类，实现了`Set`、`Cloneable`、`Serializable`接口，聚合了`HashMap`
+      - `LinkedHashSet`继承了`HashSet`类，实现了`Set`、`Cloneable`、`Serializable`接口
+    - `TreeSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口，聚合了`NavigableMap`，依赖了`Comparator`、`SortedSet`接口
+  - `SortedSet`接口继承自`Set`接口，依赖了`Comparator`接口
+    - `NavigableSet`接口继承自`SortedSet`接口(Java6新增)
 - `Map`接口依赖了`Set`、`Collection`、`BiConsumer`、`Function`、`BiFunction`接口，`Map.Entry`是Map中的内部接口
-- `SortedSet`接口继承自`Set`接口，依赖了`Comparator`接口
-- `SortedMap`接口继承自`Map`接口，依赖了`Set`、`Collection`、`Comparator`接口
+  - `AbstractMap`抽象类实现了`Map`接口，聚合了`Collection`、`Set`接口
+    - `HashMap`类继承了`AbstractMap`抽象类，实现了`Map`、`Cloneable`、`Serializable`接口，依赖了`Collection`、`Set`接口
+      - `LinkedHashMap`继承了`HashMap`类，实现了`Map`接口，依赖了`Collection`、`Set`、`Consumer`、`BiConsumer`接口
+    - `TreeMap`类继承了`AbstractMap`抽象类，实现了`NavigableMap`、`Cloneable`、`Serializable`接口，依赖了`Comparator`、`SortedMap`、`Collection`、`Set`、`BiConsumer`、`BiFunction`接口
+    - `EnumMap`类继承了`AbstractMap`抽象类，实现了`Cloneable`、`Serializable`接口，依赖了`AbstractSet`类，`Collection`、`Set`接口
+    - `WeakHashMap`类继承了`AbstractMap`抽象类，实现了`Map`接口，依赖了`Collection`、`Set`、`Consumer`、`BiConsumer`、`BiFunction`接口
+  - `SortedMap`接口继承自`Map`接口，依赖了`Set`、`Collection`、`Comparator`接口
+    - `NavigableMap`接口继承了`SortedMap`接口，依赖了`NavigableSet`接口
+  - `Hashtable`类继承了`Dictionary`抽象类，实现了`Map`、`Cloneable`、`Serializable`接口，聚合了`Collection`、`Set`接口，依赖了`Enumeration`、`BiConsumer`、`BiFunction`接口
 
 ## Collection接口中的抽象方法
 
