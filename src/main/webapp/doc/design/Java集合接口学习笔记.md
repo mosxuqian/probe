@@ -1,11 +1,16 @@
 # Java集合接口学习笔记
 
 - `Collection`接口继承了`Iterable`接口，依赖了`Predicate`、`Spliterator`、`Stream`接口（这些均为`Java8`新增），`Iterable`接口依赖了`Iterator`接口。
-- List接口继承自`Collection`接口,依赖了`UnaryOperator`接口（`Java8`新增）、`ListIterator`、`Comparator`接口
-- Set接口继承自`Collection`接口
-- Map接口依赖了`Set`、`Collection`、`BiConsumer`、`Function`、`BiFunction`接口，`Map.Entry`是Map中的内部接口
-- SortedSet接口继承自`Set`接口，依赖了`Comparator`接口
-- SortedMap接口继承自`Map`接口，依赖了`Set`、`Collection`、`Comparator`接口
+- `AbstractCollection`抽象类实现了`AbstractCollection`接口，
+- `List`接口继承自`Collection`接口,依赖了`UnaryOperator`接口（`Java8`新增）、`ListIterator`、`Comparator`接口
+- `AbstractList`抽象类继承了`AbstractCollection`抽象类，实现了`List`接口，依赖了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
+- `AbstractSequentialList`抽象类继承了`AbstractList`抽象类
+- `ArrayList`继承了`AbstractList`抽象类，实现了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
+- `LinkedList`继承了`AbstractSequentialList`抽象类，实现了`List`、`Deque`、`Cloneable`、`Serializable`接口
+- `Set`接口继承自`Collection`接口
+- `Map`接口依赖了`Set`、`Collection`、`BiConsumer`、`Function`、`BiFunction`接口，`Map.Entry`是Map中的内部接口
+- `SortedSet`接口继承自`Set`接口，依赖了`Comparator`接口
+- `SortedMap`接口继承自`Map`接口，依赖了`Set`、`Collection`、`Comparator`接口
 
 ## Collection接口中的抽象方法
 
