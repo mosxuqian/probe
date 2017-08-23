@@ -5,6 +5,7 @@
   - `Queue`接口继承了`Collection`接口
     - `Deque`接口继承了`Queue`接口
     - `BlockingQueue`接口继承了`Queue`接口
+      - `BlockingDeque`接口继承了`BlockingQueue`、`Deque`接口
       - `TransferQueue`接口继承了`BlockingQueue`接口
   - `AbstractCollection`抽象类实现了`Collection`接口，
     - `AbstractList`抽象类继承了`AbstractCollection`抽象类，实现了`List`接口，依赖了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
@@ -15,15 +16,16 @@
       - `Vector`类继承了`AbstractList`抽象类，实现了`List`、`RandomAccess`、`Cloneable`、`Serializable`接口
         - `Stack`类继承了`Vector`类
     - `AbstractQueue`抽象类继承了`AbstractCollection`接口，实现了`Queue`接口
-      - `PriorityQueue`类继承了`AbstractQueue`接口，实现了`TransferQueue`、`Serializable`接口，聚合了`Comparator`接口
       - `SynchronousQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口，依赖了`Collection`、`Spliterator`接口
+      - `ArrayBlockingQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口
+      - `LinkedBlockingQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口
+      - `LinkedBlockingDeque`类继承了`AbstractQueue`接口，实现了`BlockingDeque`、`Serializable`接口
+      - `DelayQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`接口
+      - `PriorityQueue`类继承了`AbstractQueue`接口，实现了`TransferQueue`、`Serializable`接口，聚合了`Comparator`接口
       - `PriorityBlockingQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口，聚合了`Comparator`接口，依赖了`Collection`、`Comparator`、`Comparable`接口
-      - `LinkedBlockingQueue`类
-      - `LinkedBlockingDeque`类
-      - `ArrayBlockingQueue`类
-      - `DelayQueue`类
       - `LinkedTransferQueue`类继承了`AbstractQueue`接口，实现了`TransferQueue`、`Serializable`接口（Java7新增）
-    - `ConcurrentLinkedDeque`类继承了`AbstractCollection`抽象类，实现了`Deque`、`Serializable`接口
+    - `ConcurrentLinkedDeque`类继承了`AbstractCollection`抽象类，实现了`Deque`、`Cloneable`、`Serializable`接口
+    - `ArrayDeque`类继承了`AbstractCollection`抽象类，实现了`Deque`、`Serializable`接口
 - `Set`接口继承自`Collection`接口
   - `AbstractSet`抽象类继承了`AbstractCollection`抽象类，实现了`Set`接口
     - `HashSet`类继承了`AbstractSet`抽象类，实现了`Set`、`Cloneable`、`Serializable`接口，聚合了`HashMap`
