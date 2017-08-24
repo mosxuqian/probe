@@ -47,10 +47,10 @@
     - `WeakHashMap`类继承了`AbstractMap`抽象类，实现了`Map`接口，依赖了`Collection`、`Set`、`Consumer`、`BiConsumer`、`BiFunction`接口
     - `IdentityHashMap`类继承了`AbstractMap`抽象类，实现了`Map`、`Serializable`、`Cloneable`接口，依赖了`Collection`、`Set`、`Consumer`、`BiConsumer`、`BiFunction`接口
     - `ConcurrentHashMap`类继承了`AbstractMap`抽象类，实现了`ConcurrentMap`、`Serializable`接口，依赖了`Comparable`、`ParameterizedType`、`Collection`、`Set`、`Spliterator`、`Consumer`、`BiConsumer`、`Function`、`BiFunction`、`ToDoubleFunction`、`DoubleBinaryOperator`等接口
-      - `ConcurrentNavigableMap`接口继承了`ConcurrentHashMap`、`NavigableMap`接口，聚合了`NavigableSet`接口
     - `ConcurrentSkipListMap`类继承了`AbstractMap`抽象类，实现了`ConcurrentNavigableMap`、`Cloneable`、`Serializable`接口，聚合了`Comparator`接口，依赖了`Collection`、`Set`、`Consumer`、`BiConsumer`、`BiFunction`、`NavigableSet`接口
   - `SortedMap`接口继承自`Map`接口，依赖了`Set`、`Collection`、`Comparator`接口
     - `NavigableMap`接口继承了`SortedMap`接口，依赖了`NavigableSet`接口
+    - `ConcurrentNavigableMap`接口继承了`ConcurrentMap`、`NavigableMap`接口，聚合了`NavigableSet`接口
   - `ConcurrentMap`接口继承了`Map`接口，依赖了`BiConsumer`、`BiFunction`接口
   - `Hashtable`类继承了`Dictionary`抽象类，实现了`Map`、`Cloneable`、`Serializable`接口，聚合了`Collection`、`Set`接口，依赖了`Enumeration`、`BiConsumer`、`BiFunction`接口
     - `Properties`类继承了`Hashtable`类
