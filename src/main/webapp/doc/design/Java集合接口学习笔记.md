@@ -19,25 +19,25 @@
       - `SynchronousQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口，依赖了`Collection`、`Spliterator`接口
       - `ArrayBlockingQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口
       - `LinkedBlockingQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口
-      - `LinkedBlockingDeque`类继承了`AbstractQueue`接口，实现了`BlockingDeque`、`Serializable`接口
-      - `DelayQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`接口
-      - `PriorityQueue`类继承了`AbstractQueue`接口，实现了`TransferQueue`、`Serializable`接口，聚合了`Comparator`接口
       - `PriorityBlockingQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`、`Serializable`接口，聚合了`Comparator`接口，依赖了`Collection`、`Comparator`、`Comparable`接口
+      - `DelayQueue`类继承了`AbstractQueue`接口，实现了`BlockingQueue`接口
+      - `LinkedBlockingDeque`类继承了`AbstractQueue`接口，实现了`BlockingDeque`、`Serializable`接口
+      - `PriorityQueue`类继承了`AbstractQueue`接口
       - `LinkedTransferQueue`类继承了`AbstractQueue`接口，实现了`TransferQueue`、`Serializable`接口（Java7新增）
     - `ConcurrentLinkedDeque`类继承了`AbstractCollection`抽象类，实现了`Deque`、`Cloneable`、`Serializable`接口
     - `ArrayDeque`类继承了`AbstractCollection`抽象类，实现了`Deque`、`Serializable`接口
-- `Set`接口继承自`Collection`接口
-  - `AbstractSet`抽象类继承了`AbstractCollection`抽象类，实现了`Set`接口
-    - `HashSet`类继承了`AbstractSet`抽象类，实现了`Set`、`Cloneable`、`Serializable`接口，聚合了`HashMap`
-      - `LinkedHashSet`类继承了`HashSet`类，实现了`Set`、`Cloneable`、`Serializable`接口
-    - `TreeSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口，聚合了`NavigableMap`，依赖了`Comparator`、`SortedSet`接口
-    - `EnumSet`抽象类继承了`AbstractSet`抽象类，实现了`Cloneable`、`Serializable`接口，依赖了`Comparator`、`SortedSet`接口
-      - `RegularEnumSet`类继承了`EnumSet`抽象类
-      - `JumboEnumSet`类继承了`EnumSet`抽象类
-    - `ConcurrentSkipListSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口
-    - `CopyOnWriteArraySet`类继承了`AbstractSet`抽象类，实现了`Serializable`接口，聚合了`CopyOnWriteArrayList`类，依赖了`Predicate`、`Consumer`接口
-  - `SortedSet`接口继承自`Set`接口，依赖了`Comparator`接口
-    - `NavigableSet`接口继承自`SortedSet`接口(Java6新增)
+  - `Set`接口继承自`Collection`接口
+    - `AbstractSet`抽象类继承了`AbstractCollection`抽象类，实现了`Set`接口
+      - `HashSet`类继承了`AbstractSet`抽象类，实现了`Set`、`Cloneable`、`Serializable`接口，聚合了`HashMap`
+        - `LinkedHashSet`类继承了`HashSet`类，实现了`Set`、`Cloneable`、`Serializable`接口
+      - `TreeSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口，聚合了`NavigableMap`，依赖了`Comparator`、`SortedSet`接口
+      - `EnumSet`抽象类继承了`AbstractSet`抽象类，实现了`Cloneable`、`Serializable`接口，依赖了`Comparator`、`SortedSet`接口
+        - `RegularEnumSet`类继承了`EnumSet`抽象类
+        - `JumboEnumSet`类继承了`EnumSet`抽象类
+      - `ConcurrentSkipListSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口
+      - `CopyOnWriteArraySet`类继承了`AbstractSet`抽象类，实现了`Serializable`接口，聚合了`CopyOnWriteArrayList`类，依赖了`Predicate`、`Consumer`接口
+    - `SortedSet`接口继承自`Set`接口，依赖了`Comparator`接口
+      - `NavigableSet`接口继承自`SortedSet`接口(Java6新增)
 - `Map`接口依赖了`Set`、`Collection`、`BiConsumer`、`Function`、`BiFunction`接口，`Map.Entry`是Map中的内部接口
   - `AbstractMap`抽象类实现了`Map`接口，聚合了`Collection`、`Set`接口
     - `HashMap`类继承了`AbstractMap`抽象类，实现了`Map`、`Cloneable`、`Serializable`接口，依赖了`Collection`、`Set`接口
