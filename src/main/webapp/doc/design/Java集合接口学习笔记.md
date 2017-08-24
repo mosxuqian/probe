@@ -29,13 +29,13 @@
 - `Set`接口继承自`Collection`接口
   - `AbstractSet`抽象类继承了`AbstractCollection`抽象类，实现了`Set`接口
     - `HashSet`类继承了`AbstractSet`抽象类，实现了`Set`、`Cloneable`、`Serializable`接口，聚合了`HashMap`
-      - `LinkedHashSet`继承了`HashSet`类，实现了`Set`、`Cloneable`、`Serializable`接口
+      - `LinkedHashSet`类继承了`HashSet`类，实现了`Set`、`Cloneable`、`Serializable`接口
     - `TreeSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口，聚合了`NavigableMap`，依赖了`Comparator`、`SortedSet`接口
     - `EnumSet`抽象类继承了`AbstractSet`抽象类，实现了`Cloneable`、`Serializable`接口，依赖了`Comparator`、`SortedSet`接口
       - `RegularEnumSet`类继承了`EnumSet`抽象类
       - `JumboEnumSet`类继承了`EnumSet`抽象类
-    - `ConcurrentSkipListSet`继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口
-    - `CopyOnWriteArraySet`继承了`AbstractSet`抽象类，实现了`Serializable`接口，聚合了`CopyOnWriteArrayList`类，依赖了`Predicate`、`Consumer`接口
+    - `ConcurrentSkipListSet`类继承了`AbstractSet`抽象类，实现了`NavigableSet`、`Cloneable`、`Serializable`接口
+    - `CopyOnWriteArraySet`类继承了`AbstractSet`抽象类，实现了`Serializable`接口，聚合了`CopyOnWriteArrayList`类，依赖了`Predicate`、`Consumer`接口
   - `SortedSet`接口继承自`Set`接口，依赖了`Comparator`接口
     - `NavigableSet`接口继承自`SortedSet`接口(Java6新增)
 - `Map`接口依赖了`Set`、`Collection`、`BiConsumer`、`Function`、`BiFunction`接口，`Map.Entry`是Map中的内部接口
