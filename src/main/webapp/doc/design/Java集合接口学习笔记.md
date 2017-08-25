@@ -1,5 +1,9 @@
 # Java集合接口学习笔记
 
+Java集合框架主要由`Collection`和`Map`两个根接口及其子接口、实现类组成。
+
+## 集合类关系梳理
+
 - `Collection`接口继承了`Iterable`接口，依赖了`Predicate`、`Spliterator`、`Stream`接口（这些均为`Java8`新增），`Iterable`接口依赖了`Iterator`接口。
   - `List`接口继承自`Collection`接口,依赖了`UnaryOperator`接口（`Java8`新增）、`ListIterator`、`Comparator`接口
   - `Queue`接口继承了`Collection`接口
@@ -57,7 +61,29 @@
 - `Collections`是`Collection`的辅助工具类，依赖了上述大多数接口和类
 - `Arrays`是数组的辅助工具类，依赖了上述一些接口和类
 
-## Collection接口中的抽象方法
+## 集合UML关系图
+
+Java Collection UML类关系图如下：
+
+![Java Collection UML类关系图](http://static.blinkfox.com/Java_Collection_UML.png)
+
+Java Map UML类关系图如下：
+
+![Java Map UML类关系图](http://static.blinkfox.com/Java_Map_UML.png)
+
+## 各集合接口、类的介绍
+
+### 总体接口介绍
+
+- `Collection`：`Collection`是最基本集合接口，它定义了一组允许重复的对象。`Collection`接口派生了三个子接口`List`、`Set`和`Queue`。`Collection`所有实现类的遍历都可以使用`Iterator`接口或者是`foreach`来循环。
+  - `List`：`List`代表有序、重复的集合。
+  - `Set`：`Set`代表无序、不可重复的集合。
+  - `Queue`：`Queue`是Java 5之后增加的集合体系，表示队列集合的相关实现。
+- `Map`：`Map`则代表具有映射关系的集合。
+
+## 一些接口的主要方法梳理
+
+### Collection接口中的抽象方法
 
 - `int size()`，返回集合的大小
 - `boolean isEmpty()`，返回集合是否为空的布尔值
@@ -80,7 +106,7 @@
 - `default Stream<E> stream()`，返回一个顺序的`Stream`对象。Java8引入了Stream以实现对集合更方便地进行函数式编程。
 - `default Stream<E> parallelStream()`，返回一个可能并行的`Stream`对象。Java8新增的方法。流可以是顺序的也可以是并行的。顺序流的操作是在单线程上执行的，而并行流的操作是在多线程上并发执行的。
 
-## List接口中的额外抽象方法
+### List接口中的额外抽象方法
 
 - `boolean addAll(int index, Collection<? extends E> c)`，将指定集合`c`中的所有元素插入到指定索引位置处
 - `default void replaceAll(UnaryOperator<E> operator)`，Java8新增的使用`Lambda`的方式，通过应用`UnaryOperator`获得的结果来替换列表中的每个元素
@@ -95,11 +121,11 @@
 - `ListIterator<E> listIterator(int index)`，返回本集合中从指定索引位置开始的`ListIterator`迭代器
 - `List<E> subList(int fromIndex, int toIndex)`，返回指定开始和结束索引位置的子集合
 
-## Set接口中的额外抽象方法
+### Set接口中的额外抽象方法
 
 无
 
-## Map接口中的抽象方法
+### Map接口中的抽象方法
 
 - `boolean containsKey`，判断本Map集合中是否包含指定的key键
 - `boolean containsValue`，判断本Map集合中是否包含指定的value值
@@ -122,7 +148,7 @@
 - `default V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)`，Java8新增的默认接口方法，将`Lambda`表达式中的结果值存放到Map中，如果计算的新值为null则返回null，且移除以前有的key和value值
 - `default V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)`，Java8新增的默认接口方法，将新计算的值覆盖Map中原key对应的value值
 
-## SortedSet接口中的额外抽象方法
+### SortedSet接口中的额外抽象方法
 
 - `Comparator<? super E> comparator()`，返回本SortedSet集合中的`Comparator`比较器
 - `SortedSet<E> subSet(E fromElement, E toElement)`，获取开始元素和结束元素之间的子SortedSet集合
@@ -131,7 +157,7 @@
 - `E first()`，获取本SortedSet集合中的第一个元素
 - `E last()`，获取本SortedSet集合中的最后一个元素
 
-## SortedMap接口中的额外抽象方法
+### SortedMap接口中的额外抽象方法
 
 - `Comparator<? super K> comparator()`，返回本SortedMap集合中的`Comparator`比较器
 - `SortedMap<K,V> subMap(K fromKey, K toKey)`，获取开始key和结束key之间的子SortedMap集合
