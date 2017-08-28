@@ -84,19 +84,31 @@ Java Map UML类关系图如下：
     - `CopyOnWriteArrayList`：底层使用`Copy-On-Write`的优化策略实现，适用于**读多写少**的场景，同`ArrayList`功能相似，线程安全。`CopyOnWriteArrayList`在某些情况下比`Collections.synchronizedList(List list)`有更好的性能。缺点是：内存占用大和数据一致性问题，只能保证最终一致性。
   - `Set`：`Set`代表无序、不可重复的集合。
     - `HastSet`：底层使用`Hash`表的来实现，内部使用了`HashMap`，排列无序不可重复，存取速度快，线程不安全。
-      - `LinkedHashSet`：底层采用`Hash`表存储，并用双向链表记录插入顺序，排列有序不可重复，存取速度较`HashSet`略慢，比`TreeSet`快,线程不安全。
+      - `LinkedHashSet`：底层采用`Hash`表存储，并用双向链表记录插入顺序，排列有序不可重复，存取速度较`HashSet`略慢，比`TreeSet`快，线程不安全。
     - `TreeSet`：底层使用二叉树来实现，内部使用了`NavigableMap`，按自然顺序或者自定义顺序存放、不可重复，线程不安全。
     - `CopyOnWriteArraySet`：底层使用`Copy-On-Write`的优化策略实现，适用于**读多写少**的场景，内部使用了`CopyOnWriteArrayList`，同`HastSet`功能相似，线程安全。
     - `ConcurrentSkipListSet`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeSet`功能相似，线程安全。
     - `EnumSet`：是抽象类，只能用来存储Enum常量或其子类，不能存储其它类型，`EnumSet`有两种实现方式，`RegularEnumSet`和`JumboEnumSet`，但是这两种实现方式是包**私有**的，不能在包外访问，因此必须使用工厂方法来创建并返回`EnumSet`实例，不能通过构造函数来创建。`EnumSet`中提供了多种创建`EnumSet`实例的静态工厂方法，例如`of`方法（进行了函数重载），`copyOf`方法，`noneOf`方法等。存储效率快，线程不安全。存储枚举常量时使用`EnumSet`而不要用`HashSet`。
-  - `Queue`：`Queue`是Java 5之后增加的集合体系，表示**队列**集合的相关实现。
-- `Map`：`Map`则代表具有映射关系的集合。
+  - `Queue`：`Queue`是Java 5之后增加的集合体系，表示**队列**集合的相关实现，大多遵循**先进先出**(FIFO, First-In-First-Out)的模式。
+    - `PriorityQueue`：即优先队列，底层基于**优先堆的一个无界队列**来实现，无界但可选容量界限。这个优先队列中的元素可以默认自然排序或者通过提供的`Comparator`（比较器）在队列实例化的时排序，而不是先进先出。不允许空值、不支持`non-comparable`（不可比较）的对象，每次从队列中取出的是具有最高优先权的元素，线程不安全。
+    - `ArrayBlockingQueue`：底层基于**定长数组**的阻塞队列实现，即是线程安全的有界阻塞队列。`ArrayBlockingQueue`内部通过**互斥锁**保护竞争资源，实现了多线程对竞争资源的互斥访问。队列中的锁是没有分离的，所以在添加的同时就不能读取，读取的同时就不能添加，所以锁方面性能不如`LinkedBlockingQueue`。
+    - `LinkedBlockingQueue`：即链接队列，底层基于**单向链表**的阻塞队列实现，无界但可选容量界限，线程安全。队列中的锁是分离的，即添加用的是`putLock`，获取是`takeLock`，所以在添加获取方面理论上性能会高于`ArrayBlockingQueue`。所以`LinkedBlockingQueue`更适合实现生产者-消费者队列。
+    - `PriorityBlockingQueue`：即优先阻塞队列，底层基于**优先堆的一个无界队列**来实现，无界但可选容量界限的阻塞队列，线程安全，功能同`PriorityQueue`、`LinkedBlockQueue`相似。其所含对象的排序不是先进先出，而是依据对象的自然排序顺序或者是构造函数的`Comparator`决定的顺序。
+    - `SynchronousQueue`：即同步队列，是一种线程安全无缓冲的无界阻塞队列。其操作必须是放和取交替完成的，即每个`put`必须等待一个`take`，反之亦然。
+    - `DelayQueue`：即延迟队列，是一种有序无界阻塞队列，只有在延迟期满时才能从中提取元素，线程安全。
+    - `ArrayDeque`：底层采用了循环数组的方式来完成双端队列的实现，无限扩展且可选容量。Java已不推荐使用`Stack`，而是推荐使用更高效的`ArrayDeque`来实现栈的功能，非线程安全。
+    - `LinkedBlockingDeque`：底层采用了**双向链表**实现的**双端阻塞并发**队列，无限扩展且可选容量。该阻塞队列同时支持`FIFO`和`FILO`两种操作方式，即可以从队列的头和尾同时操作(插入/删除)，且线程安全。
+    - `ConcurrentLinkedDeque`：底层采用了**双向链表**实现的**双端非阻塞并发**队列，无限扩展且可选容量。该队列同时支持`FIFO`和`FILO`两种操作方式，即可以从队列的头和尾同时操作(插入/删除)；
+    - `LinkedTransferQueue`：底层采用了**单向链表**实现的**无界传输阻塞**队列，先进先出，无限扩展且可选容量线程安全。
   - `HashMap`：底层是用**链表数组**，`Java8`后又加了**红黑树**来实现，排列无序、键不可重复可为null、值可重复可为null，存取速度快，线程不安全。
   - `HashTable`：底层是用**链表数组**，排列无序、键不可重复不可为null、值可重复不可为null，存取速度较`HashMap`慢，线程安全。
   - `TreeMap`：底层使用二叉树来实现，内部使用了`Comparator`，按自然顺序或自定义顺序存放键，键不可重复不可为null、值可重复可为null，存取速度较`HashMap`慢，线程不安全。
   - `ConcurrentSkipListMap`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeMap`功能相似，是一个并发的、可排序的Map，线程安全。因此它可以在多线程环境中弥补`ConcurrentHashMap`不支持排序的问题。
 
-> **注意**：跳表是一种采用了用空间换时间思想的数据结构。它会随机地将一些节点提升到更高的层次，以创建一种逐层的数据结构，以提高操作的速度。
+#### 一些概念解释：
+
+- 跳表是一种采用了用空间换时间思想的数据结构。它会随机地将一些节点提升到更高的层次，以创建一种逐层的数据结构，以提高操作的速度。
+- 阻塞队列和非阻塞的区别：如果队列里面已经放满了，如果是阻塞队列那么线程会一直阻塞，而非阻塞对垒则会抛出异常.
 
 #### 一些数据结构的优缺点：
 
