@@ -83,9 +83,9 @@ Java Map UML类关系图如下：
     - `LinkedList`：底层使用双向循环链表的数据结构来实现，排列有序可重复，查询速度慢、增删数据快，线程不安全。
     - `CopyOnWriteArrayList`：底层使用`Copy-On-Write`的优化策略实现，适用于**读多写少**的场景，同`ArrayList`功能相似，线程安全。`CopyOnWriteArrayList`在某些情况下比`Collections.synchronizedList(List list)`有更好的性能。缺点是：内存占用大和数据一致性问题，只能保证最终一致性。
   - `Set`：`Set`代表无序、不可重复的集合。
-    - `HastSet`：底层使用`Hash`表的来实现，内部使用了`HashMap`，排列无序不可重复，存取速度快，线程不安全。
+    - `HastSet`：底层使用`Hash`表来实现，内部使用了`HashMap`，排列无序不可重复，存取速度快，线程不安全。
       - `LinkedHashSet`：底层采用`Hash`表存储，并用双向链表记录插入顺序，排列有序不可重复，存取速度较`HashSet`略慢，比`TreeSet`快，线程不安全。
-    - `TreeSet`：底层使用二叉树来实现，内部使用了`NavigableMap`，按自然顺序或者自定义顺序存放、不可重复，线程不安全。
+    - `TreeSet`：底层使用红黑树来实现，内部使用了`NavigableMap`，按自然顺序或者自定义顺序存放、不可重复，线程不安全。
     - `CopyOnWriteArraySet`：底层使用`Copy-On-Write`的优化策略实现，适用于**读多写少**的场景，内部使用了`CopyOnWriteArrayList`，同`HastSet`功能相似，线程安全。
     - `ConcurrentSkipListSet`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeSet`功能相似，线程安全。
     - `EnumSet`：是抽象类，只能用来存储Enum常量或其子类，不能存储其它类型，`EnumSet`有两种实现方式，`RegularEnumSet`和`JumboEnumSet`，但是这两种实现方式是包**私有**的，不能在包外访问，因此必须使用工厂方法来创建并返回`EnumSet`实例，不能通过构造函数来创建。`EnumSet`中提供了多种创建`EnumSet`实例的静态工厂方法，例如`of`方法（进行了函数重载），`copyOf`方法，`noneOf`方法等。存储效率快，线程不安全。存储枚举常量时使用`EnumSet`而不要用`HashSet`。
@@ -104,6 +104,7 @@ Java Map UML类关系图如下：
   - `HashMap`：底层是用**链表数组**，`Java8`后又加了**红黑树**来实现，排列无序、键不可重复可为null、值可重复可为null，存取速度快，线程不安全。
     - `LinkedHashMap`：底层是用**链表数组**存储，并用双向链表记录插入顺序，插入的键可重复有序可为null、值可重复可为null，存取速度快较`HashMap`略慢，比`TreeMap`快，线程不安全。
   - `HashTable`：底层是用**链表数组**，排列无序、键不可重复不可为null、值可重复不可为null，存取速度较`HashMap`慢，线程安全。
+    - `Properties`：是`HashTable`的子类，是<String,String>的映射，比`HashTable`多了`load`、`store`两个方法，线程安全。
   - `TreeMap`：底层使用二叉树来实现，内部使用了`Comparator`，按自然顺序或自定义顺序存放键，键不可重复不可为null、值可重复可为null，存取速度较`HashMap`慢，线程不安全。
   - `EnumMap`：底层使用数组来实现，是专门为枚举类型量身定做的Map，性能更好。只能接收同一枚举类型的实例作为键值，并且由于枚举类型实例的数量相对固定并且有限，所以`EnumMap`使用数组来存放与枚举类型对应的值，线程不安全。
   - `WeakHashMap`：同`HashMap`基本相似。区别在于，`HashMap`的`key`保留对象的强引用，这意味着只要该`HashMap`对象不被销毁，该`HashMap`对象所有key所引用的对象不会被垃圾回收，`HashMap`也不会自动删除这些`key`所对应的`key-value`对象；但`WeakHashMap`的`key`只保留对实际对象的弱引用，这意味着当垃圾回收了该`key`所对应的实际对象后，`WeakHashMap`会自动删除该`key`对应的`key-value`对象。
@@ -111,12 +112,12 @@ Java Map UML类关系图如下：
   - `ConcurrentHashMap`：底层使用**锁分段**技术来实现线程安全，首先将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。`ConcurrentHashMap`是由`Segment`数组结构和`HashEntry`数组结构组成。`Segment`是一种可重入锁`ReentrantLock`，在`ConcurrentHashMap`里扮演锁的角色，`HashEntry`则用于存储键值对数据。一个`ConcurrentHashMap`里包含一个`Segment`数组，`Segment`的结构和`HashMap`类似，是一种数组和链表结构， 一个`Segment`里包含一个`HashEntry`数组，每个`HashEntry`是一个链表结构的元素， 每个`Segment`守护者一个`HashEntry`数组里的元素,当对`HashEntry`数组的数据进行修改时，必须首先获得它对应的`Segment`锁。
   - `ConcurrentSkipListMap`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeMap`功能相似，是一个并发的、可排序的Map，线程安全。因此它可以在多线程环境中弥补`ConcurrentHashMap`不支持排序的问题。
 
-#### 一些概念解释
+### 一些概念解释
 
 - **跳表**：是一种采用了用空间换时间思想的数据结构。它会随机地将一些节点提升到更高的层次，以创建一种逐层的数据结构，以提高操作的速度。
 - **阻塞队列和非阻塞的区别**：如果队列里面已经放满了，如果是阻塞队列那么线程会一直阻塞，而非阻塞对垒则会抛出异常。
 
-#### 一些数据结构的优缺点
+### 一些数据结构的优缺点
 
 - **Hash表**：插入、查找最快，为O(1)；如使用链表实现则可实现无锁；数据有序化需要显式的排序操作。
 - **红黑树**：插入、查找为O(logn)，但常数项较小；无锁实现的复杂性很高，一般需要加锁；数据天然有序。
