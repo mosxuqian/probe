@@ -76,10 +76,33 @@ Java Map UML类关系图如下：
 ### 总体接口介绍
 
 - `Collection`：`Collection`是最基本集合接口，它定义了一组允许重复的对象。`Collection`接口派生了三个子接口`List`、`Set`和`Queue`。`Collection`所有实现类的遍历都可以使用`Iterator`接口或者是`foreach`来循环。
-  - `List`：`List`代表有序、重复的集合。
+  - `List`：`List`代表有序、可重复的集合。
+    - `ArrayList`：底层使用数组的形式来实现，排列有序可重复，查询速度快、增删数据慢，线程不安全，效率高。`ArrayList`创建时的大小为`0`；当加入第一个元素时，进行第一次扩容时，默认容量大小为`10`，每次扩容都以当前数组大小的1.5倍去扩容。
+    - `Vector`：底层使用数组的形式来实现，排列有序可重复，查询速度快、增删数据慢，线程安全，效率低。`Vector`创建时的默认大小为`10`；`Vector`每次扩容都以当前数组大小的`2`倍去扩容。当指定了`capacityIncrement`之后，每次扩容仅在原先基础上增加`capacityIncrement`个单位空间。`ArrayList`和`Vector`的`add`、`get`、`size`方法的复杂度都为`O(1)`，`remove`方法的复杂度为`O(n)`。
+      - `Stack`：`Vector`的一个子类，是标准的**先进后出**(FILO, First In Last Out)的栈。底层通过数组实现的，线程安全。
+    - `LinkedList`：底层使用双向循环链表的数据结构来实现，排列有序可重复，查询速度慢、增删数据快，线程不安全。
+    - `CopyOnWriteArrayList`：底层使用`Copy-On-Write`的优化策略实现，适用于**读多写少**的场景，同`ArrayList`功能相似，线程安全。`CopyOnWriteArrayList`在某些情况下比`Collections.synchronizedList(List list)`有更好的性能。缺点是：内存占用大和数据一致性问题，只能保证最终一致性。
   - `Set`：`Set`代表无序、不可重复的集合。
-  - `Queue`：`Queue`是Java 5之后增加的集合体系，表示队列集合的相关实现。
+    - `HastSet`：底层使用`Hash`表的来实现，内部使用了`HashMap`，排列无序不可重复，存取速度快，线程不安全。
+      - `LinkedHashSet`：底层采用`Hash`表存储，并用双向链表记录插入顺序，排列有序不可重复，存取速度较`HashSet`略慢，比`TreeSet`快,线程不安全。
+    - `TreeSet`：底层使用二叉树来实现，内部使用了`NavigableMap`，按自然顺序或者自定义顺序存放、不可重复，线程不安全。
+    - `CopyOnWriteArraySet`：底层使用`Copy-On-Write`的优化策略实现，适用于**读多写少**的场景，内部使用了`CopyOnWriteArrayList`，同`HastSet`功能相似，线程安全。
+    - `ConcurrentSkipListSet`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeSet`功能相似，线程安全。
+    - `EnumSet`：是抽象类，只能用来存储Enum常量或其子类，不能存储其它类型，`EnumSet`有两种实现方式，`RegularEnumSet`和`JumboEnumSet`，但是这两种实现方式是包**私有**的，不能在包外访问，因此必须使用工厂方法来创建并返回`EnumSet`实例，不能通过构造函数来创建。`EnumSet`中提供了多种创建`EnumSet`实例的静态工厂方法，例如`of`方法（进行了函数重载），`copyOf`方法，`noneOf`方法等。存储效率快，线程不安全。存储枚举常量时使用`EnumSet`而不要用`HashSet`。
+  - `Queue`：`Queue`是Java 5之后增加的集合体系，表示**队列**集合的相关实现。
 - `Map`：`Map`则代表具有映射关系的集合。
+  - `HashMap`：底层是用**链表数组**，`Java8`后又加了**红黑树**来实现，排列无序、键不可重复可为null、值可重复可为null，存取速度快，线程不安全。
+  - `HashTable`：底层是用**链表数组**，排列无序、键不可重复不可为null、值可重复不可为null，存取速度较`HashMap`慢，线程安全。
+  - `TreeMap`：底层使用二叉树来实现，内部使用了`Comparator`，按自然顺序或自定义顺序存放键，键不可重复不可为null、值可重复可为null，存取速度较`HashMap`慢，线程不安全。
+  - `ConcurrentSkipListMap`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeMap`功能相似，是一个并发的、可排序的Map，线程安全。因此它可以在多线程环境中弥补`ConcurrentHashMap`不支持排序的问题。
+
+> **注意**：跳表是一种采用了用空间换时间思想的数据结构。它会随机地将一些节点提升到更高的层次，以创建一种逐层的数据结构，以提高操作的速度。
+
+#### 一些数据结构的优缺点：
+
+- **Hash表**：插入、查找最快，为O(1)；如使用链表实现则可实现无锁；数据有序化需要显式的排序操作。
+- **红黑树**：插入、查找为O(logn)，但常数项较小；无锁实现的复杂性很高，一般需要加锁；数据天然有序。
+- **SkipList**：插入、查找为O(logn)，但常数项比红黑树要大；底层结构为链表，可无锁实现；数据天然有序。
 
 ## 一些接口的主要方法梳理
 
