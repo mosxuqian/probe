@@ -98,14 +98,14 @@ Java Map UML类关系图如下：
     - `DelayQueue`：即延迟队列，是一种有序无界阻塞队列，只有在延迟期满时才能从中提取元素，线程安全。
     - `ArrayDeque`：底层采用了循环数组的方式来完成双端队列的实现，无限扩展且可选容量。Java已不推荐使用`Stack`，而是推荐使用更高效的`ArrayDeque`来实现栈的功能，非线程安全。
     - `LinkedBlockingDeque`：底层采用了**双向链表**实现的**双端阻塞并发**队列，无限扩展且可选容量。该阻塞队列同时支持`FIFO`和`FILO`两种操作方式，即可以从队列的头和尾同时操作(插入/删除)，且线程安全。
-    - `ConcurrentLinkedDeque`：底层采用了**双向链表**实现的**双端非阻塞并发**队列，无限扩展且可选容量。该队列同时支持`FIFO`和`FILO`两种操作方式，即可以从队列的头和尾同时操作(插入/删除)；
+    - `ConcurrentLinkedDeque`：底层采用了**双向链表**实现的**双端非阻塞并发**队列，无限扩展且可选容量。该队列同时支持`FIFO`和`FILO`两种操作方式，即可以从队列的头和尾同时操作(插入/删除)，且线程安全。
     - `LinkedTransferQueue`：底层采用了**单向链表**实现的**无界传输阻塞**队列，先进先出，无限扩展且可选容量线程安全。
 - `Map`：`Map`代表具有映射关系的集合。
-  - `HashMap`：底层是用**链表数组**，`Java8`后又加了**红黑树**来实现，排列无序、键不可重复可为null、值可重复可为null，存取速度快，线程不安全。
-    - `LinkedHashMap`：底层是用**链表数组**存储，并用双向链表记录插入顺序，插入的键可重复有序可为null、值可重复可为null，存取速度快较`HashMap`略慢，比`TreeMap`快，线程不安全。
-  - `HashTable`：底层是用**链表数组**，排列无序、键不可重复不可为null、值可重复不可为null，存取速度较`HashMap`慢，线程安全。
+  - `HashMap`：底层是用**链表数组**，`Java8`后又加了**红黑树**来实现，键无序不可重复可为null、值可重复可为null，存取速度快，线程不安全。
+    - `LinkedHashMap`：底层是用**链表数组**存储，并用双向链表记录插入顺序，键有序不可重复可为null、值可重复可为null，存取速度快较`HashMap`略慢，比`TreeMap`快，线程不安全。
+  - `HashTable`：底层是用**链表数组**，键无序不可重复可为null、值可重复可为null，存取速度较`HashMap`慢，线程安全。
     - `Properties`：是`HashTable`的子类，是<String,String>的映射，比`HashTable`多了`load`、`store`两个方法，线程安全。
-  - `TreeMap`：底层使用二叉树来实现，内部使用了`Comparator`，按自然顺序或自定义顺序存放键，键不可重复不可为null、值可重复可为null，存取速度较`HashMap`慢，线程不安全。
+  - `TreeMap`：底层使用红黑树来实现，内部使用了`Comparator`，按自然顺序或自定义顺序存放键，键不可重复不可为null、值可重复可为null，存取速度较`HashMap`慢，线程不安全。
   - `EnumMap`：底层使用数组来实现，是专门为枚举类型量身定做的Map，性能更好。只能接收同一枚举类型的实例作为键值，并且由于枚举类型实例的数量相对固定并且有限，所以`EnumMap`使用数组来存放与枚举类型对应的值，线程不安全。
   - `WeakHashMap`：同`HashMap`基本相似。区别在于，`HashMap`的`key`保留对象的强引用，这意味着只要该`HashMap`对象不被销毁，该`HashMap`对象所有key所引用的对象不会被垃圾回收，`HashMap`也不会自动删除这些`key`所对应的`key-value`对象；但`WeakHashMap`的`key`只保留对实际对象的弱引用，这意味着当垃圾回收了该`key`所对应的实际对象后，`WeakHashMap`会自动删除该`key`对应的`key-value`对象。
   - `IdentityHashMap`：同`HashMap`基本相似。区别在于，在处理两个`key`相等时，对于普通`HashMap`而言，只要`key1`和`key2`通过`equals`比较返回`true`时就认为key相同；在`IdentityHashMap`中，当且仅当两个`key`严格相等时(`key1 = key2`)时才认为两个`key`相同。
