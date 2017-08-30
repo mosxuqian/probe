@@ -73,8 +73,6 @@ Java Map UML类关系图如下：
 
 ## 各集合接口、类的介绍
 
-### 总体接口介绍
-
 - `Collection`：`Collection`是最基本集合接口，它定义了一组允许重复的对象。`Collection`接口派生了三个子接口`List`、`Set`和`Queue`。`Collection`所有实现类的遍历都可以使用`Iterator`接口或者是`foreach`来循环。
   - `List`：`List`代表有序、可重复的集合。
     - `ArrayList`：底层使用数组的形式来实现，排列有序可重复，查询速度快、增删数据慢，线程不安全，效率高。`ArrayList`创建时的大小为`0`；当加入第一个元素时，进行第一次扩容时，默认容量大小为`10`，每次扩容都以当前数组大小的1.5倍去扩容。
@@ -111,6 +109,10 @@ Java Map UML类关系图如下：
   - `IdentityHashMap`：同`HashMap`基本相似。区别在于，在处理两个`key`相等时，对于普通`HashMap`而言，只要`key1`和`key2`通过`equals`比较返回`true`时就认为key相同；在`IdentityHashMap`中，当且仅当两个`key`严格相等时(`key1 = key2`)时才认为两个`key`相同。
   - `ConcurrentHashMap`：底层使用**锁分段**技术来实现线程安全，首先将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。`ConcurrentHashMap`是由`Segment`数组结构和`HashEntry`数组结构组成。`Segment`是一种可重入锁`ReentrantLock`，在`ConcurrentHashMap`里扮演锁的角色，`HashEntry`则用于存储键值对数据。一个`ConcurrentHashMap`里包含一个`Segment`数组，`Segment`的结构和`HashMap`类似，是一种数组和链表结构， 一个`Segment`里包含一个`HashEntry`数组，每个`HashEntry`是一个链表结构的元素， 每个`Segment`守护者一个`HashEntry`数组里的元素,当对`HashEntry`数组的数据进行修改时，必须首先获得它对应的`Segment`锁。
   - `ConcurrentSkipListMap`：底层使用**跳跃列表**来实现，适用于**高并发**的场景，内部使用了`ConcurrentNavigableMap`，同`TreeMap`功能相似，是一个并发的、可排序的Map，线程安全。因此它可以在多线程环境中弥补`ConcurrentHashMap`不支持排序的问题。
+
+Java集合框架功能介绍思维导图如下：
+
+![Java集合框架功能介绍思维导图](http://static.blinkfox.com/Java_collections_mind.png)
 
 ### 一些概念解释
 
