@@ -190,3 +190,77 @@ int capacity = 1;
 所以说，当数组长度为`2`的`n`次幂的时候，不同的`key`算得的`index`相同的几率较小，那么数据在数组上分布 就比较均匀，也就是说碰撞的几率小，相对的，查询的时候就不用遍历某个位置上的链表，这样查询效率也就较高了。
 
 根据上面`put`方法的源代码可以看出，当程序试图将一个`key-value`对放入 HashMap 中时，程序首先根据该`key`的`hashCode()`返回值决定该`Entry`的存储位置：如果两个`Entry`的`key`的`hashCode()`返回值相同，那它们的存储位置相同。如果这两个`Entry`的`key`通过 `equals`比较返回 true，新添加`Entry`的`value`将覆盖集合 中原有`Entry`的`value`，但`key`不会覆盖。如果这两个`Entry`的`key`通过`equals`比较返回 false，新添加的`Entry`将与集合中原有`Entry`形成`Entry`链，而且新添加的`Entry`位于`Entry`链的头部——具体说明继续看`addEntry()`方法的说明。
+
+### 读取
+
+```java
+/**
+* Returns the value to which the specified key is mapped,
+* or {@code null} if this map contains no mapping for the key.
+*
+* <p>More formally, if this map contains a mapping from a key
+* {@code k} to a value {@code v} such that {@code (key==null ? k==null :
+* key.equals(k))}, then this method returns {@code v}; otherwise
+* it returns {@code null}. (There can be at most one such mapping.)
+*
+* <p>A return value of {@code null} does not <i>necessarily</i>
+* indicate that the map contains no mapping for the key; it's also
+* possible that the map explicitly maps the key to {@code null}.
+* The {@link #containsKey containsKey} operation may be used to
+* distinguish these two cases.
+*
+* @see #put(Object, Object)
+*/
+public V get(Object key) {
+    if (key == null)
+        return getForNullKey();
+    Entry<K,V> entry = getEntry(key);
+
+    return null == entry ? null : entry.getValue();
+}
+
+final Entry<K,V> getEntry(Object key) {
+    int hash = (key == null) ? 0 : hash(key);
+    for (Entry<K,V> e = table[indexFor(hash, table.length)];
+            e != null;
+            e = e.next) {
+    Object k;
+    if (e.hash == hash &&
+        ((k = e.key) == key || (key != null && key.equals(k))))
+        return e;
+    }
+    return null;
+}
+```
+
+有了上面存储时的`hash`算法作为基础，理解起来这段代码就很容易了。从上面的源代码中可以看出：**从 HashMap 中`get`元素时，首先计算`key`的`hashCode`，找到数组中对应位置的某一元素，然后通过`key`的`equals`方法在对应位置的链表中找到需要的元素**。
+
+### 归纳
+
+**简单地说，HashMap 在底层将`key-value`当成一个整体进行处理，这个整体就是一个`Entry`对象。HashMap底层采用一个`Entry[]`数组来保存所有的`key-value`对，当需要存储一个`Entry`对象时，会根据`hash`算法来决定其在数组中的存储位置，在根据`equals`方法决定其在该数组位置上的链表中的存储位置；当需要取出一个`Entry`时，也会根据`hash`算法找到其在数组中的存储位置，再根据`equals`方法从该位置上的链表中取出该`Entry`**。
+
+## HashMap 的 resize（rehash）
+
+当 HashMap 中的元素越来越多的时候，`hash`冲突的几率也就越来越高，因为数组的长度是固定的。所以为了提高查询的效率，就要对 HashMap 的数组进行扩容，数组扩容这个操作也会出现在 ArrayList 中，这是一个常用的操作，而在 HashMap 数组扩容之后，最消耗性能的点就出现了：**原数组中的数据必须重新计算其在新数组中的位置，并放进去，这就是`resize`**。
+那么 HashMap 什么时候进行扩容呢？当 HashMap 中的元素个数超过数组大小`loadFactor`时，就会进行数组扩容，`loadFactor`的默认值为`0.75`，这是一个折中的取值。也就是说，默认情况下，数组大小为`16`，那么当
+HashMap 中元素个数超过`16 * 0.75 = 12`的时候，就把数组的大小扩展为`2*16=32`，即扩大一倍，然后重新计算每个元素在数组中的位置，而这是一个非常消耗性能的操作，所以如果我们已经预知 HashMap 中元素的个数，那么预设元素的个数能够有效的提高 HashMap 的性能。
+
+## HashMap 的性能参数
+
+HashMap 包含如下几个构造器：
+
+- `HashMap()`：构建一个初始容量为`16`，负载因子为`0.75`的 HashMap。
+- `HashMap(int initialCapacity)`：构建一个初始容量为`initialCapacity`，负载因子为`0.75`的 HashMap。
+- `HashMap(int initialCapacity, float loadFactor)`：以指定初始容量、指定的负载因子创建一个 HashMap。
+
+HashMap 的基础构造器`HashMap(int initialCapacity, float loadFactor)`带有两个参数，它们是初始容量`initialCapacity`和负载因子`loadFactor`。
+
+**负载因子`loadFactor`衡量的是一个散列表的空间的使用程度，负载因子越大表示散列表的装填程度越高，反之愈小**。对于使用链表法的散列表来说，查找一个元素的平均时间是`O(1+a)`，因此如果负载因子越大，对空间的利用更充分，然而后果是查找效率的降低；如果负载因子太小，那么散列表的数据将过于稀疏，对空间造成严重浪费。
+
+HashMap 的实现中，通过 threshold 字段来判断 HashMap 的最大容量：
+
+```java
+threshold = (int)(capacity * loadFactor);
+```
+
+结合负载因子的定义公式可知，`threshold`就是在此`loadFactor`和`capacity`对应下允许的最大元素数目，超过这个数目就重新`resize`，以降低实际的负载因子。默认的的负载因子`0.75`是对空间和时间效率的一个平衡选择。当容量超出此最大容量时，`resize`后的 HashMap 容量是之前容量的两倍。
