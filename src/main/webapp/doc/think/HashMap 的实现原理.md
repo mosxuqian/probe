@@ -307,3 +307,55 @@ final Entry<K,V> nextEntry() {
 ### 解决方案
 
 在上文中也提到，`Fail-Fast`机制，是一种错误检测机制。它只能被用来检测错误，因为 JDK 并不保证`Fail-Fast`机制一定会发生。若在多线程环境下使用`Fail-Fast`机制的集合，建议使用`java.util.concurrent`包下的类去取代`java.util`包下的类。
+
+## HashMap的几种遍历方式
+
+在java中遍历Map有不少的方法。我们看一下最常用的方法及其优缺点。
+
+## 使用Iterator遍历
+
+```java
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+Iterator<Map.Entry<Integer, Integer>> entries = map.entrySet().iterator();
+while (entries.hasNext()) {
+    Map.Entry<Integer, Integer> entry = entries.next();
+    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+}
+```
+
+该种方式看起来冗余却有其优点所在。首先，在老版本java中这是惟一遍历map的方式。另一个好处是，你可以在遍历时调用`iterator.remove()`来删除entries，另两个方法则不能。从性能方面看，该方法类同于`for-each`中使用`entrySet`遍历的性能。
+
+## 在for-each中使用entrySet来遍历
+
+```java
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+}
+```
+
+`for-each`循环在`java 5`中被引入所以该方法只能应用于`java 5`或更高的版本中。如果你遍历的是一个null的map对象，`for-each`循环将抛出`NullPointerException`，因此在遍历前你总是应该检查空引用。
+
+## 在for-each中使用keySet来遍历
+
+```java
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+//遍历map中的键
+for (Integer key : map.keySet()) {
+    System.out.println("Key = " + key);
+}
+```
+
+该遍历方式仅用于获取Map中的key，比entrySet遍历在性能上稍好（快了10%），而且代码更加干净。但是如果再该循环中通过键来查找值，则它会很慢且无效率。因为从键取值是耗时的操作（与方法二相比，在不同的Map实现中该方法慢了20%~200%）。
+
+## 在for-each中使用values来遍历
+
+```java
+Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+//遍历map中的值
+for (Integer value : map.values()) {
+    System.out.println("Value = " + value);
+}
+```
+
+该遍历方式仅用于获取Map中的value，比entrySet遍历在性能上稍好（快了10%），而且代码更加干净。
