@@ -264,3 +264,46 @@ threshold = (int)(capacity * loadFactor);
 ```
 
 结合负载因子的定义公式可知，`threshold`就是在此`loadFactor`和`capacity`对应下允许的最大元素数目，超过这个数目就重新`resize`，以降低实际的负载因子。默认的的负载因子`0.75`是对空间和时间效率的一个平衡选择。当容量超出此最大容量时，`resize`后的 HashMap 容量是之前容量的两倍。
+
+## Fail-Fast 机制
+
+### 原理
+
+我们知道`java.util.HashMap`不是线程安全的，因此如果在使用迭代器的过程中有其他线程修改了map，那么将抛出`ConcurrentModificationException`，这就是所谓`Fail-Fast`策略。
+
+`Fail-Fast`机制是 java 集合(Collection)中的一种错误机制。 当多个线程对同一个集合的内容进行操作时，就可能会产生`Fail-Fast`事件。
+
+例如：当某一个线程 A 通过`iterator`去遍历某集合的过程中，若该集合的内容被其他线程所改变了；那么线程A访问集合时，就会抛出`ConcurrentModificationException`异常，产生`Fail-Fast`事件。
+
+这一策略在源码中的实现是通过`modCount`域，`modCount`顾名思义就是修改次数，对 HashMap 内容（当然不仅仅是 HashMap 才会有，其他例如 ArrayList 也会）的修改都将增加这个值（大家可以再回头看一下其源码，在很多操作中都有`modCount++`这句），那么在迭代器初始化过程中会将这个值赋给迭代器的`expectedModCount`。
+
+```java
+HashIterator() {
+    expectedModCount = modCount;
+    if (size > 0) { // advance to first entry
+        Entry[] t = table;
+        while (index < t.length && (next = t[index++]) == null)
+            ;
+    }
+}
+```
+
+在迭代过程中，判断`modCount`跟`expectedModCount`是否相等，如果不相等就表示已经有其他线程修改了Map。
+
+> **注意**：`modCount`声明为`volatile`，保证线程之间修改的可见性。
+
+```java
+final Entry<K,V> nextEntry() {
+    if (modCount != expectedModCount)
+        throw new ConcurrentModificationException();
+```
+
+在 HashMap 的 API 中指出：
+
+由所有 HashMap 类的**collection 视图方法**所返回的迭代器都是快速失败的：在迭代器创建之后，如果从结构上对映射进行修改，除非通过迭代器本身的`remove`方法，其他任何时间任何方式的修改，迭代器都将抛出`ConcurrentModificationException`。因此，面对并发的修改，迭代器很快就会完全失败，而不冒在将来不确定的时间发生任意不确定行为的风险。
+
+> **注意**：迭代器的快速失败行为不能得到保证，一般来说，存在非同步的并发修改时，不可能作出任何坚决的保证。快速失败迭代器尽最大努力抛出 ConcurrentModificationException。因此，编写依赖于此异常的程序的做法是错误的，正确做法是：迭代器的快速失败行为应该仅用于检测程序错误。
+
+### 解决方案
+
+在上文中也提到，`Fail-Fast`机制，是一种错误检测机制。它只能被用来检测错误，因为 JDK 并不保证`Fail-Fast`机制一定会发生。若在多线程环境下使用`Fail-Fast`机制的集合，建议使用`java.util.concurrent`包下的类去取代`java.util`包下的类。
