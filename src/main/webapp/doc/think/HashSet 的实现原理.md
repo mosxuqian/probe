@@ -148,3 +148,5 @@ public Object clone() {
 ## 相关说明
 
 对于 HashSet 中保存的对象，请注意正确重写其`equals`和`hashCode`方法，以保证放入的对象的唯一性。
+
+来自：[极客学院Wiki](http://wiki.jikexueyuan.com/project/java-collection/hashset.html)

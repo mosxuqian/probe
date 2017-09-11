@@ -359,3 +359,5 @@ for (Integer value : map.values()) {
 ```
 
 该遍历方式仅用于获取Map中的value，比entrySet遍历在性能上稍好（快了10%），而且代码更加干净。
+
+来自：[极客学院Wiki](http://wiki.jikexueyuan.com/project/java-collection/hashmap.html)

@@ -250,3 +250,5 @@ Iterator<Entry<String, String>> it2 = table.entrySet().iterator();
 - HashTable 基于`Dictionary`类，而 HashMap 是基于`AbstractMap`。`Dictionary`是任何可将键映射到相应值的类的抽象父类，而`AbstractMap`是基于`Map`接口的实现，它以最大限度地减少实现此接口所需的工作。
 - HashMap 的`key`和`value`都允许为`null`，而 Hashtable 的`key`和`value`都不允许为`null`。HashMap 遇到`key`为`null`的时候，调用`putForNullKey`方法进行处理，而对`value`没有处理；Hashtable遇到`null`，直接返回`NullPointerException`。
 - Hashtable 方法是同步，而HashMap则不是。我们可以看一下源码，Hashtable 中的几乎所有的 public 的方法都是`synchronized`的，而有些方法也是在内部通过`synchronized`代码块来实现。所以有人一般都建议如果是涉及到多线程同步时采用 HashTable，没有涉及就采用 HashMap，但是在 Collections 类中存在一个静态方法：`synchronizedMap()`，该方法创建了一个线程安全的 Map 对象，并把它作为一个封装的对象来返回。
+
+来自：[极客学院Wiki](http://wiki.jikexueyuan.com/project/java-collection/hashtable.html)
