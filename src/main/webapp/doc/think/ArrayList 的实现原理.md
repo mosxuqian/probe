@@ -32,8 +32,8 @@ ArrayList 实现 java.io.Serializable 接口，这意味着 ArrayList 支持序�
 
 ```java
 /**
-* The array buffer into which the elements of the ArrayList are stored. * The capacity of the ArrayList is the length of this array buffer.
-*/
+ * The array buffer into which the elements of the ArrayList are stored. * The capacity of the ArrayList is the length of this array buffer.
+ */
 private transient Object[] elementData;
 ```
 

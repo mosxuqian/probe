@@ -8,13 +8,14 @@
 
 ```java
 private transient HashMap<E,Object> map;
+
 // Dummy value to associate with an Object in the backing Map
 private static final Object PRESENT = new Object();
 
 /**
-* Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
-* default initial capacity (16) and load factor (0.75).
-*/
+ * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
+ * default initial capacity (16) and load factor (0.75).
+ */
 public HashSet() {
     map = new HashMap<>();
 }
@@ -30,55 +31,55 @@ public HashSet() {
 
 ```java
 /**
-* 默认的无参构造器，构造一个空的HashSet。
-*
-* 实际底层会初始化一个空的HashMap，并使用默认初始容量为16和加载因子0.75。
-*/
+ * 默认的无参构造器，构造一个空的HashSet。
+ *
+ * 实际底层会初始化一个空的HashMap，并使用默认初始容量为16和加载因子0.75。
+ */
 public HashSet() {
     map = new HashMap<E,Object>();
 }
 
 /**
-* 构造一个包含指定collection中的元素的新set。
-*
-* 实际底层使用默认的加载因子0.75和足以包含指定collection中所有元素的初始容量来创建一个HashMap。
-* @param c 其中的元素将存放在此set中的collection。
-*/
+ * 构造一个包含指定collection中的元素的新set。
+ *
+ * 实际底层使用默认的加载因子0.75和足以包含指定collection中所有元素的初始容量来创建一个HashMap。
+ * @param c 其中的元素将存放在此set中的collection。
+ */
 public HashSet(Collection<? extends E> c) {
     map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16));
     addAll(c);
 }
 
 /**
-* 以指定的initialCapacity和loadFactor构造一个空的HashSet。
-*
-* 实际底层以相应的参数构造一个空的HashMap。
-* @param initialCapacity 初始容量。
-* @param loadFactor 加载因子。
-*/
+ * 以指定的initialCapacity和loadFactor构造一个空的HashSet。
+ *
+ * 实际底层以相应的参数构造一个空的HashMap。
+ * @param initialCapacity 初始容量。
+ * @param loadFactor 加载因子。
+ */
 public HashSet(int initialCapacity, float loadFactor) {
     map = new HashMap<E,Object>(initialCapacity, loadFactor);
 }
 
 /**
-* 以指定的initialCapacity构造一个空的HashSet。
-*
-* 实际底层以相应的参数及加载因子loadFactor为0.75构造一个空的HashMap。
-* @param initialCapacity 初始容量。
-*/
+ * 以指定的initialCapacity构造一个空的HashSet。
+ *
+ * 实际底层以相应的参数及加载因子loadFactor为0.75构造一个空的HashMap。
+ * @param initialCapacity 初始容量。
+ */
 public HashSet(int initialCapacity) {
     map = new HashMap<E,Object>(initialCapacity);
 }
 
 /**
-* 以指定的initialCapacity和loadFactor构造一个新的空链接哈希集合。此构造函数为包访问权限，不对外公开，
-* 实际只是是对LinkedHashSet的支持。
-*
-* 实际底层会以指定的参数构造一个空LinkedHashMap实例来实现。
-* @param initialCapacity 初始容量。
-* @param loadFactor 加载因子。
-* @param dummy 标记。
-*/
+ * 以指定的initialCapacity和loadFactor构造一个新的空链接哈希集合。此构造函数为包访问权限，不对外公开，
+ * 实际只是是对LinkedHashSet的支持。
+ *
+ * 实际底层会以指定的参数构造一个空LinkedHashMap实例来实现。
+ * @param initialCapacity 初始容量。
+ * @param loadFactor 加载因子。
+ * @param dummy 标记。
+ */
 HashSet(int initialCapacity, float loadFactor, boolean dummy) {
     map = new LinkedHashMap<E,Object>(initialCapacity, loadFactor);
 }
@@ -88,9 +89,9 @@ HashSet(int initialCapacity, float loadFactor, boolean dummy) {
 
 ```java
 /**
-* @param e 将添加到此set中的元素。
-* @return 如果此set尚未包含指定元素，则返回true。
-*/
+ * @param e 将添加到此set中的元素。
+ * @return 如果此set尚未包含指定元素，则返回true。
+ */
 public boolean add(E e) {
     return map.put(e, PRESENT)==null;
 }
@@ -105,34 +106,34 @@ public boolean add(E e) {
 
 ```java
 /**
-* 如果此set包含指定元素，则返回true。
-* 更确切地讲，当且仅当此set包含一个满足(o==null ? e==null : o.equals(e))的e元素时，返回true。
-*
-* 底层实际调用HashMap的containsKey判断是否包含指定key。
-* @param o 在此set中的存在已得到测试的元素。
-* @return 如果此set包含指定元素，则返回true。
-*/
+ * 如果此set包含指定元素，则返回true。
+ * 更确切地讲，当且仅当此set包含一个满足(o==null ? e==null : o.equals(e))的e元素时，返回true。
+ *
+ * 底层实际调用HashMap的containsKey判断是否包含指定key。
+ * @param o 在此set中的存在已得到测试的元素。
+ * @return 如果此set包含指定元素，则返回true。
+ */
 public boolean contains(Object o) {
     return map.containsKey(o);
 }
 
 /**
-* 如果指定元素存在于此set中，则将其移除。更确切地讲，如果此set包含一个满足(o==null ? e==null : o.equals(e))的元素e，
-* 则将其移除。如果此set已包含该元素，则返回true
-*
-* 底层实际调用HashMap的remove方法删除指定Entry。
-* @param o 如果存在于此set中则需要将其移除的对象。
-* @return 如果set包含指定元素，则返回true。
-*/
+ * 如果指定元素存在于此set中，则将其移除。更确切地讲，如果此set包含一个满足(o==null ? e==null : o.equals(e))的元素e，
+ * 则将其移除。如果此set已包含该元素，则返回true
+ *
+ * 底层实际调用HashMap的remove方法删除指定Entry。
+ * @param o 如果存在于此set中则需要将其移除的对象。
+ * @return 如果set包含指定元素，则返回true。
+ */
 public boolean remove(Object o) {
     return map.remove(o)==PRESENT;
 }
 
 /**
-* 返回此HashSet实例的浅表副本：并没有复制这些元素本身。
-*
-* 底层实际调用HashMap的clone()方法，获取HashMap的浅表副本，并设置到HashSet中。
-*/
+ * 返回此HashSet实例的浅表副本：并没有复制这些元素本身。
+ *
+ * 底层实际调用HashMap的clone()方法，获取HashMap的浅表副本，并设置到HashSet中。
+ */
 public Object clone() {
     try {
         HashSet<E> newSet = (HashSet<E>) super.clone();
