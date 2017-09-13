@@ -1,5 +1,8 @@
 package com.blinkfox.learn.mybatis.mapper;
 
+import com.blinkfox.learn.mybatis.pojo.Blog;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,8 +14,14 @@ public interface BlogMapper {
     /**
      * 根据博客ID查询博客实体信息.
      * @param id 博客ID
-     * @return Map结构的博客实体信息
+     * @return 博客实体信息
      */
-    Map<String, Object> queryBlogById(int id);
+    Blog queryBlogById(int id);
+
+    /**
+     * 查询所有博客信息.
+     * @return map的List集合.
+     */
+    List<Map<String, Object>> queryBlogs();
 
 }

@@ -2,6 +2,11 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+    <!-- 设置别名 -->
+    <typeAliases>
+        <typeAlias type="com.blinkfox.learn.mybatis.pojo.Blog" alias="Blog"/>
+    </typeAliases>
+
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -15,7 +20,9 @@
         </environment>
     </environments>
 
+    <!-- 注册Mapper.xml -->
     <mappers>
         <mapper resource="mybatis/mapper/BlogMapper.xml"/>
     </mappers>
+
 </configuration>

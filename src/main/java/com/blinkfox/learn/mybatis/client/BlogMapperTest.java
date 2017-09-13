@@ -1,9 +1,11 @@
 package com.blinkfox.learn.mybatis.client;
 
 import com.blinkfox.learn.mybatis.mapper.BlogMapper;
+import com.blinkfox.learn.mybatis.pojo.Blog;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
@@ -54,8 +56,20 @@ public class BlogMapperTest {
     public void testQueryBlogById() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             BlogMapper blogMapper = session.getMapper(BlogMapper.class);
-            Map<String, Object> blogMap = blogMapper.queryBlogById(1);
-            Assert.assertNotNull(blogMap);
+            Blog blog = blogMapper.queryBlogById(1);
+            Assert.assertNotNull(blog);
+        }
+    }
+
+    /**
+     * 测试查询所有博客的部分信息的方法.
+     */
+    @Test
+    public void testQueryBlogs() {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            BlogMapper blogMapper = session.getMapper(BlogMapper.class);
+            List<Map<String, Object>> blogMaps = blogMapper.queryBlogs();
+            Assert.assertNotNull(blogMaps);
         }
     }
 
