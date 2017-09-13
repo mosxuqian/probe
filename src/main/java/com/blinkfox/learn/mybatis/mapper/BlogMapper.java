@@ -1,6 +1,7 @@
 package com.blinkfox.learn.mybatis.mapper;
 
 import com.blinkfox.learn.mybatis.pojo.Blog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,12 @@ public interface BlogMapper {
      * @return map的List集合.
      */
     List<Map<String, Object>> queryBlogs();
+
+    /**
+     * 根据博客标题模糊查询所有匹配的博客信息.
+     * @param title 博客标题
+     * @return map的List集合.
+     */
+    List<Map<String, Object>> queryBlogsByTitle(@Param("title") String title);
 
 }

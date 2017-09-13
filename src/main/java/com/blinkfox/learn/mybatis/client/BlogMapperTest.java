@@ -74,6 +74,18 @@ public class BlogMapperTest {
     }
 
     /**
+     * 测试根据博客标题模糊查询所有匹配的博客信息的方法.
+     */
+    @Test
+    public void testQueryBlogsByTitle() {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            BlogMapper blogMapper = session.getMapper(BlogMapper.class);
+            List<Map<String, Object>> blogMaps = blogMapper.queryBlogsByTitle("%My%");
+            Assert.assertNotNull(blogMaps);
+        }
+    }
+
+    /**
      * 销毁实例.
      */
     @AfterClass
