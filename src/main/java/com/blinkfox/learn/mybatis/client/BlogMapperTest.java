@@ -16,7 +16,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pmw.tinylog.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * mybatis的BlogMapper单元测试类.
@@ -26,6 +27,8 @@ public class BlogMapperTest {
 
     /** BlogMapper.xml限定名. */
     private static final String BLOG_MAPPER = "mybatis/mybatis-config.xml";
+
+    private static final Logger log = LoggerFactory.getLogger(BlogMapperTest.class);
 
     /** mybaits的SqlSessionFactory实例. */
     private static SqlSessionFactory sqlSessionFactory;
@@ -40,7 +43,7 @@ public class BlogMapperTest {
         try {
             inputStream = Resources.getResourceAsStream(BLOG_MAPPER);
         } catch (IOException e) {
-            Logger.error(e, "获取BlogMapper.xml文件的输入流失败！");
+            log.error("获取BlogMapper.xml文件的输入流失败！", e);
         }
         Assert.assertNotNull(inputStream);
 
