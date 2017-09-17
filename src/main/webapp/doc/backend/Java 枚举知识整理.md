@@ -63,3 +63,53 @@ public enum ColorEnum {
 ```
 
 > **注意**：枚举类的名称一般以`Enum`结尾，比如`ColorEnum`等。如果你写个枚举类，取名为`Color`，那么没人能快速知道它是一个枚举类。
+
+## 遍历
+
+Java 中使用`values()`方法将枚举所有元素item转换成一个数组。这样就可以通过`foreach`语法来遍历枚举中的所有元素了。
+
+```java
+for (ColorEnum color: ColorEnum.values()) {
+    log.info("ordinal:{}, name:{}", color.ordinal(), color.name());
+}
+```
+
+输出结果；
+
+```bash
+ordinal:0, name:RED
+ordinal:1, name:GREEN
+ordinal:2, name:BLUE
+```
+
+其中：
+
+- `ordinal()`：用于获取当前 enume item 在枚举类中声明时的次序，从0开始计数
+- `name()`：用于返回某个enume item的名字
+
+## switch
+
+在`JDK7`之前，String字符串是不支持通过`switch`语法来筛选数据，但是 Java 为枚举提供了`switch`语法的支持。使用示例如下：
+
+```java
+// 客户端传来的枚举item
+ColorEnum color = ColorEnum.GREEN;
+
+switch (color) {
+    case RED: log.info("进入了 RED 的分支");
+        break;
+    case GREEN: log.info("进入了 GREEN 的分支");
+        break;
+    case BLUE: log.info("进入了 BLUE 的分支");
+        break;
+    default: log.info("进入了 default 的分支");
+}
+```
+
+输出结果：
+
+```bash
+进入了 GREEN 的分支
+```
+
+> **注意**：`switch`后已经指定了枚举的类型，`case`后无须再使用全名`ColorEnum`。
