@@ -3,6 +3,8 @@ package com.blinkfox.test.other;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.EnumMap;
+
 /**
  * ColorEnumTest.
  *
@@ -34,6 +36,12 @@ public class ColorEnumTest {
         log.info("color name:{}", ColorEnum.getNameByCode(2));
 
         ColorEnum.GREEN.paint();
+
+        EnumMap<ColorEnum, String> colorEnumMap = new EnumMap<ColorEnum, String>(ColorEnum.class);
+        colorEnumMap.put(ColorEnum.RED, "这是EnumMap中的'RED'");
+        colorEnumMap.put(ColorEnum.GREEN, "这是EnumMap中的'GREEN'");
+        colorEnumMap.put(ColorEnum.BLUE, "这是EnumMap中的'BLUE'");
+        log.info("{}", colorEnumMap);
     }
 
 }

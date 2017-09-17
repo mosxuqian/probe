@@ -75,7 +75,7 @@ public enum ColorEnum {
 
 > **注意**：枚举类的名称一般以`Enum`结尾，比如`ColorEnum`等。如果你写个枚举类，取名为`Color`，那么没人能快速知道它是一个枚举类。
 
-## 遍历
+### 遍历
 
 Java 中使用`values()`方法将枚举所有元素item转换成一个数组。这样就可以通过`foreach`语法来遍历枚举中的所有元素了。
 
@@ -93,7 +93,7 @@ ordinal:1, name:GREEN
 ordinal:2, name:BLUE
 ```
 
-## switch
+### switch
 
 在`JDK7`之前，String字符串是不支持通过`switch`语法来筛选数据，但是 Java 为枚举提供了`switch`语法的支持。使用示例如下：
 
@@ -120,7 +120,7 @@ switch (color) {
 
 > **注意**：`switch`后已经指定了枚举的类型，`case`后无须再使用全名`ColorEnum`。
 
-## 自定义属性和方法
+### 自定义属性和方法
 
 Java枚举中允许定义属性和方法，但必须在枚举实例序列的最后一个分号后再添加。Java 要求必须先定义枚举实例在前面，使用示例如下：
 
@@ -187,7 +187,7 @@ public enum ColorEnum {
 
 > **注意**：枚举的构造方法默认且只能是`private`的。
 
-## 枚举多态用法
+### 使用枚举来表达多态
 
 所有的枚举都继承自`java.lang.Enum`类。由于 Java 不支持多继承，所以枚举不能再继承其他类。但枚举类中可以定义抽象方法，也可以实现一个或者多个接口。由于每一个枚举值会呈现出不同的行为方式，则须要让每个枚举值分别实现方法。
 
@@ -277,3 +277,48 @@ public enum ColorEnum {
 
 }
 ```
+
+### 枚举集合的使用
+
+`java.util.EnumSet`和`java.util.EnumMap`是两个枚举集合。`EnumSet`保证集合中的元素不重复；`EnumMap`中的`key`是`enum`类型且不能为`null`，而`value`则可以是任意类型。`EnumSet`和`EnumMap`内部以数组来实现，性能更好。
+
+以下是`EnumMap`的使用示例：
+
+```java
+EnumMap<ColorEnum, String> colorEnumMap = new EnumMap<ColorEnum, String>(ColorEnum.class);
+colorEnumMap.put(ColorEnum.RED, "这是EnumMap中的'RED'");
+colorEnumMap.put(ColorEnum.GREEN, "这是EnumMap中的'GREEN'");
+colorEnumMap.put(ColorEnum.BLUE, "这是EnumMap中的'BLUE'");
+
+log.info("{}", colorEnumMap);
+```
+
+输出结果：
+
+```bash
+{1:红色=这是EnumMap中的'RED', 2:绿色=这是EnumMap中的'GREEN', 3:蓝色=这是EnumMap中的'BLUE'}
+```
+
+### 枚举单例
+
+在`《Effective Java》`一书中强烈推荐**使用枚举来实现单例模式**，同时枚举单例代码也最为简单：
+
+```java
+public enum ColorEnumSingleton {
+
+    INSTANCE;
+
+    public static void doSomething(){
+        // do something
+    }
+
+}
+```
+
+使用枚举单例有以下好处：
+
+- 自由序列化
+- 保证只有一个实例（即使使用反射机制也无法多次实例化一个枚举量）
+- 线程安全
+
+> **注意**：枚举单例是**饿汉**式的。
