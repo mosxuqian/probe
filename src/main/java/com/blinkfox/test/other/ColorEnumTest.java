@@ -27,6 +27,13 @@ public class ColorEnumTest {
                 break;
             default: log.info("进入了 default 的分支");
         }
+
+        ColorEnum color2 = ColorEnum.valueOf("RED");
+        log.info("{}", color2.toString());
+
+        log.info("color name:{}", ColorEnum.getNameByCode(2));
+
+        ColorEnum.GREEN.paint();
     }
 
 }

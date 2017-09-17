@@ -28,6 +28,17 @@ enum 类名 {
 - 枚举类可以定义自己的成员变量、成员函数和带参构造方法，自定义带参构造方法时，枚举值需要传参
 - 枚举类可以存在抽象的方法，但是枚举值必须要实现抽象的方法
 
+### 常用方法
+
+枚举中的一些常用方法如下：
+
+- `int ordinal()`：返回枚举常量的序数（它在枚举声明中的位置，其中初始常量序数为零）。
+- `String name()`：返回此枚举常量的名称。
+- `String toString()`：返回覆盖枚举常量的`toString()`方法的值。
+- `int compareTo(E o)`：比较此枚举与指定对象的顺序。
+- `Class<E> getDeclaringClass()`：返回与此枚举常量的枚举类型相对应的 Class 对象。
+- `static <T extends Enum<T>> T valueOf(Class<T> enumType, String name)`：返回指定名称的枚举常量指定的enumtype的方法。如：`ColorEnum color = ColorEnum.valueOf("RED");`。
+
 ## 主要应用
 
 ### 表达常量
@@ -82,11 +93,6 @@ ordinal:1, name:GREEN
 ordinal:2, name:BLUE
 ```
 
-其中：
-
-- `ordinal()`：用于获取当前 enume item 在枚举类中声明时的次序，从0开始计数
-- `name()`：用于返回某个enume item的名字
-
 ## switch
 
 在`JDK7`之前，String字符串是不支持通过`switch`语法来筛选数据，但是 Java 为枚举提供了`switch`语法的支持。使用示例如下：
@@ -113,3 +119,161 @@ switch (color) {
 ```
 
 > **注意**：`switch`后已经指定了枚举的类型，`case`后无须再使用全名`ColorEnum`。
+
+## 自定义属性和方法
+
+Java枚举中允许定义属性和方法，但必须在枚举实例序列的最后一个分号后再添加。Java 要求必须先定义枚举实例在前面，使用示例如下：
+
+```java
+/**
+ * 关于颜色的枚举.
+ * @author blinkfox on 2017/9/17.
+ */
+public enum ColorEnum {
+
+    RED(1, "红色"), GREEN(2, "绿色"), BLUE(3, "蓝色");
+
+    /** 颜色的code. */
+    private int code;
+
+    /** 颜色的名称. */
+    private String name;
+
+    /**
+     * 枚举的构造方法默认且只能是private的.
+     * @param code 代码值
+     * @param name 名称
+     */
+    ColorEnum(int code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    /**
+     * 根据颜色的code值获取到对应的名称.
+     * @param code 颜色code
+     * @return 颜色名称
+     */
+    public static String getNameByCode(int code) {
+        for (ColorEnum color: ColorEnum.values()) {
+            if (color.code == code) {
+                return color.name;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 覆盖的toString方法.
+     * @return 字符串
+     */
+    @Override
+    public String toString() {
+        return this.code + ":" + this.name;
+    }
+
+    /* getter方法. */
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+}
+```
+
+> **注意**：枚举的构造方法默认且只能是`private`的。
+
+## 枚举多态用法
+
+所有的枚举都继承自`java.lang.Enum`类。由于 Java 不支持多继承，所以枚举不能再继承其他类。但枚举类中可以定义抽象方法，也可以实现一个或者多个接口。由于每一个枚举值会呈现出不同的行为方式，则须要让每个枚举值分别实现方法。
+
+```java
+/**
+ * 关于颜色的枚举.
+ * @author blinkfox on 2017/9/17.
+ */
+public enum ColorEnum {
+
+    RED(1, "红色") {
+        @Override
+        public void paint() {
+            log.info("使用了'红色'颜料来喷漆");
+        }
+    },
+
+    GREEN(2, "绿色") {
+        @Override
+        public void paint() {
+            log.info("使用了'绿色'颜料来喷漆");
+        }
+    },
+
+    BLUE(3, "蓝色") {
+        @Override
+        public void paint() {
+            log.info("使用了'蓝色'颜料来喷漆");
+        }
+    };
+
+    private static final Logger log = LoggerFactory.getLogger(ColorEnum.class);
+
+    /** 颜色的code. */
+    private int code;
+
+    /** 颜色的名称. */
+    private String name;
+
+    /**
+     * 枚举的构造方法默认且只能是private的.
+     * @param code 代码值
+     * @param name 名称
+     */
+    ColorEnum(int code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    /**
+     * 使用不同的颜色来喷漆的抽象方法.
+     */
+    public abstract void paint();
+
+    /**
+     * 根据颜色的code值获取到对应的名称.
+     * @param code 颜色code
+     * @return 颜色名称
+     */
+    public static String getNameByCode(int code) {
+        for (ColorEnum color: ColorEnum.values()) {
+            if (color.code == code) {
+                return color.name;
+            }
+        }
+        return null;
+    }
+
+    /* getter方法. */
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 覆盖的toString方法.
+     * @return 字符串
+     */
+    @Override
+    public String toString() {
+        return this.code + ":" + this.name;
+    }
+
+}
+```
