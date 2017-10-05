@@ -22,6 +22,8 @@
 
 在Java中，所有的事件都能由类描述，Java中的异常就是由`java.lang`包下的异常类来描述的。Java定义了一个异常类的层次结构，其以`Throwable`（万物即可抛）开始，派生出了`Error`和`Exception`，而`Exception`又派生出了`CheckedException`和`RuntimeException`。如下图所示：
 
+![Java异常体系](http://incdn1.b0.upaiyun.com/2015/01/64b0aee39bfd16f22aaa14091d803a49.jpg)
+
 ### Throwable
 
 Throwable（可抛出）是异常类的最终父类，它有两个子类，`Error`与`Exception`。
@@ -402,3 +404,13 @@ public class Test {
 ### java.text
 
 `ParseException`：你做的没有任何意义，冷静下来，再试一次。
+
+---
+
+参考文档：
+
+- [java提高篇之异常（上）](http://www.importnew.com/20629.html)
+- [java提高篇之异常（下）](http://www.importnew.com/20645.html)
+- [深入理解java异常处理机制](http://www.importnew.com/14688.html)
+- [Java 中 9 个处理 Exception 的最佳实践](http://www.importnew.com/26775.html)
+- [Java常见异常及解释](http://www.importnew.com/16725.html)
