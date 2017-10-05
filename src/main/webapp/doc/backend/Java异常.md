@@ -28,10 +28,11 @@ Throwable（可抛出）是异常类的最终父类，它有两个子类，`Erro
 
 Throwable 中常用方法有：
 
-- `getCause()`：返回抛出异常的原因。如果 cause 不存在或未知，则返回`null`。
-- `getMessage()`：返回异常的消息信息。
-- `printStackTrace()`：对象的堆栈跟踪输出至错误输出流，作为字段`System.err`的值。
-- `toString()`：返回此`throwable`的简短描述。
+- `synchronized Throwable getCause()`：此方法返回异常产生的原因，如果不知道原因的话返回`null`。
+- `String getMessage()`：方法返回`Throwable`的`String`型信息，当异常通过构造器创建后可用。
+- `String getLocalizedMessage()`：此方法通过被重写来得到用本地语言表示的异常信息返回给调用程序。`Throwable`类通常只是用`getMessage()`方法来实现返回异常信息。
+- `void printStackTrace()`：该方法打印栈轨迹信息到标准错误流。该方法能接受`PrintStream`和`PrintWriter`作为参数实现重载，这样就能实现打印栈轨迹到文件或流中。
+- `String toString()`：方法返回`String`格式的`Throwable`信息，此信息包括`Throwable`的名字和本地化信息。
 
 ### Error
 
@@ -84,6 +85,16 @@ try {
     // 捕获并处理try抛出的异常类型Type2
 } finally {
     // 无论是否发生异常，都将执行的语句块
+}
+```
+
+Java7及之后的版本可这样使用：
+
+```java
+try (MyResource mr = new MyResource()) {
+    System.out.println("MyResource created in try-with-resources");
+} catch (Exception1 | Exception2 e) {
+    // 捕获并统一处理 try 抛出的多种异常类型，不需要finally块
 }
 ```
 
@@ -191,15 +202,74 @@ public class Test {
 
 如果在程序中,去掉`e`，也就是：`throw new MyException(“文件没有找到–02″);`那么异常信息就保存不了。
 
+## 自定义异常
+
+Java确实给我们提供了非常多的异常，但是异常体系是不可能预见所有的希望加以报告的错误。所以，Java允许我们自定义异常来表现程序中可能会遇到的特定问题，总之就是一句话：我们不必拘泥于Java中已有的异常类型。
+
+Java自定义异常的使用要经历如下四个步骤：
+
+- 定义一个类继承`Throwable`或其子类。
+- 添加构造方法(当然也可以不用添加，使用默认构造方法)。
+- 在某个方法类抛出该异常。
+- 捕捉该异常。
+
+示例如下：
+
+```java
+/**
+ *自定义异常 继承Exception类.
+ */
+public class MyException extends Exception {
+
+    public MyException(){
+
+    }
+
+    public MyException(String message){
+        super(message);
+    }
+
+}
+
+/**
+ * 测试抛出和捕捉异常的类.
+ */
+public class Test {
+
+    public void display(int i) throws MyException{
+        if (i == 0) {
+            throw new MyException("该值不能为0.......");
+        } else{
+            System.out.println( i / 2);
+        }
+    }
+
+    public static void main(String[] args) {
+        Test test = new Test();
+        try {
+            test.display(0);
+            System.out.println("---------------------");
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
 ## 最佳实践
 
 - 尽可能的减小`try`块。
+- 不要在构造函数中抛出异常。
+- 如果使用Java7及以后的版本，一个catch子句中可以捕获多个异常。
 - 充分使用`finally`块，保证所有资源都被正确释放；如果使用Java7及以后的版本，那么更推荐使用`try-with-resource`语法。
 - `catch`语句应当尽量指定具体的异常类型，而不应该指定涵盖范围太广的`Exception`类。 不要一个`Exception`试图处理所有可能出现的异常。
 - 不要忽略异常。既然捕获了异常，就要对它进行适当的处理。不要捕获异常之后又把它丢弃，不予理睬。
 - 在异常处理模块中提供适量的错误原因信息，组织错误信息使其易于理解和阅读。
-- 不要在`finally`块中处理返回值。
-- 不要在构造函数中抛出异常。
+- 减轻`finally`的任务，finally块仅仅用来释放资源是最合适的。不要在`finally`中使用`return`、抛出异常等。
 - 为了给调用者提供尽可能多的信息，从而可以更好地避免/处理异常。对异常进行Javadoc文档说明，并且描述抛出异常的场景。
 - 不要捕获`Throwable`。`Throwable`是所有异常和错误的父类。如果`catch`了`throwable`，那么不仅仅会捕获所有`Exception`，还会捕获`Error`。而`Error`是表明无法恢复的JVM错误。因此除非绝对肯定能够处理或者被要求处理`Error`，不要捕获`Throwable`。
 - 包装异常时要包含原始的异常。包装异常时，一定要把原始的异常设置为`cause`(`Exception`有构造方法可以传入`cause`)。否则，丢失了原始的异常信息会让错误的分析变得困难。
+
+## 常见异常及解释
+
+待续...
