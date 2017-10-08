@@ -22,7 +22,7 @@
 
 在Java中，所有的事件都能由类描述，Java中的异常就是由`java.lang`包下的异常类来描述的。Java定义了一个异常类的层次结构，其以`Throwable`（万物即可抛）开始，派生出了`Error`和`Exception`，而`Exception`又派生出了`CheckedException`和`RuntimeException`。如下图所示：
 
-![Java异常体系](http://incdn1.b0.upaiyun.com/2015/01/64b0aee39bfd16f22aaa14091d803a49.jpg)
+![Java异常体系](http://static.blinkfox.com/java_exception.png)
 
 ### Throwable
 
