@@ -1,4 +1,4 @@
-# Javascript中级知识点
+# JavaScript中级知识点
 
 ## 概览
 
