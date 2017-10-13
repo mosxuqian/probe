@@ -1449,7 +1449,6 @@ Math.cos(Math.PI)  // 预定义常量π，-1
 - [给javascript初学者的24条最佳实践][44]
 - [我希望我知道的七个JavaScript技巧][45]
 
-
   [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
   [2]: http://yanhaijing.com/javascript/2013/06/22/javascript-designing-a-language-in-10-days/
   [3]: http://jquery.com/
