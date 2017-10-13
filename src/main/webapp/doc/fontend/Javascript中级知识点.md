@@ -117,3 +117,195 @@ JavaScript垃圾回收的机制很简单：**找出不再使用的变量，然�
 
 - **标记清除**：垃圾回收器在运行的时候会给存储在内存中的所有变量都加上标记。然后，它会去掉环境中的变量以及被环境中的变量引用的变量的标记（闭包）。而在此之后再被加上标记的变量将被视为准备删除的变量，原因是环境中的变量已经无法访问到这些变量了。最后，垃圾回收器完成内存清除工作，销毁那些带标记的值并回收它们所占用的内存空间。
 - **引用计数**：引用计数的含义是跟踪记录每个值被引用的次数。当声明了一个变量并将一个引用类型值赋给该变量时，则这个值的引用次数就是1。如果同一个值又被赋给另一个变量，则该值的引用次数加1。相反，如果包含对这个值引用的变量又取得了另外一个值，则这个值的引用次数减1。当这个值的引用次数变成0时，则说明没有办法再访问这个值了，因而就可以将其占用的内存空间回收回来。这样，当垃圾回收器下次再运行时，它就会释放那些引用次数为0的值所占用的内存。
+
+## 原型（prototype）
+
+原型是一个对象，其他对象可以通过它实现属性继承。JavaScript的对象中都包含了一个`Prototype`内部属性，这个属性所对应的就是该对象的原型。`Prototype`作为对象的内部属性，是不能被直接访问的。所以为了方便查看一个对象的原型，Firefox和Chrome中提供了`__proto__`这个非标准的访问器。
+
+- 所有的对象都有`__proto__`属性，该属性对应着该对象的原型。
+- 所有的函数对象都有`prototype`属性，该属性的值会被赋值给该函数创建的对象的`__proto__`属性
+- 所有的原型对象都有`constructor`属性，该属性对应创建所有指向该原型的实例的构造函数
+- 函数对象和原型对象通过`prototype`和`constructor`属性进行相互关联
+- `Object`实例对象的原型`obj.__proto__`就是`Object.prototype`
+- `hasOwnProperty`是`Object.prototype`的一个方法，该方法能判断一个对象是否包含自定义属性而不是原型链上的属性，因为"hasOwnProperty" 是 JavaScript 中唯一一个处理属性但是不查找原型链的函数
+
+### 原型链
+
+因为每个对象和原型都有原型，对象的原型指向对象的父，而父的原型又指向父的父，这种原型层层连接起来的就构成了原型链。
+
+当通过原型链查找一个属性的时候，首先查找的是对象本身的属性，如果找不到才会继续按照原型链进行查找。这样一来，如果想要覆盖原型链上的一些属性，我们就可以直接在对象中引入这些属性，达到属性隐藏的效果。
+
+## 对象创建方式
+
+### 1. Object构造函数方式
+
+```javascript
+var Person = new Object();
+Person.name = 'Nike';
+Person.age = 29;
+```
+
+这行代码创建了`Object`引用类型的一个新实例，然后把实例保存在变量`Person`中。
+
+### 2. 对象字面量方式
+
+```javascript
+var Person = {
+ name: 'Nike';
+ age: 29;
+};
+```
+
+对象字面量是对象定义的一种简写形式，目的在于简化创建包含大量属性对象的过程。
+
+> **注**：前两种方法的缺点在于：它们都是用了同一个接口创建很多对象，会产生大量的重复代码，就是如果你有100个对象，那你要输入100次很多相同的代码。那我们有什么方法来避免过多的重复代码呢，就是把创建对象的过程封装在函数体内，通过函数的调用直接生成对象。
+
+### 3. 工厂模式
+
+```javascript
+function createPerson(name, age, job) {
+    var o = new Object();
+    o.name = name;
+    o.age = age;
+    o.job = job;
+    o.sayName = function() {
+        alert(this.name);
+    };
+    return o;
+}
+
+var person1 = createPerson('Nike', 29, 'teacher');
+```
+
+在使用工厂模式创建对象的时候，我们都可以注意到，在`createPerson`函数中，返回的是一个对象。但我们就无法判断返回的对象究竟是一个什么样的类型。于是就出现了第四种创建对象的模式。
+
+### 4. 构造函数方式
+
+```javascript
+function Person(name, age, job) {
+    this.name = name;
+    this.age = age;
+    this.job = job;
+    this.sayName = function() {
+        alert(this.name);
+    };
+}
+
+var person1 = new Person('Nike', 29, 'teacher');
+alert(person1 instanceof Object); //ture
+```
+
+对比工厂模式，我们可以发现以下区别：
+
+- 没有显示地创建对象
+- 直接将属性和方法赋给了`this`对象
+- 没有`return`语句
+- 终于可以识别的对象的类型。对于检测对象类型，我们应该使用instanceof操作符，我们来进行自主检测：
+
+那么构造函数确实挺好用的，但是它也有它的缺点：就是每个方法都要在每个实例上重新创建一遍，方法指的就是我们在对象里面定义的函数。如果方法的数量很多，就会占用很多不必要的内存。于是出现了第五种创建对象的方法。
+
+### 5. 原型创建对象模式
+
+```javascript
+function Person(){}
+Person.prototype.name = 'Nike';
+Person.prototype.age = 20;
+Person.prototype.jbo = 'teacher';
+Person.prototype.sayName = function() {
+    alert(this.name);
+};
+
+var person1 = new Person();
+var person2 = new Person();
+person1.name = 'Greg';
+alert(person1.name); //'Greg' --来自实例
+alert(person2.name); //'Nike' --来自原型
+```
+
+当为对象实例添加一个属性时，这个属性就会屏蔽原型对象中保存的同名属性。
+
+这时候我们就可以使用构造函数模式与原型模式结合的方式，构造函数模式用于定义实例属性，而原型模式用于定义方法和共享的属性。
+
+### 6. 组合使用构造函数模式和原型模式
+
+```javascript
+function Person(name, age, job) {
+    this.name = name;
+    this.age = age;
+    this.job = job;
+}
+Person.prototype = {
+    constructor: Person,
+    sayName: function(){
+        alert(this.name);
+    };
+}
+var person1 = new Person('Nike', 20, 'teacher');
+```
+
+### 7. 动态原型模式
+
+```javascript
+function Person(name, age, job) {
+    this.name = name;
+    this.age = age;
+    this.job = job;
+
+    if (typeof this.sayName != 'function') {
+        Person.prototype.sayName = function() {
+            alert(this.name);
+        }
+    }
+}
+
+var person1 = new Person('Nike', 20, 'teacher');
+person1.sayName();
+```
+
+动态原型模式将所有信息封装在了构造函数中，而通过构造函数中初始化原型（仅第一个对象实例化时初始化原型），这个可以通过判断该方法是否有效而选择是否需要初始化原型。
+
+### 8. 寄生构造函数方式
+
+```javascript
+function Person(name, age, job) {
+    var o = new Object();
+    o.name = name;
+    o.age = age;
+    o.job = job;
+    o.sayName = function() {
+        alert(this.name);
+    };
+    return o;
+}
+
+var person1 = new Person('Nike', 29, 'teacher');
+```
+
+寄生模式和工厂模式几乎一样，寄生模式和工厂模式的区别：
+
+- 寄生模式创建对象时使用了`new`关键字
+- 寄生模式的外部包装函数是一个构造函数
+
+> **作用**:寄生模式可以在特殊的情况下为对象来创建构造函数,原因在于我们可以通过构造函数重写对象的值，并通过return返回。重写调用构造函数(创建的对象的实例)之后的对象实例的新的值。
+
+### 9. 稳妥构造函数方式
+
+```javascript
+function Person(name, age, job) {
+    var o = new Object();
+    o.sayName = function() {
+        alert(this.name);
+    };
+    return o;
+}
+
+var person = new Person('Nike', 29, 'teacher');
+person.sayName(); // 使用稳妥构造函数模式只能通过其构造函数内部的方法来获取里面的属性值
+```
+
+道格拉斯·克拉克福德发明了JavaScript中的稳妥对象这个概念。所谓稳妥对象，是指没有公共属性，而且其方法也不引用`this`对象。稳妥对象最适合在一些安全环境中（这些环境会禁止使用`this`和`new`），或者在防止数据被其他应用程序改动时使用。稳妥构造函数遵循的与寄生构造函数类似的模式，但又两点不同：
+
+- 一是新创建对象的实例方法不引用`this`；
+- 二是不使用`new`操作符调用构造函数。
+
+> **注**：与寄生构造函数模式类似，使用稳妥构造函数模式创建的对象与构造函数之间没有什么关系，因此instanceof操作符对这种对象也没有意义。
