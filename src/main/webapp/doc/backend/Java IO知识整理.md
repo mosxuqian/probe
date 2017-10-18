@@ -4,11 +4,11 @@
 
 - InputStream: JavaIO中的顶级的字节输入流的抽象类，定义了最基础的输入、读取的相关方法。
   - FileInputStream: 继承自`InputStream`的文件输入流类，用于从本地文件中读取字节数据。
-  - ObjectInputStream
-  - PipedInputStream
-  - SequenceInputStream
-  - StringBufferInputStream
   - ByteArrayInputStream
+  - StringBufferInputStream
+  - PipedInputStream
+  - ObjectInputStream
+  - SequenceInputStream
   - FilterInputStream: 继承自`InputStream`的过滤输入流类，是用来“封装其它的输入流，并为它们提供额外的功能”。
     - BufferedInputStream
     - DataInputStream
@@ -88,6 +88,26 @@
 ## 使用示例
 
 ### FileInputStream和FileOutputStream
+
+```java
+/**
+ * 测试复制文件a.txt中的内容到b.txt文件中.
+ */
+private static void testCopyByFileStream() {
+    try (
+        InputStream in = new FileInputStream("G:/test/a.txt");
+        OutputStream out = new FileOutputStream("G:/test/b.txt", true)
+    ) {
+        int read;
+        byte[] b = new byte[1024];
+        while ((read = in.read(b)) != -1) {
+            out.write(b, 0, read);
+        }
+    } catch (IOException e) {
+        log.error("文件读取写入失败!", e);
+    }
+}
+```
 
 ## 设计模式
 
