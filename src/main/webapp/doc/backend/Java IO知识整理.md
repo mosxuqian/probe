@@ -98,10 +98,10 @@ private static void testCopyByFileStream() {
         InputStream in = new FileInputStream("G:/test/a.txt");
         OutputStream out = new FileOutputStream("G:/test/b.txt", true)
     ) {
-        int read;
+        int len;
         byte[] b = new byte[1024];
-        while ((read = in.read(b)) != -1) {
-            out.write(b, 0, read);
+        while ((len = in.read(b)) != -1) {
+            out.write(b, 0, len);
         }
     } catch (IOException e) {
         log.error("文件读取写入失败!", e);

@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author blinkfox on 2017-10-18.
  */
-public class FileStreamTest {
+public class StreamTest {
 
-    private static final Logger log = LoggerFactory.getLogger(FileStreamTest.class);
+    private static final Logger log = LoggerFactory.getLogger(StreamTest.class);
 
     /**
      * 测试复制文件a.txt中的内容到b.txt文件中.
@@ -26,10 +26,10 @@ public class FileStreamTest {
             InputStream in = new FileInputStream("G:/test/a.txt");
             OutputStream out = new FileOutputStream("G:/test/b.txt", true)
         ) {
-            int read;
+            int len;
             byte[] b = new byte[1024];
-            while ((read = in.read(b)) != -1) {
-                out.write(b, 0, read);
+            while ((len = in.read(b)) != -1) {
+                out.write(b, 0, len);
             }
         } catch (IOException e) {
             log.error("文件读取写入失败!", e);
