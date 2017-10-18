@@ -39,12 +39,13 @@ public class StreamTest {
     }
 
     /**
-     * 测试将内容输写入到ByteArrayOutputStream中并打印出来，不需要关闭流.
+     * 测试将内容写入到ByteArrayOutputStream中并打印出来，不需要关闭流.
      */
     private static void testByByteArrayStream() {
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream(8);
+        String str = "Hello World!";
         try {
-            byteOut.write(new byte[]{'1', '2', '3', '4', '5', '6', '7', '8', '9'});
+            byteOut.write(str.getBytes());
         } catch (IOException e) {
             log.error("写入字节数据出错!", e);
         }
@@ -53,7 +54,6 @@ public class StreamTest {
         for (byte b : buf) {
             log.info("{}", (char) b);
         }
-        log.info("打印字节数组中的内容结束!");
     }
 
     /**

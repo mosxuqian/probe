@@ -5,8 +5,8 @@
 - InputStream: JavaIO中的顶级的字节输入流的抽象类，定义了最基础的输入、读取的相关方法。实现了`Closeable`接口。
   - FileInputStream: 继承自`InputStream`的文件输入流类，用于从本地文件中读取字节数据。
   - ByteArrayInputStream: 继承自`InputStream`的字节数组输入流类，它包含一个内部缓冲区，该缓冲区包含从流中读取的字节；通俗点说，它的内部缓冲区就是一个字节数组，而 ByteArrayInputStream 本质就是通过字节数组来实现的。InputStream通过`read()`向外提供接口，供它们来读取字节数据；而 ByteArrayInputStream 的内部额外的定义了一个计数器，它被用来跟踪`read()`方法要读取的下一个字节。
-  - StringBufferInputStream
-  - PipedInputStream
+  - StringBufferInputStream: 继承自`InputStream`的字节输入流类，其中读取的字节由字符串的内容提供的输入流。该类已过时，不推荐使用。
+  - PipedInputStream: 继承自`InputStream`的管道输入流类，在使用管道通信时，必须与 PipedOutputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
   - ObjectInputStream
   - SequenceInputStream
   - FilterInputStream: 继承自`InputStream`的过滤输入流类，是用来“封装其它的输入流，并为它们提供额外的功能”。
@@ -16,8 +16,8 @@
 - OutputStream: JavaIO中的顶级的字节输出流的抽象类，定义了最基础的输出、写入的相关方法。实现了`Closeable`和`Flushable`接口。
   - FileOutputStream: 继承自`OutputStream`的文件输出流类，用于向本地文件中写入字节数据。
   - ByteArrayOutputStream: 继承自`OutputStream`的字节数组输出流类，ByteArrayOutputStream 中的数据会被写入一个 byte 数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray() 和 toString() 获取数据。
+  - PipedOutputStream: 继承自`OutputStream`的管道输出流类，在使用管道通信时，必须与 PipedInputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
   - ObjectOutputStream
-  - PipedOutputStream
   - FilterOutputStream: 继承自`OutputStream`的过滤输出流类，是用来“封装其它的输出流，并为它们提供额外的功能”。
     - BufferedOutputStream
     - DataOutputStream
@@ -100,9 +100,24 @@
 - `synchronized String toString()`: 根据平台的默认字符编码将缓冲区中的字节内容字节转换成字符串。
 - `synchronized String toString(String charsetName)`: 根据指定的字符编码 charsetName 将缓冲区中的字节内容字节转换成字符串。
 
+### PipedInputStream中的特有方法
+
+- `PipedInputStream()`: 构造方法，默认创建缓冲区大小是 1024 字节的管道输入流对象。
+- `PipedInputStream(int pipeSize)`: 构造方法，创建缓冲区大小是 pipeSize 字节的管道输入流对象。
+- `PipedInputStream(PipedOutputStream src)`: 构造方法，创建与管道输出流关联的管道输入流对象，默认的缓冲区大小是 1024 字节。
+- `PipedInputStream(PipedOutputStream src, int pipeSize)`: 构造方法，创建缓冲区大小是 pipeSize 字节，且与管道输出流关联的管道输入流对象。
+- `void connect(PipedOutputStream src)`: 与管道输出流对象进行连接绑定。
+- `synchronized void receive(int b)`: 接收 int 类型的数据 b。它只会在 PipedOutputStream 的`write(int b)`中会被调用。
+
+### PipedOutputStream中的特有方法
+
+- `PipedOutputStream()`: 空构造方法。
+- `PipedOutputStream(PipedInputStream snk)`: 构造方法，创建与管道输入流关联的管道输出流对象。
+- `synchronized void connect(PipedInputStream snk)`: 与管道输入流对象进行连接绑定。
+
 ## 使用示例
 
-### FileInputStream和FileOutputStream
+### FileInputStream 和 FileOutputStream
 
 ```java
 /**
@@ -128,12 +143,13 @@ private static void testCopyByFileStream() {
 
 ```java
 /**
- * 测试将内容输写入到ByteArrayOutputStream中并打印出来，不需要关闭流.
+ * 测试将内容写入到ByteArrayOutputStream中并打印出来，不需要关闭流.
  */
 private static void testByByteArrayStream() {
     ByteArrayOutputStream byteOut = new ByteArrayOutputStream(8);
+    String str = "Hello World!";
     try {
-        byteOut.write(new byte[]{'1', '2', '3', '4', '5', '6', '7', '8', '9'});
+        byteOut.write(str.getBytes());
     } catch (IOException e) {
         log.error("写入字节数据出错!", e);
     }
@@ -142,7 +158,112 @@ private static void testByByteArrayStream() {
     for (byte b : buf) {
         log.info("{}", (char) b);
     }
-    log.info("打印字节数组中的内容结束!");
+}
+```
+
+### PipedInputStream 和 PipedOutputStream
+
+```java
+/**
+ * 发送消息的线程.
+ *
+ * @author blinkfox on 2017/10/19.
+ */
+public class Sender extends Thread {
+
+    private static final Logger log = LoggerFactory.getLogger(Sender.class);
+
+    /** 管道输出流对象,它和管道输入流(PipedInputStream)对象绑定.从而可以将数据发送给“管道输入流”. */
+    private PipedOutputStream pipedOut;
+
+    public Sender(PipedOutputStream pipedOut) {
+        this.pipedOut = pipedOut;
+    }
+
+    public PipedOutputStream getPipedOut() {
+        return pipedOut;
+    }
+
+    @Override
+    public void run() {
+        String strInfo = "Hello World!" ;
+        try {
+            pipedOut.write(strInfo.getBytes());
+            pipedOut.close();
+        } catch (IOException e) {
+            log.error("向管道中写入数据出错!", e);
+        }
+    }
+
+}
+```
+
+```java
+/**
+ * 接收消息的线程.
+ *
+ * @author blinkfox on 2017/10/19.
+ */
+public class Receiver extends Thread {
+
+    private static final Logger log = LoggerFactory.getLogger(Receiver.class);
+
+    /** 管道输入流对象,它和管道输出流(PipedOutputStream)对象绑定.从而可以接收“管道输出流”的数据. */
+    private PipedInputStream pipedIn;
+
+    public Receiver(PipedInputStream pipedIn) {
+        this.pipedIn = pipedIn;
+    }
+
+    public PipedInputStream getPipedIn() {
+        return pipedIn;
+    }
+
+    @Override
+    public void run() {
+        byte[] buf = new byte[2048];
+        try {
+            int len = pipedIn.read(buf);
+            log.info("{}", new String(buf, 0, len));
+            pipedIn.close();
+        } catch (IOException e) {
+            log.error("从管道中读取数据出错!", e);
+        }
+    }
+
+}
+```
+
+```java
+/**
+ * PipedInputStream 和 PipedOutputStream 的测试类.
+ *
+ * @author blinkfox on 2017/10/19.
+ */
+public class PipedStreamTest {
+
+    private static final Logger log = LoggerFactory.getLogger(PipedStreamTest.class);
+
+    /**
+     * 主入口方法.
+     * @param args 字符串数组参数
+     */
+    public static void main(String[] args) {
+        Sender sender = new Sender(new PipedOutputStream());
+        Receiver receiver = new Receiver(new PipedInputStream());
+
+        try {
+            // 将管道输入流和管道的输出流进行连接.
+            receiver.getPipedIn().connect(sender.getPipedOut());
+
+            // 启动线程
+            sender.start();
+            receiver.start();
+        } catch (IOException e) {
+            log.info("发送接收消息出错!", e);
+        }
+    }
+
 }
 ```
 
