@@ -1,5 +1,7 @@
 package com.blinkfox.test.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,11 +39,30 @@ public class StreamTest {
     }
 
     /**
+     * 测试将内容输写入到ByteArrayOutputStream中并打印出来，不需要关闭流.
+     */
+    private static void testByByteArrayStream() {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream(8);
+        try {
+            byteOut.write(new byte[]{'1', '2', '3', '4', '5', '6', '7', '8', '9'});
+        } catch (IOException e) {
+            log.error("写入字节数据出错!", e);
+        }
+
+        byte[] buf = byteOut.toByteArray();
+        for (byte b : buf) {
+            log.info("{}", (char) b);
+        }
+        log.info("打印字节数组中的内容结束!");
+    }
+
+    /**
      * 主入口方法.
      * @param args 字符串数组参数
      */
     public static void main(String[] args) {
-        testCopyByFileStream();
+        //testCopyByFileStream();
+        testByByteArrayStream();
     }
 
 }

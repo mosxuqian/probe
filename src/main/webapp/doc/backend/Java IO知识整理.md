@@ -2,9 +2,9 @@
 
 ## 各IO类关系梳理
 
-- InputStream: JavaIO中的顶级的字节输入流的抽象类，定义了最基础的输入、读取的相关方法。
+- InputStream: JavaIO中的顶级的字节输入流的抽象类，定义了最基础的输入、读取的相关方法。实现了`Closeable`接口。
   - FileInputStream: 继承自`InputStream`的文件输入流类，用于从本地文件中读取字节数据。
-  - ByteArrayInputStream
+  - ByteArrayInputStream: 继承自`InputStream`的字节数组输入流类，它包含一个内部缓冲区，该缓冲区包含从流中读取的字节；通俗点说，它的内部缓冲区就是一个字节数组，而 ByteArrayInputStream 本质就是通过字节数组来实现的。InputStream通过`read()`向外提供接口，供它们来读取字节数据；而 ByteArrayInputStream 的内部额外的定义了一个计数器，它被用来跟踪`read()`方法要读取的下一个字节。
   - StringBufferInputStream
   - PipedInputStream
   - ObjectInputStream
@@ -13,11 +13,11 @@
     - BufferedInputStream
     - DataInputStream
     - PushbackInputStream
-- OutputStream: JavaIO中的顶级的字节输出流的抽象类，定义了最基础的输出、写入的相关方法。
+- OutputStream: JavaIO中的顶级的字节输出流的抽象类，定义了最基础的输出、写入的相关方法。实现了`Closeable`和`Flushable`接口。
   - FileOutputStream: 继承自`OutputStream`的文件输出流类，用于向本地文件中写入字节数据。
+  - ByteArrayOutputStream: 继承自`OutputStream`的字节数组输出流类，ByteArrayOutputStream 中的数据会被写入一个 byte 数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray() 和 toString() 获取数据。
   - ObjectOutputStream
   - PipedOutputStream
-  - ByteArrayOutputStream
   - FilterOutputStream: 继承自`OutputStream`的过滤输出流类，是用来“封装其它的输出流，并为它们提供额外的功能”。
     - BufferedOutputStream
     - DataOutputStream
@@ -85,6 +85,21 @@
 - `FileChannel getChannel()`: 返回与此文件输出流有关的唯一 FileChannel 对象。
 - `void finalize()`: 清理到文件的连接，并确保在不再引用此文件输出流时调用此流的 close 方法。
 
+### ByteArrayInputStream中的特有方法
+
+- `ByteArrayInputStream(byte buf[])`: 构造方法，创建一个内容为 buf 的字节流。
+- `ByteArrayInputStream(byte buf[], int offset, int length)`: 构造方法，创建一个内容为 buf 的字节流，并且是从 offset 开始读取数据，读取的长度为 length。
+
+### ByteArrayOutputStream中的特有方法
+
+- `ByteArrayOutputStream()`: 构造方法，默认创建的字节数组大小是 32 的字节数组输出流。
+- `ByteArrayOutputStream(int size)`: 构造方法，创建一个指定数组大小为 size 的字节数组输出流。
+- `synchronized void writeTo(OutputStream out)`: 将该字节数组输出流的数据全部写入到输出流 out 中。
+- `synchronized byte toByteArray()[]`: 将字节数组输出流转换成字节数组。
+- `synchronized int size()`: 得到字节数组输出流中的当前计数值。
+- `synchronized String toString()`: 根据平台的默认字符编码将缓冲区中的字节内容字节转换成字符串。
+- `synchronized String toString(String charsetName)`: 根据指定的字符编码 charsetName 将缓冲区中的字节内容字节转换成字符串。
+
 ## 使用示例
 
 ### FileInputStream和FileOutputStream
@@ -106,6 +121,28 @@ private static void testCopyByFileStream() {
     } catch (IOException e) {
         log.error("文件读取写入失败!", e);
     }
+}
+```
+
+### ByteArrayOutputStream
+
+```java
+/**
+ * 测试将内容输写入到ByteArrayOutputStream中并打印出来，不需要关闭流.
+ */
+private static void testByByteArrayStream() {
+    ByteArrayOutputStream byteOut = new ByteArrayOutputStream(8);
+    try {
+        byteOut.write(new byte[]{'1', '2', '3', '4', '5', '6', '7', '8', '9'});
+    } catch (IOException e) {
+        log.error("写入字节数据出错!", e);
+    }
+
+    byte[] buf = byteOut.toByteArray();
+    for (byte b : buf) {
+        log.info("{}", (char) b);
+    }
+    log.info("打印字节数组中的内容结束!");
 }
 ```
 
