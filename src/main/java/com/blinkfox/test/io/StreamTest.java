@@ -1,12 +1,12 @@
 package com.blinkfox.test.io;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.SequenceInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,12 +57,32 @@ public class StreamTest {
     }
 
     /**
+     * 测试使用 testBySequenceStream 合并输入流来统一读取写入.
+     */
+    private static void testBySequenceStream() {
+        try (
+            InputStream in1 = new FileInputStream("G:/test/a.txt");
+            InputStream in2 = new FileInputStream("G:/test/b.txt");
+            OutputStream out = new FileOutputStream("G:/test/c.txt");
+            SequenceInputStream seqIn = new SequenceInputStream(in1, in2)
+        ) {
+            int len = 0;
+            while ((len = seqIn.read()) != -1) {
+                out.write(len);
+            }
+        } catch (IOException e) {
+            log.error("合并输入流写入失败!", e);
+        }
+    }
+
+    /**
      * 主入口方法.
      * @param args 字符串数组参数
      */
     public static void main(String[] args) {
         //testCopyByFileStream();
         testByByteArrayStream();
+        testBySequenceStream();
     }
 
 }

@@ -7,8 +7,8 @@
   - ByteArrayInputStream: 继承自`InputStream`的字节数组输入流类，它包含一个内部缓冲区，该缓冲区包含从流中读取的字节；通俗点说，它的内部缓冲区就是一个字节数组，而 ByteArrayInputStream 本质就是通过字节数组来实现的。InputStream通过`read()`向外提供接口，供它们来读取字节数据；而 ByteArrayInputStream 的内部额外的定义了一个计数器，它被用来跟踪`read()`方法要读取的下一个字节。
   - StringBufferInputStream: 继承自`InputStream`的字节输入流类，其中读取的字节由字符串的内容提供的输入流。该类已过时，不推荐使用。
   - PipedInputStream: 继承自`InputStream`的管道输入流类，在使用管道通信时，必须与 PipedOutputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
-  - ObjectInputStream
-  - SequenceInputStream
+  - ObjectInputStream: 继承自`InputStream`的对象输入流类，实现了 ObjectInput 和 ObjectStreamConstants 接口。作用是从输入流中读取Java对象和基本数据。只有支持 Serializable  或 Externalizable 接口的对象才能被`ObjectInputStream/ObjectOutputStream`所操作！
+  - SequenceInputStream: 继承自`InputStream`的输入合并流类。SequenceInputStream 会将与之相连接的流集组合成一个输入流并从第一个输入流开始读取，直到到达文件末尾，接着从第二个输入流读取，依次类推，直到到达包含的最后一个输入流的文件末 尾为止。合并流的作用是将多个源合并合一个源。
   - FilterInputStream: 继承自`InputStream`的过滤输入流类，是用来“封装其它的输入流，并为它们提供额外的功能”。
     - BufferedInputStream
     - DataInputStream
@@ -17,7 +17,7 @@
   - FileOutputStream: 继承自`OutputStream`的文件输出流类，用于向本地文件中写入字节数据。
   - ByteArrayOutputStream: 继承自`OutputStream`的字节数组输出流类，ByteArrayOutputStream 中的数据会被写入一个 byte 数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray() 和 toString() 获取数据。
   - PipedOutputStream: 继承自`OutputStream`的管道输出流类，在使用管道通信时，必须与 PipedInputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
-  - ObjectOutputStream
+  - ObjectOutputStream: 继承自`OutputStream`的对象输出流类，实现了 ObjectOutput 和 ObjectStreamConstants 接口。作用是把Java对象和基本数据写入到对象输出流中。只有支持 Serializable  或 Externalizable 接口的对象才能被`ObjectInputStream/ObjectOutputStream`所操作！
   - FilterOutputStream: 继承自`OutputStream`的过滤输出流类，是用来“封装其它的输出流，并为它们提供额外的功能”。
     - BufferedOutputStream
     - DataOutputStream
@@ -114,6 +114,38 @@
 - `PipedOutputStream()`: 空构造方法。
 - `PipedOutputStream(PipedInputStream snk)`: 构造方法，创建与管道输入流关联的管道输出流对象。
 - `synchronized void connect(PipedInputStream snk)`: 与管道输入流对象进行连接绑定。
+
+### ObjectInputStream中的特有方法
+
+- `ObjectInputStream(InputStream in)`: 构造方法，根据其他输入流构造对象输入流对象。
+- `Object readObject()`: 从对象输入流中读取出Java对象的方法。
+- `Object readUnshared()`: 从对象输入流中读取出“非共享”Java对象的方法。
+- `void defaultReadObject()`: 从对象输入流中读取出当前类的非静态和非瞬态字段。
+- `void registerValidation(ObjectInputValidation obj, int prio)`: 用于注册对象的图形被返回之前进行验证。
+- `boolean readBoolean()`: 如果该字节不为零返回true，如果该字节是零则返回false。
+- `byte readByte()`: 读取并返回一个单一的输入字节。该字节的范围是从-128到127之间的有符号值。
+- `int readUnsignedByte()`: 返回的无符号8位值，结果是在0-255的范围内。
+- `char readChar()`: 读取两个字节，并返回一个字符值。
+- `int readInt()`: 读取四个输入字节并返回一个整型值。
+- `String readLine()`: 读取一行文本。一行被认为是由一个换行符('\n')，回车符('\r')或回车符中的任何一个。
+- ...
+
+### ObjectOutputStream中的特有方法
+
+- `ObjectOutputStream(OutputStream out)`: 构造方法，根据其他输出流构造对象输出流对象。
+- `void writeObject(Object obj)`: 将指定Java对象写入到对象输出流中。
+- `void writeUnshared(Object obj)`: 写一个“非共享”对象到对象输出流。
+- `void defaultWriteObject()`: 写入当前类的非静态和非瞬态字段写入此流。
+- `void writeBoolean(boolean val)`: 写入布尔值到基础输出流。
+- `void writeByte(int val)`: 写入一个8位字节。
+- `void writeChar(int val)`: 将一个字符首先写入基础输出流与高字节两个字节的值。
+- `void writeInt(int val)`: 写入一个 int 值的基础流为四个字节。
+- ...
+
+### SequenceInputStream中的特有方法
+
+- `SequenceInputStream(Enumeration<? extends InputStream> e)`: 构造方法，通过记住参数来初始化新创建的 SequenceInputStream 对象，该参数必须是生成运行时类型为 InputStream 对象的 Enumeration 型参数。将按顺序读取由该枚举生成的输入流，以提供从此 SequenceInputStream 读取的字节。在用尽枚举中的每个输入流之后，将通过调用该流的 close 方法将其关闭。
+- `SequenceInputStream(InputStream s1, InputStream s2)`: 构造方法，通过记住这两个参数来初始化新创建的 SequenceInputStream（将按顺序读取这两个参数，先读取 s1，然后读取 s2）对象，以提供从此 SequenceInputStream 读取的字节。
 
 ## 使用示例
 
@@ -264,6 +296,29 @@ public class PipedStreamTest {
         }
     }
 
+}
+```
+
+### SequenceInputStream
+
+```java
+/**
+ * 测试使用 testBySequenceStream 合并输入流来统一读取写入.
+ */
+private static void testBySequenceStream() {
+    try (
+        InputStream in1 = new FileInputStream("G:/test/a.txt");
+        InputStream in2 = new FileInputStream("G:/test/b.txt");
+        OutputStream out = new FileOutputStream("G:/test/c.txt");
+        SequenceInputStream seqIn = new SequenceInputStream(in1, in2)
+    ) {
+        int len = 0;
+        while ((len = seqIn.read()) != -1) {
+            out.write(len);
+        }
+    } catch (IOException e) {
+        log.error("合并输入流写入失败!", e);
+    }
 }
 ```
 
