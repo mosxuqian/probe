@@ -36,7 +36,7 @@
     - CheckedOutputStream: 继承自`FilterOutputStream`的校验输出流类。
     - CipherOutputStream: 继承自`FilterOutputStream`的密钥输出流类。
     - DigestOutputStream: 继承自`FilterOutputStream`的摘要处理输出流类。
-    - InflaterOutputStream：继承自`FilterOutputStream`的解压缩处理输出流类。
+    - InflaterOutputStream: 继承自`FilterOutputStream`的解压缩处理输出流类。
     - DeflaterOutputStream: 继承自`FilterOutputStream`的解压缩数据输出流类。
       - GZIPOutputStream: 继承自`DeflaterOutputStream`的gzip文件解压缩输出流类。
       - ZipOutputStream: 继承自`DeflaterOutputStream`的zip文件解压缩输出流类。
@@ -60,6 +60,12 @@
   - PipedWriter: 继承自`Writer`的字符管道输出流类。作用是可以通过管道进行线程间的通讯。必须和 PipedReader 配合使用。
   - CharArrayWriter: 继承自`Writer`的字符数组输出流类。
   - PrinterWriter: 继承自`Writer`的打印写入类，提供了PrintStream的所有打印方法，其方法也从不抛出IOException。与PrintStream的区别：作为处理流使用时，PrintStream只能封装OutputStream类型的字节流，而PrintWriter既可以封装OutputStream类型的字节流，还能够封装Writer类型的字符输出流并增强其功能。
+
+## IO UML类图
+
+![Java InputStream UML](http://static.blinkfox.com/java_inputstream_uml.png)
+
+![Java OutputStream UML](http://static.blinkfox.com/java_outputstream_uml.png)
 
 ## 接口主要方法梳理
 
