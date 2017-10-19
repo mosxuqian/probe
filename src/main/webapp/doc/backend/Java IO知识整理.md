@@ -5,41 +5,42 @@
 - InputStream: JavaIO中的顶级的字节输入流的抽象类，定义了最基础的输入、读取的相关方法。实现了`Closeable`接口。
   - FileInputStream: 继承自`InputStream`的文件输入流类，用于从本地文件中读取字节数据。
   - ByteArrayInputStream: 继承自`InputStream`的字节数组输入流类，它包含一个内部缓冲区，该缓冲区包含从流中读取的字节；通俗点说，它的内部缓冲区就是一个字节数组，而 ByteArrayInputStream 本质就是通过字节数组来实现的。InputStream通过`read()`向外提供接口，供它们来读取字节数据；而 ByteArrayInputStream 的内部额外的定义了一个计数器，它被用来跟踪`read()`方法要读取的下一个字节。
-  - StringBufferInputStream: 继承自`InputStream`的字节输入流类，其中读取的字节由字符串的内容提供的输入流。该类已过时，不推荐使用。
+  - StringBufferInputStream: 继承自`InputStream`的字节输入流类，其中读取的字节由字符串的内容提供的输入流。该类已过时，不推荐使用，由 StringReader 代替。
   - PipedInputStream: 继承自`InputStream`的管道输入流类，在使用管道通信时，必须与 PipedOutputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
   - ObjectInputStream: 继承自`InputStream`的对象输入流类，实现了 ObjectInput 和 ObjectStreamConstants 接口。作用是从输入流中读取Java对象和基本数据。只有支持 Serializable  或 Externalizable 接口的对象才能被`ObjectInputStream/ObjectOutputStream`所操作！
   - SequenceInputStream: 继承自`InputStream`的输入合并流类。SequenceInputStream 会将与之相连接的流集组合成一个输入流并从第一个输入流开始读取，直到到达文件末尾，接着从第二个输入流读取，依次类推，直到到达包含的最后一个输入流的文件末 尾为止。合并流的作用是将多个源合并合一个源。
-  - FilterInputStream: 继承自`InputStream`的过滤输入流类，是用来“封装其它的输入流，并为它们提供额外的功能”。
-    - BufferedInputStream
-    - DataInputStream
-    - PushbackInputStream
+  - FilterInputStream: 继承自`InputStream`的过滤输入流类（装饰器超类），是用来“封装其它的输入流，并为它们提供额外的功能”。
+    - BufferedInputStream: 继承自`FilterInputStream`的带缓冲区功能的输入流类（装饰器子类），默认缓冲区大小是8K，能够减少访问磁盘的次数，提高文件读取性能。
+    - DataInputStream: 继承自`FilterInputStream`的数据输入流类，实现了 DataInput 接口。它允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型。
+    - PushbackInputStream: 继承自`FilterInputStream`的回退输入流类。允许试探性的读取数据流，如果不是我们想要的则返还回去。
+    - LineNumberInputStream: 继承自`FilterInputStream`的行号输入流类。可以获取当前的行号或设置当前行号，已过时，已经被 LineNumberReader 替代。
 - OutputStream: JavaIO中的顶级的字节输出流的抽象类，定义了最基础的输出、写入的相关方法。实现了`Closeable`和`Flushable`接口。
   - FileOutputStream: 继承自`OutputStream`的文件输出流类，用于向本地文件中写入字节数据。
   - ByteArrayOutputStream: 继承自`OutputStream`的字节数组输出流类，ByteArrayOutputStream 中的数据会被写入一个 byte 数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray() 和 toString() 获取数据。
   - PipedOutputStream: 继承自`OutputStream`的管道输出流类，在使用管道通信时，必须与 PipedInputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
   - ObjectOutputStream: 继承自`OutputStream`的对象输出流类，实现了 ObjectOutput 和 ObjectStreamConstants 接口。作用是把Java对象和基本数据写入到对象输出流中。只有支持 Serializable  或 Externalizable 接口的对象才能被`ObjectInputStream/ObjectOutputStream`所操作！
   - FilterOutputStream: 继承自`OutputStream`的过滤输出流类，是用来“封装其它的输出流，并为它们提供额外的功能”。
-    - BufferedOutputStream
-    - DataOutputStream
-    - PrintStream
-- Reader
-  - BufferedReader
-  - InputStreamReader
-    - FileReader
-  - FilterReader
-    - PushbackReader
-  - StringReader
-  - PipedReader
-  - ByteArrayReader
-- Writer
-  - BufferedWriter
-  - OutputStreamWriter
-    - FileWriter
-  - FilterWriter
-  - StringWriter
-  - PipedWriter
-  - CharArrayWriter
-  - PrinterWriter
+    - BufferedOutputStream: 继承自`FilterOutputStream`的带缓冲区功能的输出流类，默认缓冲区大小是8K，能够提高文件的写入效率。
+    - DataOutputStream: 继承自`FilterOutputStream`的数据输出流类，实现了 DataOutput 接口。它允许应用程序以与机器无关方式向底层输入流中写入基本 Java 数据类型。
+    - PrintStream: 继承自`FilterOutputStream`的打印输出流类，实现了 Appendable 和 Closeable 接口。使它们能够方便地打印各种数据值表示形式。PrintStream 永远不会抛出 IOException。PrintStream 提供了自动flush 和 字符集设置功能。所谓自动flush，就是往PrintStream写入的数据会立刻调用flush()函数。
+- Reader: JavaIO中的顶级的字符读取的抽象类，定义了最基础的读取方法。实现了 Readable 和 Closeable 接口。
+  - BufferedReader: 继承自`Reader`的带缓冲功能的字符流类，默认缓冲区大小是8K，从字符输入流中读取文本，缓冲各个字符，从而实现字符、数组和行的高效读取。创建 BufferReader 时，我们会通过它的构造函数指定某个 Reader 为参数。BufferReader 会将该 Reader 中的数据分批读取，每次读取一部分到缓冲中；操作完缓冲中的这部分数据之后，再从 Reader 中读取下一部分的数据。
+  - InputStreamReader: 继承自`Reader`，用于将从字节流转换成字符流的 Reader。是字节流通向字符流的桥梁。如果不指定字符集编码，该解码过程将使用平台默认的字符编码。
+    - FileReader: 继承自`InputStreamReader`，用来读取字符文件的便捷类。
+  - StringReader: 继承自`Reader`，用于字符串读取的字符流。
+  - CharArrayReader: 继承自`Reader`的字符数组输入流类。
+  - FilterReader: 继承自`Reader`的字符过滤输入流抽象类。
+    - PushbackReader: 继承自`FilterReader`的字符回退输入流类。
+  - PipedReader: 继承自`Reader`的字符管道输入流类。作用是可以通过管道进行线程间的通讯。必须和 PipedWriter 配合使用。
+- Writer: JavaIO中的顶级的字符写入的抽象类，定义了最基础的写入方法。实现了 Appendable 、 Closeable 和 Flushable 接口。
+  - BufferedWriter: 继承自`Writer`的带缓冲功能的字符流类，默认缓冲区大小是8K，从字符输出流中写入字符到文本中，缓冲各个字符，从而实现字符、数组和行的高效写入。
+  - OutputStreamWriter: 继承自`Reader`，用于将从字节流转换成字符流的 Writer。是字节流通向字符流的桥梁。如果不指定字符集编码，该解码过程将使用平台默认的字符编码。
+    - FileWriter: 继承自`OutputStreamWriter`，用来向文件中写入字符的便捷类。
+  - FilterWriter: 继承自`Writer`的字符过滤输出流抽象类。与 FilterOutputStream 功能一样、只是简单重写了父类的方法、目的是为所有装饰类提供标准和基本的方法、要求子类必须实现核心方法、和拥有自己的特色。这里 FilterWriter 没有子类、可能其意义只是提供一个接口、留着以后的扩展，本身是一个抽象类。
+  - StringWriter: 继承自`Writer`，用于字符串写入的字符流。
+  - PipedWriter: 继承自`Writer`的字符管道输出流类。作用是可以通过管道进行线程间的通讯。必须和 PipedReader 配合使用。
+  - CharArrayWriter: 继承自`Writer`的字符数组输出流类。
+  - PrinterWriter: 继承自`Writer`的打印写入类，提供了PrintStream的所有打印方法，其方法也从不抛出IOException。与PrintStream的区别：作为处理流使用时，PrintStream只能封装OutputStream类型的字节流，而PrintWriter既可以封装OutputStream类型的字节流，还能够封装Writer类型的字符输出流并增强其功能。
 
 ## 接口主要方法梳理
 
@@ -322,10 +323,31 @@ private static void testBySequenceStream() {
 }
 ```
 
+```java
+/**
+ * 测试通过 BufferedInputStream 和 BufferedOutputStream 来复制文件a.txt中的内容到b.txt文件中.
+ */
+private static void testCopyByBufferedStream() {
+    try (
+        InputStream in = new BufferedInputStream(new FileInputStream("G:/test/a.txt"));
+        OutputStream out = new BufferedOutputStream(new FileOutputStream("G:/test/b.txt"))
+    ) {
+        int len;
+        byte[] b = new byte[1024];
+        while ((len = in.read(b)) != -1) {
+            out.write(b, 0, len);
+        }
+    } catch (IOException e) {
+        log.error("通过缓冲区的方式来做文件读取写入失败!", e);
+    }
+}
+```
+
 ## 设计模式
 
 - 装饰器模式
 - 适配器模式
+- 监听器模式
 
 ## 设计的优缺点
 

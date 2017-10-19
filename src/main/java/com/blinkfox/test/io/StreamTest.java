@@ -1,6 +1,10 @@
 package com.blinkfox.test.io;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,13 +80,32 @@ public class StreamTest {
     }
 
     /**
+     * 测试通过 BufferedInputStream 和 BufferedOutputStream 来复制文件a.txt中的内容到b.txt文件中.
+     */
+    private static void testCopyByBufferedStream() {
+        try (
+            InputStream in = new BufferedInputStream(new FileInputStream("G:/test/a.txt"));
+            OutputStream out = new BufferedOutputStream(new FileOutputStream("G:/test/b.txt"))
+        ) {
+            int len;
+            byte[] b = new byte[1024];
+            while ((len = in.read(b)) != -1) {
+                out.write(b, 0, len);
+            }
+        } catch (IOException e) {
+            log.error("通过缓冲区的方式来做文件读取写入失败!", e);
+        }
+    }
+
+    /**
      * 主入口方法.
      * @param args 字符串数组参数
      */
     public static void main(String[] args) {
         //testCopyByFileStream();
-        testByByteArrayStream();
-        testBySequenceStream();
+        //testByByteArrayStream();
+        //testBySequenceStream();
+        testCopyByBufferedStream();
     }
 
 }
