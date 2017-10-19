@@ -9,11 +9,21 @@
   - PipedInputStream: 继承自`InputStream`的管道输入流类，在使用管道通信时，必须与 PipedOutputStream 配合使用。让多线程可以通过管道进行线程间的通讯。
   - ObjectInputStream: 继承自`InputStream`的对象输入流类，实现了 ObjectInput 和 ObjectStreamConstants 接口。作用是从输入流中读取Java对象和基本数据。只有支持 Serializable  或 Externalizable 接口的对象才能被`ObjectInputStream/ObjectOutputStream`所操作！
   - SequenceInputStream: 继承自`InputStream`的输入合并流类。SequenceInputStream 会将与之相连接的流集组合成一个输入流并从第一个输入流开始读取，直到到达文件末尾，接着从第二个输入流读取，依次类推，直到到达包含的最后一个输入流的文件末 尾为止。合并流的作用是将多个源合并合一个源。
+  - AudioInputStream: 继承自`InputStream`的音频输入流类。音频输入流是具有指定音频格式和长度的输入流。长度用示例帧表示，不用字节表示。提供几种方法，用于从流读取一定数量的字节，或未指定数量的字节。音频输入流跟踪所读取的最后一个字节。可以跳过任意数量的字节以到达稍后的读取位置。音频输入流可支持标记。设置标记时，会记住当前位置，以便可以稍后返回到该位置。
   - FilterInputStream: 继承自`InputStream`的过滤输入流类（装饰器超类），是用来“封装其它的输入流，并为它们提供额外的功能”。
     - BufferedInputStream: 继承自`FilterInputStream`的带缓冲区功能的输入流类（装饰器子类），默认缓冲区大小是8K，能够减少访问磁盘的次数，提高文件读取性能。
     - DataInputStream: 继承自`FilterInputStream`的数据输入流类，实现了 DataInput 接口。它允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型。
     - PushbackInputStream: 继承自`FilterInputStream`的回退输入流类。允许试探性的读取数据流，如果不是我们想要的则返还回去。
     - LineNumberInputStream: 继承自`FilterInputStream`的行号输入流类。可以获取当前的行号或设置当前行号，已过时，已经被 LineNumberReader 替代。
+    - CheckedInputStream: 继承自`FilterInputStream`的校验输入流类。
+    - CipherInputStream: 继承自`FilterInputStream`的密钥输入流类。
+    - DigestInputStream: 继承自`FilterInputStream`的摘要处理输入流类。
+    - InflaterInputStream: 继承自`FilterInputStream`的解压缩处理输入流类。
+      - GZIPInputStream: 继承自`InflaterInputStream`的gzip文件处理输入流类。
+      - ZipInputStream: 继承自`InflaterInputStream`的解压缩处理输入流类。
+        - JarInputStream: 继承自`ZipInputStream`的解压缩处理输入流类。
+    - DeflaterInputStream: 继承自`FilterInputStream`的压缩数据输入流类。
+    - ProgressMonitorInputStream: 继承自`FilterInputStream`的进度监控输入流类。
 - OutputStream: JavaIO中的顶级的字节输出流的抽象类，定义了最基础的输出、写入的相关方法。实现了`Closeable`和`Flushable`接口。
   - FileOutputStream: 继承自`OutputStream`的文件输出流类，用于向本地文件中写入字节数据。
   - ByteArrayOutputStream: 继承自`OutputStream`的字节数组输出流类，ByteArrayOutputStream 中的数据会被写入一个 byte 数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray() 和 toString() 获取数据。
@@ -23,8 +33,17 @@
     - BufferedOutputStream: 继承自`FilterOutputStream`的带缓冲区功能的输出流类，默认缓冲区大小是8K，能够提高文件的写入效率。
     - DataOutputStream: 继承自`FilterOutputStream`的数据输出流类，实现了 DataOutput 接口。它允许应用程序以与机器无关方式向底层输入流中写入基本 Java 数据类型。
     - PrintStream: 继承自`FilterOutputStream`的打印输出流类，实现了 Appendable 和 Closeable 接口。使它们能够方便地打印各种数据值表示形式。PrintStream 永远不会抛出 IOException。PrintStream 提供了自动flush 和 字符集设置功能。所谓自动flush，就是往PrintStream写入的数据会立刻调用flush()函数。
+    - CheckedOutputStream: 继承自`FilterOutputStream`的校验输出流类。
+    - CipherOutputStream: 继承自`FilterOutputStream`的密钥输出流类。
+    - DigestOutputStream: 继承自`FilterOutputStream`的摘要处理输出流类。
+    - InflaterOutputStream：继承自`FilterOutputStream`的解压缩处理输出流类。
+    - DeflaterOutputStream: 继承自`FilterOutputStream`的解压缩数据输出流类。
+      - GZIPOutputStream: 继承自`DeflaterOutputStream`的gzip文件解压缩输出流类。
+      - ZipOutputStream: 继承自`DeflaterOutputStream`的zip文件解压缩输出流类。
+        - JarOutputStream: 继承自`ZipOutputStream`的zip文件解压缩输出流类。
 - Reader: JavaIO中的顶级的字符读取的抽象类，定义了最基础的读取方法。实现了 Readable 和 Closeable 接口。
   - BufferedReader: 继承自`Reader`的带缓冲功能的字符流类，默认缓冲区大小是8K，从字符输入流中读取文本，缓冲各个字符，从而实现字符、数组和行的高效读取。创建 BufferReader 时，我们会通过它的构造函数指定某个 Reader 为参数。BufferReader 会将该 Reader 中的数据分批读取，每次读取一部分到缓冲中；操作完缓冲中的这部分数据之后，再从 Reader 中读取下一部分的数据。
+    - LineNumberReader: 继承自`BufferedReader`，可以获取当前的行号或设置当前行号。
   - InputStreamReader: 继承自`Reader`，用于将从字节流转换成字符流的 Reader。是字节流通向字符流的桥梁。如果不指定字符集编码，该解码过程将使用平台默认的字符编码。
     - FileReader: 继承自`InputStreamReader`，用来读取字符文件的便捷类。
   - StringReader: 继承自`Reader`，用于字符串读取的字符流。
