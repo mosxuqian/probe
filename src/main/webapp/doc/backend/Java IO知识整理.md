@@ -59,7 +59,7 @@
   - StringWriter: 继承自`Writer`，用于字符串写入的字符流。
   - PipedWriter: 继承自`Writer`的字符管道输出流类。作用是可以通过管道进行线程间的通讯。必须和 PipedReader 配合使用。
   - CharArrayWriter: 继承自`Writer`的字符数组输出流类。
-  - PrinterWriter: 继承自`Writer`的打印写入类，提供了PrintStream的所有打印方法，其方法也从不抛出IOException。与PrintStream的区别：作为处理流使用时，PrintStream只能封装OutputStream类型的字节流，而PrintWriter既可以封装OutputStream类型的字节流，还能够封装Writer类型的字符输出流并增强其功能。
+  - PrintWriter: 继承自`Writer`的打印写入类，提供了PrintStream的所有打印方法，其方法也从不抛出IOException。与PrintStream的区别：作为处理流使用时，PrintStream只能封装OutputStream类型的字节流，而PrintWriter既可以封装OutputStream类型的字节流，还能够封装Writer类型的字符输出流并增强其功能。
 
 ## IO UML类图
 
@@ -68,6 +68,8 @@
 ![Java OutputStream UML](http://static.blinkfox.com/java_outputstream_uml.png)
 
 ![Java Reader UML](http://static.blinkfox.com/java_reader_uml.png)
+
+![Java Writer UML](http://static.blinkfox.com/java_writer_uml.png)
 
 ## 接口主要方法梳理
 
