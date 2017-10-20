@@ -389,8 +389,6 @@ private static void testCopyByBufferedStream() {
 
 适配器模式是java IO库中第二个重要的设计模式。如：`StringBufferInputStream`就是一个适配器类。它继承了`InputStream`类型，同时持有一个对`String`类型的引用。这是将`String`对象适配成`InputStream`类型的对象形式的适配器模式。`PipedOutputStream`也是一个适配器类。`PipedOutputStream`总是和`PipedInputStream`一起使用，它接收一个类型为`PipedInputStream`的输入类型，并将之转换成`OutputStream`类型的输出流，这是一个对象形式的适配器模式应用。
 
-监听器模式
-
 ## 设计的优缺点
 
 ### 优点
