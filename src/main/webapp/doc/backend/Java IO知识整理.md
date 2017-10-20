@@ -67,6 +67,8 @@
 
 ![Java OutputStream UML](http://static.blinkfox.com/java_outputstream_uml.png)
 
+![Java Reader UML](http://static.blinkfox.com/java_reader_uml.png)
+
 ## 接口主要方法梳理
 
 ### InputStream中的主要方法
