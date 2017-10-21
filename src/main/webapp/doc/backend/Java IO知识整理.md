@@ -71,7 +71,25 @@
 
 ![Java Writer UML](http://static.blinkfox.com/java_writer_uml.png)
 
-## 接口主要方法梳理
+## 流的分类
+
+- 字节流和字符流：
+  - 字节流：以字节为单位，每次次读入或读出是8位数据。可以读任何类型数据。
+  - 字符流：以字符为单位，每次次读入或读出是16位数据。其只能读取字符类型数据。
+- 输出流和输入流：
+  - 输入流：从文件读入到内存。只能进行读操作。
+  - 输出流：从内存读出到文件。只能进行写操作。
+- 节点流和处理流：
+  - 节点流：直接与数据源相连，读入或读出。
+  - 处理流：与节点流一块使用，在节点流的基础上，再套接一层，套接在节点流上的就是处理流。处理流的构造方法总是要带一个其他的流对象做参数。一个流对象经过其他流的多次包装，称为流的链接。
+
+> **注**：输入输出流中的入和出，都是相对于系统内存而言的。为什么要有处理流？直接使用节点流，读写不方便，为了更快的读写文件，才有了处理流。
+
+![流按类型分类](http://static.blinkfox.com/javaio_mind_optype.png)
+
+![流按用途分类](http://static.blinkfox.com/javaio_mind_object.png)
+
+## 流中主要方法梳理
 
 ### InputStream中的主要方法
 
@@ -95,87 +113,31 @@
 - `void flush()`: 刷空输出流，并输出所有被缓存的字节。由于某些流支持缓存功能，该方法将把缓存中所有内容强制输出到流中。
 - `void close()`: 关闭输出流。
 
-### FileInputStream中的特有方法
+### Reader中的主要方法
 
-- `FileInputStream(String name)`: 构造方法，通过打开一个到实际文件的连接来创建一个FileInputStream，该文件通过文件系统中的路径名 name 指定。
-- `FileInputStream(File file)`: 构造方法，通过打开一个到实际文件的连接来创建一个 FileInputStream ，该文件通过文件系统中的 File 对象 file 指定。
-- `FileInputStream(FileDescriptor fdObj)`: 构造方法，通过使用文件描述符 fdObj 创建一个 FileInputStream，该文件描述符表示到文件系统中某个实际文件的现有连接。
-- `final FileDescriptor getFD()`: 返回表示到文件系统中实际文件的连接的 FileDescriptor 对象，该文件系统正被此 FileInputStream 使用。
-- `FileChannel getChannel()`: 返回与此文件输入流有关的唯一 FileChannel 对象。
-- `void finalize()`: 确保在不再引用文件输入流时调用其 close 方法。
+- `int read(java.nio.CharBuffer target)`: 试图读取字符入指定的字符缓冲区。
+- `int read()`: 读取单个字符。
+- `int read(char cbuf[])`: 读取字符到一个数组中。
+- `int read(char cbuf[], int off, int len)`: 读取字符到一个数组中的一部分。
+- `long skip(long n)`: 跳过n个字符。
+- `boolean ready()`: 通知此流是否已准备好被读取。
+- `boolean markSupported()`: 告诉此流是否支持`mark()`操作。
+- `void mark(int readAheadLimit)`: 标记流中的当前位置。
+- `void reset()`: 重置流。
+- `void close()`: 关闭该流并释放与之关联的所有系统资源。
 
-### FileOutputStream中的特有方法
+### Writer中的主要方法
 
-- `FileOutputStream(String name)`: 构造方法，创建一个向具有指定名称的文件中写入数据的输出文件流。
-- `FileOutputStream(String name, boolean append)`: 构造方法，创建一个向具有指定名称的文件中写入数据的输出文件流。如果第二个参数为 true，则将字节写入文件末尾处，而不是写入文件开始处。默认为 false，则是覆盖。
-- `FileOutputStream(File file)`: 构造方法，创建一个向指定 File 对象表示的文件中写入数据的文件输出流。
-- `FileOutputStream(File file, boolean append)`: 构造方法，创建一个向指定 File 对象表示的文件中写入数据的文件输出流。如果第二个参数为 true，则将字节写入文件末尾处，而不是写入文件开始处。默认为 false，则是覆盖。
-- `FileOutputStream(FileDescriptor fdObj)`: 构造方法，创建一个向指定文件描述符处写入数据的输出文件流，该文件描述符表示一个到文件系统中的某个实际文件的现有连接。
-- `final FileDescriptor getFD()`: 返回与此流有关的文件描述符。
-- `FileChannel getChannel()`: 返回与此文件输出流有关的唯一 FileChannel 对象。
-- `void finalize()`: 清理到文件的连接，并确保在不再引用此文件输出流时调用此流的 close 方法。
-
-### ByteArrayInputStream中的特有方法
-
-- `ByteArrayInputStream(byte buf[])`: 构造方法，创建一个内容为 buf 的字节流。
-- `ByteArrayInputStream(byte buf[], int offset, int length)`: 构造方法，创建一个内容为 buf 的字节流，并且是从 offset 开始读取数据，读取的长度为 length。
-
-### ByteArrayOutputStream中的特有方法
-
-- `ByteArrayOutputStream()`: 构造方法，默认创建的字节数组大小是 32 的字节数组输出流。
-- `ByteArrayOutputStream(int size)`: 构造方法，创建一个指定数组大小为 size 的字节数组输出流。
-- `synchronized void writeTo(OutputStream out)`: 将该字节数组输出流的数据全部写入到输出流 out 中。
-- `synchronized byte toByteArray()[]`: 将字节数组输出流转换成字节数组。
-- `synchronized int size()`: 得到字节数组输出流中的当前计数值。
-- `synchronized String toString()`: 根据平台的默认字符编码将缓冲区中的字节内容字节转换成字符串。
-- `synchronized String toString(String charsetName)`: 根据指定的字符编码 charsetName 将缓冲区中的字节内容字节转换成字符串。
-
-### PipedInputStream中的特有方法
-
-- `PipedInputStream()`: 构造方法，默认创建缓冲区大小是 1024 字节的管道输入流对象。
-- `PipedInputStream(int pipeSize)`: 构造方法，创建缓冲区大小是 pipeSize 字节的管道输入流对象。
-- `PipedInputStream(PipedOutputStream src)`: 构造方法，创建与管道输出流关联的管道输入流对象，默认的缓冲区大小是 1024 字节。
-- `PipedInputStream(PipedOutputStream src, int pipeSize)`: 构造方法，创建缓冲区大小是 pipeSize 字节，且与管道输出流关联的管道输入流对象。
-- `void connect(PipedOutputStream src)`: 与管道输出流对象进行连接绑定。
-- `synchronized void receive(int b)`: 接收 int 类型的数据 b。它只会在 PipedOutputStream 的`write(int b)`中会被调用。
-
-### PipedOutputStream中的特有方法
-
-- `PipedOutputStream()`: 空构造方法。
-- `PipedOutputStream(PipedInputStream snk)`: 构造方法，创建与管道输入流关联的管道输出流对象。
-- `synchronized void connect(PipedInputStream snk)`: 与管道输入流对象进行连接绑定。
-
-### ObjectInputStream中的特有方法
-
-- `ObjectInputStream(InputStream in)`: 构造方法，根据其他输入流构造对象输入流对象。
-- `Object readObject()`: 从对象输入流中读取出Java对象的方法。
-- `Object readUnshared()`: 从对象输入流中读取出“非共享”Java对象的方法。
-- `void defaultReadObject()`: 从对象输入流中读取出当前类的非静态和非瞬态字段。
-- `void registerValidation(ObjectInputValidation obj, int prio)`: 用于注册对象的图形被返回之前进行验证。
-- `boolean readBoolean()`: 如果该字节不为零返回true，如果该字节是零则返回false。
-- `byte readByte()`: 读取并返回一个单一的输入字节。该字节的范围是从-128到127之间的有符号值。
-- `int readUnsignedByte()`: 返回的无符号8位值，结果是在0-255的范围内。
-- `char readChar()`: 读取两个字节，并返回一个字符值。
-- `int readInt()`: 读取四个输入字节并返回一个整型值。
-- `String readLine()`: 读取一行文本。一行被认为是由一个换行符('\n')，回车符('\r')或回车符中的任何一个。
-- ...
-
-### ObjectOutputStream中的特有方法
-
-- `ObjectOutputStream(OutputStream out)`: 构造方法，根据其他输出流构造对象输出流对象。
-- `void writeObject(Object obj)`: 将指定Java对象写入到对象输出流中。
-- `void writeUnshared(Object obj)`: 写一个“非共享”对象到对象输出流。
-- `void defaultWriteObject()`: 写入当前类的非静态和非瞬态字段写入此流。
-- `void writeBoolean(boolean val)`: 写入布尔值到基础输出流。
-- `void writeByte(int val)`: 写入一个8位字节。
-- `void writeChar(int val)`: 将一个字符首先写入基础输出流与高字节两个字节的值。
-- `void writeInt(int val)`: 写入一个 int 值的基础流为四个字节。
-- ...
-
-### SequenceInputStream中的特有方法
-
-- `SequenceInputStream(Enumeration<? extends InputStream> e)`: 构造方法，通过记住参数来初始化新创建的 SequenceInputStream 对象，该参数必须是生成运行时类型为 InputStream 对象的 Enumeration 型参数。将按顺序读取由该枚举生成的输入流，以提供从此 SequenceInputStream 读取的字节。在用尽枚举中的每个输入流之后，将通过调用该流的 close 方法将其关闭。
-- `SequenceInputStream(InputStream s1, InputStream s2)`: 构造方法，通过记住这两个参数来初始化新创建的 SequenceInputStream（将按顺序读取这两个参数，先读取 s1，然后读取 s2）对象，以提供从此 SequenceInputStream 读取的字节。
+- `void write(int c)`: 写入单个字符。
+- `void write(char cbuf[])`: 写入字符数组。
+- `abstract void write(char cbuf[], int off, int len)`: 写入字符数组的一部分。
+- `void write(String str)`: 写入一个字符串。
+- `void write(String str, int off, int len)`: 写入一个字符串的一部分。
+- `Writer append(CharSequence csq)`: 将指定的字符序列追加写到writer中。
+- `Writer append(CharSequence csq, int start, int end)`: 将指定的字符序列的子序列追加写入此writer。
+- `Writer append(char c)`: 将指定字符追加到这个writer。
+- `abstract void flush()`: 刷新流。
+- `abstract void close()`: 关闭流，但要先刷新它。
 
 ## 使用示例
 
