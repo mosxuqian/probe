@@ -63,6 +63,8 @@
 
 ## IO UML类图
 
+![Java IO Mind](http://static.blinkfox.com/Javaio_mind_all.png)
+
 ![Java InputStream UML](http://static.blinkfox.com/java_inputstream_uml.png)
 
 ![Java OutputStream UML](http://static.blinkfox.com/java_outputstream_uml.png)
@@ -386,5 +388,3 @@ private static void testOutputByPrintStream() {
 
 - 复杂难记，API使用繁琐。如：Jdk1.6中，从文本文件中读取数据转换为字符串，就得至少10行代码。
 - IO流中的绝大多数方法都有`IOException`的检查异常，导致开发人员不得不在各个使用到的地方捕捉或再抛出异常，代码繁琐，不符合当前的主流设计思路。
-
-### 改进
