@@ -1,16 +1,6 @@
 package com.blinkfox.test.io;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.SequenceInputStream;
+import java.io.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +88,20 @@ public class StreamTest {
     }
 
     /**
+     * 测试使用 PrintStream 将数据输出到指定的文件.
+     */
+    private static void testOutputByPrintStream() {
+        System.out.println("Hello World!");
+        File file = new File("G:/test/d.txt");
+        try {
+            System.setOut(new PrintStream(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("这些内容在文件中才能看到哦！");
+    }
+
+    /**
      * 主入口方法.
      * @param args 字符串数组参数
      */
@@ -105,7 +109,8 @@ public class StreamTest {
         //testCopyByFileStream();
         //testByByteArrayStream();
         //testBySequenceStream();
-        testCopyByBufferedStream();
+        //testCopyByBufferedStream();
+        testOutputByPrintStream();
     }
 
 }

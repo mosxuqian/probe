@@ -163,6 +163,28 @@ private static void testCopyByFileStream() {
 }
 ```
 
+### BufferedInputStream 和 BufferedOutputStream
+
+```java
+/**
+ * 测试通过 BufferedInputStream 和 BufferedOutputStream 来复制文件a.txt中的内容到b.txt文件中.
+ */
+private static void testCopyByBufferedStream() {
+    try (
+        InputStream in = new BufferedInputStream(new FileInputStream("G:/test/a.txt"));
+        OutputStream out = new BufferedOutputStream(new FileOutputStream("G:/test/b.txt"))
+    ) {
+        int len;
+        byte[] b = new byte[1024];
+        while ((len = in.read(b)) != -1) {
+            out.write(b, 0, len);
+        }
+    } catch (IOException e) {
+        log.error("通过缓冲区的方式来做文件读取写入失败!", e);
+    }
+}
+```
+
 ### ByteArrayOutputStream
 
 ```java
@@ -314,23 +336,21 @@ private static void testBySequenceStream() {
 }
 ```
 
+### PrintStream
+
 ```java
 /**
- * 测试通过 BufferedInputStream 和 BufferedOutputStream 来复制文件a.txt中的内容到b.txt文件中.
+ * 测试使用 PrintStream 将数据输出到指定的文件.
  */
-private static void testCopyByBufferedStream() {
-    try (
-        InputStream in = new BufferedInputStream(new FileInputStream("G:/test/a.txt"));
-        OutputStream out = new BufferedOutputStream(new FileOutputStream("G:/test/b.txt"))
-    ) {
-        int len;
-        byte[] b = new byte[1024];
-        while ((len = in.read(b)) != -1) {
-            out.write(b, 0, len);
-        }
-    } catch (IOException e) {
-        log.error("通过缓冲区的方式来做文件读取写入失败!", e);
+private static void testOutputByPrintStream() {
+    System.out.println("Hello World!");
+    File file = new File("G:/test/d.txt");
+    try {
+        System.setOut(new PrintStream(new FileOutputStream(file)));
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
     }
+    System.out.println("这些内容在文件中才能看到哦！");
 }
 ```
 
