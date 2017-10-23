@@ -165,7 +165,7 @@ public enum Singleton {
 
 > **注**：在`《Effective Java》`一书中强烈推荐使用枚举来实现单例模式，该方式简单可自由序列化；保证只有一个实例（即使使用反射机制也无法多次实例化一个枚举量）；线程安全。唯一的缺点是非懒加载方式。
 
-### 6. 静态内部类（强烈推荐使用）
+### 6. 静态内部类（推荐使用）
 
 ```java
 /**
@@ -198,6 +198,8 @@ public class Singleton {
 
 }
 ```
+
+> **注**：这种方式利用了`ClassLoader`的机制保证初始化`instance`时只有一个线程，其只有显示通过调用`getInstance`方法时，才会显示装载`SingletonHolder`类，从而实例化`instance`。
 
 ## 模式分析
 
