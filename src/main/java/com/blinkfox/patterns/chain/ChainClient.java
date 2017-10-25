@@ -19,7 +19,7 @@ public class ChainClient {
         handler2.setNextHandler(handlern);
 
         //假设这个请求是ConcreteHandler2的责任
-        handler1.handlerRequest("ConcreteHandler2");
+        handler1.handle("ConcreteHandler2");
     }
 
 }

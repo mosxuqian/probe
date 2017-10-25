@@ -12,7 +12,7 @@ public class ConcreteHandlerN extends Handler {
      * @param condition 参数条件
      */
     @Override
-    public void handlerRequest(String condition) {
+    public void handle(String condition) {
         System.out.println( "具体处理角色n的处理方法 结束...");
     }
 

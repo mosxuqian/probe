@@ -6,21 +6,19 @@ package com.blinkfox.patterns.chain;
  */
 public abstract class Handler {
 
-    /** 下一个处理者角色. */
-    private Handler nextHandler;
+    /** 后继处理者角色. */
+    protected Handler nextHandler;
 
     /**
      * 处理请求的抽象方法.
      * @param condition 条件
      */
-    public abstract void handlerRequest(String condition);
+    public abstract void handle(String condition);
 
-    /* getter和setter方法 */
-
-    public Handler getNextHandler() {
-        return nextHandler;
-    }
-
+    /**
+     * nextHandler的Setter方法.
+     * @param nextHandler 后继处理器
+     */
     public void setNextHandler(Handler nextHandler) {
         this.nextHandler = nextHandler;
     }
