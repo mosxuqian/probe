@@ -1,14 +1,14 @@
 package com.blinkfox.patterns.chain;
 
 /**
- * 具体处理角色1
+ * 具体处理角色1.
  * Created by blinkfox on 16/7/11.
  */
 public class ConcreteHandler1 extends Handler {
 
     /**
-     * 具体处理角色1的处理方法
-     * @param condition
+     * 具体处理角色1的处理方法.
+     * @param condition 条件
      */
     @Override
     public void handlerRequest(String condition) {

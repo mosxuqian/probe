@@ -1,11 +1,15 @@
 package com.blinkfox.patterns.chain;
 
 /**
- * 责任连模式的客户端场景类
+ * 责任连模式的客户端场景类.
  * Created by blinkfox on 16/7/11.
  */
 public class ChainClient {
 
+    /**
+     * 主入口方法.
+     * @param args 数组参数
+     */
     public static void main(String[] args) {
         Handler handler1 = new ConcreteHandler1();
         Handler handler2 = new ConcreteHandler2();
