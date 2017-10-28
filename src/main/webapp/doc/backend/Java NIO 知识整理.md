@@ -100,6 +100,26 @@ aFile.close();
 
 > **注意**: `buf.flip()`的调用。首先把数据读取到Buffer中，然后调用`flip()`方法。接着再把数据读取出来。
 
+## 三、Buffer缓冲区
+
+Java NIO Buffers用于和NIO Channels进行交互。正如你已经知道的，我们从channel中读取数据到buffer里，从buffer把数据写入到channel中。
+**buffer本质上就是一块内存区，可以用来写入数据，并在稍后读取出来**。这块内存被NIO Buffer包裹起来，对外提供一系列的读写方便开发的接口。
+
+### Buffer基本用法
+
+利用Buffer读写数据，通常遵循四个步骤：
+
+- 把数据写入buffer；
+- 调用`flip()`方法；
+- 从Buffer中读取数据；
+- 调用`buffer.clear()`或者`buffer.compact()`。
+
+当写入数据到buffer中时，buffer会记录已经写入的数据大小。当需要读数据时，通过`flip()`方法把buffer从写模式调整为读模式；在读模式下，可以读取所有已经写入的数据。
+
+当读取完数据后，需要清空buffer，以满足后续写入操作。清空buffer有两种方式：调用`clear()`或`compact()`方法。`clear()`会清空整个buffer，`compact()`则只清空已读取的数据，未被读取的数据会被移动到buffer的开始位置，写入位置则近跟着未读数据之后。
+
+这里有一个简单的buffer案例，包括了write，flip和clear操作：
+
 ---
 
 参考文档：
