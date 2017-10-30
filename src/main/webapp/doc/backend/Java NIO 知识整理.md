@@ -313,6 +313,48 @@ channel.write(bufferArray);
 
 类似的传入一个buffer数组给write，内部机会按顺序将数组内的内容写进channel，这里需要注意，写入的时候针对的是buffer中position到limit之间的数据。也就是如果buffer的容量是128字节，但它只包含了58字节数据，那么写入的时候只有58字节会真正写入。因此`gathering write`是可以适用于可变大小的message的，这和`scattering read`不同。
 
+## 五、Channel to Channel Transfers通道传输接口
+
+在Java NIO中如果一个channel是`FileChannel`类型的，那么他可以直接把数据传输到另一个channel。逐个特性得益于`FileChannel`包含的`transferTo`和`transferFrom`两个方法。
+
+### transferFrom()
+
+`FileChannel.transferFrom`方法把数据从通道源传输到FileChannel：
+
+```java
+RandomAccessFile fromFile = new RandomAccessFile("fromFile.txt", "rw");
+FileChannel fromChannel = fromFile.getChannel();
+
+RandomAccessFile toFile = new RandomAccessFile("toFile.txt", "rw");
+FileChannel toChannel = toFile.getChannel();
+
+long position = 0;
+long count = fromChannel.size();
+
+toChannel.transferFrom(fromChannel, position, count);
+```
+
+transferFrom的参数`position`和`count`表示目标文件的写入位置和最多写入的数据量。如果通道源的数据小于count那么就传实际有的数据量。 另外，有些`SocketChannel`的实现在传输时只会传输哪些处于就绪状态的数据，即使`SocketChannel`后续会有更多可用数据。因此，这个传输过程可能不会传输整个的数据。
+
+### transferTo()
+
+`transferTo`方法把FileChannel数据传输到另一个channel,下面是案例：
+
+```java
+RandomAccessFile fromFile = new RandomAccessFile("fromFile.txt", "rw");
+FileChannel fromChannel = fromFile.getChannel();
+
+RandomAccessFile toFile = new RandomAccessFile("toFile.txt", "rw");
+FileChannel toChannel = toFile.getChannel();
+
+long position = 0;
+long count = fromChannel.size();
+
+fromChannel.transferTo(position, count, toChannel);
+```
+
+这段代码和之前介绍transfer时的代码非常相似，区别只在于调用方法的是哪个FileChannel。
+
 ---
 
 参考文档：
