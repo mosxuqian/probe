@@ -717,7 +717,7 @@ while(buf.hasRemaining()) {
 
 注意`SocketChannel.write()`方法的调用是在一个while循环中的。`write()`方法无法保证能写多少字节到SocketChannel。所以，我们重复调用`write()`直到Buffer没有要写的字节为止。
 
-### 非阻塞模式
+### SocketChannel的非阻塞模式
 
 可以设置SocketChannel为非阻塞模式（non-blocking mode）。设置之后，就可以在异步模式下调用`connect()`，`read()`和`write()`了。
 
@@ -745,6 +745,75 @@ while(!socketChannel.finishConnect() ){
 ### 非阻塞模式与选择器
 
 非阻塞模式与选择器搭配会工作的更好，通过将一或多个SocketChannel注册到Selector，可以询问选择器哪个通道已经准备好了读取，写入等。Selector与SocketChannel的搭配使用会在后面详讲。
+
+## 九、ServerSocketChannel
+
+Java NIO中的`ServerSocketChannel`是一个可以监听新进来的TCP连接的通道, 就像标准IO中的ServerSocket一样。ServerSocketChannel类在 `java.nio.channels`包中。
+
+这里有个例子：
+
+```java
+ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+
+serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+
+while (true) {
+    SocketChannel socketChannel = serverSocketChannel.accept();
+
+    //do something with socketChannel...
+}
+```
+
+### 打开 ServerSocketChannel
+
+通过调用`ServerSocketChannel.open()`方法来打开ServerSocketChannel。如：
+
+```java
+ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+```
+
+### 关闭 ServerSocketChannel
+
+通过调用`ServerSocketChannel.close()`方法来关闭ServerSocketChannel. 如：
+
+```java
+serverSocketChannel.close();
+```
+
+### 监听新进来的连接
+
+通过`ServerSocketChannel.accept()`方法监听新进来的连接。当`accept()`方法返回的时候,它返回一个包含新进来的连接的 SocketChannel。因此, `accept()`方法会一直阻塞到有新连接到达。
+
+通常不会仅仅只监听一个连接，在while循环中调用`accept()`方法. 如下面的例子：
+
+```java
+while (true) {
+    SocketChannel socketChannel = serverSocketChannel.accept();
+
+    //do something with socketChannel...
+}
+```
+
+当然,也可以在while循环中使用除了true以外的其它退出准则。
+
+### ServerSocketChannel的非阻塞模式
+
+ServerSocketChannel可以设置成非阻塞模式。在非阻塞模式下，`accept()`方法会立刻返回，如果还没有新进来的连接,返回的将是null。 因此，需要检查返回的SocketChannel是否是null。如：
+
+```java
+ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+
+serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+serverSocketChannel.configureBlocking(false);
+
+while (true) {
+    SocketChannel socketChannel = serverSocketChannel.accept();
+
+    if (socketChannel != null) {
+        //do something with socketChannel...
+    }
+}
+```
 
 ---
 
