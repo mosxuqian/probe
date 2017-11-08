@@ -1,8 +1,10 @@
 package com.blinkfox.test.other;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 
+import com.blinkfox.bean.UserInfo;
 import com.blinkfox.test.sorts.others.PhoneNumberSort;
 import org.pmw.tinylog.Logger;
 
@@ -26,6 +28,14 @@ public class CharTest {
         Logger.info("手机号3:{}", PhoneNumberSort.toNumStr(1380003L));
         Logger.info("手机号4:{}", PhoneNumberSort.toNumStr(1380103213L));
         Logger.info("手机号5:{}", PhoneNumberSort.toNumStr(13801032135L));
+
+        Field[] fields = UserInfo.class.getDeclaredFields();
+        for (Field field: fields) {
+            field.setAccessible(true);
+            if (field.getName().equals("email")) {
+                Logger.info("找到了email的字段field:{}", field.getName());
+            }
+        }
     }
 
 }
