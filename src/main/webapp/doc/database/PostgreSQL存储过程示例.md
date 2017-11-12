@@ -71,3 +71,32 @@ $$ LANGUAGE PLPGSQL;
 
 SELECT generate_ajupid('2017', '33', 2, 2, 'gaah', 'jcyah2', NULL);
 ```
+
+```sql
+CREATE OR REPLACE FUNCTION db_upid.update_gjf_ajupid(schema_table VARCHAR, ajupid VARCHAR, old_ajupid VARCHAR)
+RETURNS integer AS $$
+BEGIN
+    EXECUTE 'UPDATE ' || schema_table || ' set c_ptbh = ' || quote_literal(ajupid) 
+        || ' WHERE c_ptbh = ' || quote_literal(old_ajupid);
+    RETURN 1;
+END;
+$$ LANGUAGE PLPGSQL;
+
+SELECT update_gjf_ajupid('db_sacw.t_test_aaa', 'my_test_bh1', 'typtbh01');
+```
+
+```sql
+CREATE OR REPLACE FUNCTION db_upid.test_loop(schema_tables VARCHAR[])
+RETURNS VARCHAR AS $$
+DECLARE
+    str VARCHAR := '';
+BEGIN
+    FOR i IN 1..ARRAY_LENGTH(schema_tables, 1) LOOP
+        str := str || schema_tables[i];
+    END LOOP;
+    RETURN str;
+END;
+$$ LANGUAGE PLPGSQL;
+
+SELECT db_upid.test_loop(ARRAY['a', 'b', 'c']);
+```
