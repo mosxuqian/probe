@@ -41,7 +41,7 @@ SELECT generate_ajupid('2017', '33', 2, 2, 'gaah', null, NULL);
 CASE lylx
          WHEN 1 THEN '男'
          WHEN 2 THEN '女'
-	ELSE '其他' END;
+    ELSE '其他' END;
 
 ELSE
         sql1 := 'SELECT c_bh FROM db_upid.t_upid_ajupid WHERE c_jcyah = ' || jcyah || ' ORDER BY dt_zhgxsj DESC LIMIT 1 OFFSET 0'    
@@ -99,4 +99,18 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 SELECT db_upid.test_loop(ARRAY['a', 'b', 'c']);
+```
+
+```sql
+CREATE OR REPLACE FUNCTION db_upid.update_gjf_ajupid(tables VARCHAR[], ajupid VARCHAR, old_ajupid VARCHAR)
+RETURNS void AS $$
+BEGIN
+    FOR i IN 1..ARRAY_LENGTH(tables, 1) LOOP
+        EXECUTE 'UPDATE ' || tables[i] || ' set c_ptbh = ' || quote_literal(ajupid) 
+            || ' WHERE c_ptbh = ' || quote_literal(old_ajupid);
+    END LOOP;
+END;
+$$ LANGUAGE PLPGSQL;
+
+SELECT db_upid.update_gjf_ajupid(ARRAY['a', 'b', 'c'], '', 'typtbh01');
 ```
