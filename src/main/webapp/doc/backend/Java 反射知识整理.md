@@ -84,3 +84,133 @@ System.out.println(obj);
 ```
 
 > **注**：这种方法可以用指定的构造器构造类的实例。
+
+### 4. 获取方法
+
+获取某个Class对象的方法集合，主要有以下几个方法：
+
+- `getDeclaredMethods()`方法返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法。
+
+```java
+public Method[] getDeclaredMethods() throws SecurityException
+```
+
+- `getMethods()`方法返回某个类的所有公用（public）方法，包括其继承类的公用方法。
+
+```java
+public Method[] getMethods() throws SecurityException
+```
+
+- `getMethod()`方法返回一个特定的方法，其中第一个参数为方法名称，后面的参数为方法的参数对应Class的对象。
+
+```java
+public Method getMethod(String name, Class<?>... parameterTypes)
+```
+
+代码示例：
+
+```java
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+public class Test {
+
+    public static void test() throws IllegalAccessException,
+            InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Class<?> c = MethodClass.class;
+        Object object = c.newInstance();
+        Method[] methods = c.getMethods();
+        Method[] declaredMethods = c.getDeclaredMethods();
+        //获取MethodClass类的add方法
+        Method method = c.getMethod("add", int.class, int.class);
+
+        //getMethods()方法获取的所有方法
+        System.out.println("getMethods获取的方法：");
+        for(Method m: methods) {
+            System.out.println(m);
+        }
+
+        //getDeclaredMethods()方法获取的所有方法
+        System.out.println("getDeclaredMethods获取的方法：");
+        for(Method m: declaredMethods) {
+            System.out.println(m);
+        }
+    }
+}
+
+class MethodClass {
+
+    public final int fuck = 3;
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int sub(int a, int b) {
+        return a - b;
+    }
+
+}
+```
+
+> **注**：通过`getMethods()`获取的方法可以获取到父类的方法,比如`java.lang.Object`下定义的各个方法。
+
+### 5. 获取构造方法
+
+获取类构造器的用法与上述获取方法的用法类似。主要是通过Class类的`getConstructor`方法得到`Constructor`类的一个实例，而Constructor类有一个`newInstance`方法可以创建一个对象实例:
+
+```java
+public T newInstance(Object ... initargs)
+```
+
+> **注**：此方法可以根据传入的参数来调用对应的Constructor创建对象实例。
+
+### 6. 获取类的成员变量信息
+
+获取的方法同Method相似，主要是这几个方法，在此不再赘述：
+
+- `Field getField(String name)`: 访问公有的成员变量。
+- `Field[] getDeclaredFields()`：所有已声明的成员变量。但不能得到其父类的成员变量。
+- `Field[] getFields()`和`Field[] getDeclaredFields()`用法同上。
+
+### 7. 调用方法
+
+当我们从类中获取了一个方法后，我们就可以用invoke()方法来调用这个方法。invoke方法的原型为:
+
+```java
+public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException,
+ InvocationTargetException
+```
+
+代码示例：
+
+```java
+public class Test {
+
+    public static void main(String[] args) throws IllegalAccessException,
+            InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Class<?> klass = MethodClass.class;
+        //创建 MethodClass 的实例
+        Object obj = klass.newInstance();
+        //获取 MethodClass 类的add方法
+        Method method = klass.getMethod("add", int.class, int.class);
+        //调用 method 对应的方法 => add(1,4)
+        Object result = method.invoke(obj, 1, 4);
+        System.out.println(result);
+    }
+}
+
+class MethodClass {
+
+    public final int fuck = 3;
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int sub(int a, int b) {
+        return a - b;
+    }
+
+}
+```
