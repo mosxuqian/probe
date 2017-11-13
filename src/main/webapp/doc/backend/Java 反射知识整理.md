@@ -235,6 +235,121 @@ public static void testArray() throws ClassNotFoundException {
 }
 ```
 
+## 三、使用反射获取信息
+
+Class类提供了大量的实例方法来获取该Class对象所对应的详细信息，Class类大致包含如下方法，其中每个方法都包含多个重载版本，因此我们只是做简单的介绍，详细请参考[JDK文档](https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html)。
+
+### 1. 获取类内信息
+
+- 构造器: `Constructor<T> getConstructor(Class<?>... parameterTypes)`
+- 包含的方法: `Method getMethod(String name, Class<?>... parameterTypes)`
+- 包含的属性: `Field getField(String name)`
+- 包含的Annotation: `<A extends Annotation> A getAnnotation(Class<A> annotationClass)`
+- 内部类: `Class<?>[] getDeclaredClasses()`
+- 外部类: `Class<?> getDeclaringClass()`
+- 所实现的接口: `Class<?>[] getInterfaces()`
+- 修饰符: `int getModifiers()`
+- 所在包: `Package getPackage()`
+- 类名: `String getName()`
+- 简称: `String getSimpleName()`
+
+### 2. 判断类本身信息的方法
+
+- 是否注解类型: `boolean isAnnotation()`
+- 是否使用了该Annotation修饰: `boolean isAnnotationPresent(Class<? extends Annotation> annotationClass)`
+- 是否匿名类: `boolean isAnonymousClass()`
+- 是否数组: `boolean isArray()`
+- 是否枚举: `boolean isEnum()`
+- 是否原始类型: `boolean isPrimitive()`
+- 是否接口: `boolean isInterface()`
+- obj是否是该Class的实例: `boolean isInstance(Object obj)`
+
+### 3. 使用反射获取泛型信息
+
+为了通过反射操作泛型以迎合实际开发的需要, Java新增了`java.lang.reflect.ParameterizedType`、`java.lang.reflect.GenericArrayType`、`java.lang.reflect.TypeVariable`、`java.lang.reflect.WildcardType`几种类型来代表不能归一到Class类型但是又和原始类型同样重要的类型。
+
+- `ParameterizedType`: 一种参数化类型, 比如Collection<String>
+- `GenericArrayType`: 一种元素类型是参数化类型或者类型变量的数组类型
+- `TypeVariable`: 各种类型变量的公共接口
+- `WildcardType`: 一种通配符类型表达式, 如`?`、`? extends Number`、`? super Integer`
+
+代码示例：
+
+```java
+public class Client {
+
+    private Map<String, Object> objectMap;
+
+    public void test(Map<String, User> map, String string) {
+    }
+
+    public Map<User, Bean> test() {
+        return null;
+    }
+
+    /**
+     * 测试属性类型
+     *
+     * @throws NoSuchFieldException
+     */
+    @Test
+    public void testFieldType() throws NoSuchFieldException {
+        Field field = Client.class.getDeclaredField("objectMap");
+        Type gType = field.getGenericType();
+        // 打印type与generic type的区别
+        System.out.println(field.getType());
+        System.out.println(gType);
+        System.out.println("**************");
+        if (gType instanceof ParameterizedType) {
+            ParameterizedType pType = (ParameterizedType) gType;
+            Type[] types = pType.getActualTypeArguments();
+            for (Type type : types) {
+                System.out.println(type.toString());
+            }
+        }
+    }
+
+    /**
+     * 测试参数类型
+     *
+     * @throws NoSuchMethodException
+     */
+    @Test
+    public void testParamType() throws NoSuchMethodException {
+        Method testMethod = Client.class.getMethod("test", Map.class, String.class);
+        Type[] parameterTypes = testMethod.getGenericParameterTypes();
+        for (Type type : parameterTypes) {
+            System.out.println("type -> " + type);
+            if (type instanceof ParameterizedType) {
+                Type[] actualTypes = ((ParameterizedType) type).getActualTypeArguments();
+                for (Type actualType : actualTypes) {
+                    System.out.println("\tactual type -> " + actualType);
+                }
+            }
+        }
+    }
+
+    /**
+     * 测试返回值类型
+     *
+     * @throws NoSuchMethodException
+     */
+    @Test
+    public void testReturnType() throws NoSuchMethodException {
+        Method testMethod = Client.class.getMethod("test");
+        Type returnType = testMethod.getGenericReturnType();
+        System.out.println("return type -> " + returnType);
+
+        if (returnType instanceof ParameterizedType) {
+            Type[] actualTypes = ((ParameterizedType) returnType).getActualTypeArguments();
+            for (Type actualType : actualTypes) {
+                System.out.println("\tactual type -> " + actualType);
+            }
+        }
+    }
+}
+```
+
 ---
 
 参考文档：[Java反射基础](http://www.sczyh30.com/posts/Java/java-reflection-1/)
