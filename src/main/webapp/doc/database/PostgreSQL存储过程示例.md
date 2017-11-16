@@ -102,15 +102,22 @@ SELECT db_upid.test_loop(ARRAY['a', 'b', 'c']);
 ```
 
 ```sql
-CREATE OR REPLACE FUNCTION db_upid.update_gjf_ajupid(tables VARCHAR[], ajupid VARCHAR, old_ajupid VARCHAR)
+CREATE OR REPLACE FUNCTION db_upid.update_gjf_cwupid(update_schema VARCHAR, main_table VARCHAR,
+    sub_tables VARCHAR[], cwupid VARCHAR, old_cwupid VARCHAR)
 RETURNS void AS $$
 BEGIN
-    FOR i IN 1..ARRAY_LENGTH(tables, 1) LOOP
-        EXECUTE 'UPDATE ' || tables[i] || ' set c_ptbh = ' || quote_literal(ajupid) 
-            || ' WHERE c_ptbh = ' || quote_literal(old_ajupid);
+    --  执行主表的财物平台编号的更新.
+    EXECUTE 'UPDATE ' || update_schema || '.' || main_table || ' set c_ptbh = ' || quote_literal(cwupid)
+            || ' WHERE c_ptbh = ' || quote_literal(old_cwupid);
+
+    -- 循环执行其下各个子表的财物平台编号的更新.
+    FOR i IN 1..ARRAY_LENGTH(sub_tables, 1) LOOP
+        EXECUTE 'UPDATE ' || update_schema || '.' || sub_tables[i] || ' set c_cwptbh = ' || quote_literal(cwupid)
+            || ' WHERE c_cwptbh = ' || quote_literal(old_cwupid);
     END LOOP;
 END;
 $$ LANGUAGE PLPGSQL;
 
-SELECT db_upid.update_gjf_ajupid(ARRAY['a', 'b', 'c'], '', 'typtbh01');
+SELECT db_upid.update_gjf_cwupid('db_sacw_fy', 't_cw_jbxx',
+    ARRAY['t_cw_kxzcxx', 't_cw_wpjdxx', 't_cw_ckrkxx'], '2017331000001520002', '2017331000001520001');
 ```
