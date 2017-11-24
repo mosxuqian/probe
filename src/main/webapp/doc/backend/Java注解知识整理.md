@@ -26,3 +26,39 @@ public String toString() {
 另一个很重要的因素是注解定义了一种标准的描述元数据的方式。在这之前，开发人员通常使用他们自己的方式定义元数据。例如，使用标记接口，注释，`transient`关键字等等。每个程序员按照自己的方式定义元数据，而不像注解这种标准的方式。
 
 目前，许多框架将`XML`和`Annotation`两种方式结合使用，平衡两者之间的利弊。
+
+## Java基本注解
+
+在`java.lang`包下，JAVA提供了5个基本注解：
+
+- `@Override`：限定重写父类的方法。对于子类中被`@Override`修饰的方法，如果存在对应的被重写的父类方法，则正确；如果不存在，则报错。`@Override`只能作用于方法，不能作用于其他程序元素。
+- `@Deprecated`：用于表示某个程序元素（类、方法等）已过时。如果使用了被`@Deprecated`修饰的类或方法等，编译器会发出警告。
+- `@SuppressWarnings`：抑制编译器警告。指示被`@SuppressWarnings`修饰的程序元素（以及该程序元素中的所有子元素，例如类以及该类中的方法）取消显示指定的编译器警告。例如，常见的`@SuppressWarnings（value="unchecked"）`。`SuppressWarnings`注解的常见参数值的简单说明：
+  - `deprecation`：使用了不赞成使用的类或方法时的警告(使用`@Deprecated`使得编译器产生的警告)；
+  - `unchecked`：执行了未检查的转换时的警告，例如当使用集合时没有用泛型 (Generics) 来指定集合保存的类型; 关闭编译器警告
+  - `fallthrough`：当 Switch 程序块直接通往下一种情况而没有 Break 时的警告;
+  - `path`：在类路径、源文件路径等中有不存在的路径时的警告;
+  - `serial`：当在可序列化的类上缺少 serialVersionUID 定义时的警告;
+  - `finally`：任何 finally 子句不能正常完成时的警告;
+  - `all`：关于以上所有情况的警告。
+- `@SafeVarargs`：@SafeVarargs是JDK 7 专门为抑制“堆污染”警告提供的。
+- `@FunctionalInterface`：Java8新增的函数式接口。Java8规定：如果接口中只有一个抽象方法（可以包含多个默认方法或多个`static`方法），该接口称为函数式接口。如以下代码：
+
+```java
+@FunctionalInterface
+public interface Fun {
+
+    static void foo() {
+        System.out.println("foo类方法")；
+    }
+
+    default void bar() {
+        System.out.println("bar默认方法")；
+    }
+
+    void test(); //只定义了一个抽象方法
+
+}
+```
+
+> **注**：如在上面的接口中再加一个抽象方法`abc()`，则会编译出错。
