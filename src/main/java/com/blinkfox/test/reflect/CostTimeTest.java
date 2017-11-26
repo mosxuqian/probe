@@ -17,9 +17,15 @@ public class CostTimeTest {
         b = (B) bproxy.getProxy(B.class);
     }
 
+    /**
+     * main 方法.
+     * 
+     * @param args 数组参数
+     */
     public static void main(String[] args) {
         a.doSomeThing();
-        b.doSomeThing2();
+        a.doSomeThing2();
+        b.doSomeThing3();
     }
 
 }

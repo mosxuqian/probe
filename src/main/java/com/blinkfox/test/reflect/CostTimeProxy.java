@@ -1,21 +1,30 @@
 package com.blinkfox.test.reflect;
 
+import java.lang.reflect.Method;
+
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import java.lang.reflect.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * CostTime 方法执行耗时的代理方法
- * Created by blinkfox on 2017-01-04.
+ * 被标注为'@CostTime'注解的方法执行耗时的代理方法.
+ * <p>实现了cglib中的`MethodInterceptor`的方法拦截接口.</p>
+ *
+ * @author blinkfox on 2017-01-04.
  */
 public class CostTimeProxy implements MethodInterceptor {
+
+    private static final Logger log = LoggerFactory.getLogger(CostTimeProxy.class);
 
     private Enhancer enhancer = new Enhancer();
 
     /**
-     * 获取代理类
-     * @return
+     * 获取代理类.
+     *
+     * @param cls 代理类的class
+     * @return 代理类实例
      */
     public Object getProxy(Class cls) {
         enhancer.setSuperclass(cls);
@@ -24,13 +33,14 @@ public class CostTimeProxy implements MethodInterceptor {
     }
 
     /**
-     * 拦截方法，判断是否有 @CostTime 的注解，如果有则拦截执行
-     * @param o
-     * @param method
-     * @param args
-     * @param methodProxy
-     * @return
-     * @throws Throwable
+     * 拦截方法,判断是否有'@CostTime'的注解，如果有则拦截执行.
+     *
+     * @param o 对象
+     * @param method 方法
+     * @param args 参数
+     * @param methodProxy 代理方法
+     * @return 对象
+     * @throws Throwable 问题
      */
     @Override
     public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
@@ -49,9 +59,9 @@ public class CostTimeProxy implements MethodInterceptor {
         if (limitTime <= 0 || (diffTime >= limitTime)) {
             String methodName = method.getName();
             // 打印耗时的信息
-            System.out.println("-----通过注解监控" + methodName + " 方法的执行耗时为:" + diffTime + " ms");
+            log.warn("【CostTime监控】通过注解监控方法'{}'的执行耗时为:{}", methodName, diffTime);
         }
-        return null;
+        return result;
     }
 
 }
