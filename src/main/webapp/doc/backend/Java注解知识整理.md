@@ -2,7 +2,7 @@
 
 ## 概述
 
-### 什么是注解
+### 1. 什么是注解
 
 注解(`Annotation`)是一种应用于类、方法、参数、变量、构造器及包声明中的特殊修饰符，它是一种由JSR-175标准选择用来描述元数据的一种工具。Java从`Java5`开始引入了注解。在注解出现之前，程序的元数据只是通过java注释和javadoc，但是注解提供的功能要远远超过这些。注解不仅包含了元数据，它还可以作用于程序运行过程中、注解解释器可以通过注解决定程序的执行顺序。
 
@@ -17,7 +17,7 @@ public String toString() {
 
 上面的代码中，我重写了`toString()`方法并使用了`@Override`注解。但是，即使我们不使用`@Override`注解标记代码，程序也能够正常执行。那么，该注解表示什么？这么写有什么好处吗？事实上，`@Override`告诉编译器这个方法是一个重写方法(描述方法的元数据)，如果父类中不存在该方法，编译器便会报错，提示该方法没有重写父类中的方法。如果我不小心拼写错误，例如将`toString()`写成了`toStrring(){double r}`，而且我也没有使用`@Override`注解，那程序依然能编译运行。但运行结果会和我期望的大不相同。现在我们了解了什么是注解，并且使用注解有助于阅读程序。
 
-### 为什么要引入注解
+### 2. 为什么要引入注解
 
 使用注解之前(甚至在使用之后)，XML被广泛的应用于描述元数据。不知何时开始一些应用开发人员和架构师发现XML的维护越来越糟糕了。他们希望使用一些和代码紧耦合的东西，而不是像XML那样和代码是松耦合的(在某些情况下甚至是完全分离的)代码描述。如果你在Google中搜索“XML vs. annotations”，会看到许多关于这个问题的辩论。最有趣的是XML配置其实就是为了分离代码和配置而引入的。上述两种观点可能会让你很疑惑，两者观点似乎构成了一种循环，但各有利弊。下面我们通过一个例子来理解这两者的区别。
 
@@ -29,20 +29,37 @@ public String toString() {
 
 ## Java基本注解
 
-在`java.lang`包下，JAVA提供了5个基本注解：
+在`java.lang`包下，JAVA提供了5个基本注解。
 
-- `@Override`：限定重写父类的方法。对于子类中被`@Override`修饰的方法，如果存在对应的被重写的父类方法，则正确；如果不存在，则报错。`@Override`只能作用于方法，不能作用于其他程序元素。
-- `@Deprecated`：用于表示某个程序元素（类、方法等）已过时。如果使用了被`@Deprecated`修饰的类或方法等，编译器会发出警告。
-- `@SuppressWarnings`：抑制编译器警告。指示被`@SuppressWarnings`修饰的程序元素（以及该程序元素中的所有子元素，例如类以及该类中的方法）取消显示指定的编译器警告。例如，常见的`@SuppressWarnings（value="unchecked"）`。`SuppressWarnings`注解的常见参数值的简单说明：
-  - `deprecation`：使用了不赞成使用的类或方法时的警告(使用`@Deprecated`使得编译器产生的警告)；
-  - `unchecked`：执行了未检查的转换时的警告，例如当使用集合时没有用泛型 (Generics) 来指定集合保存的类型; 关闭编译器警告
-  - `fallthrough`：当 Switch 程序块直接通往下一种情况而没有 Break 时的警告;
-  - `path`：在类路径、源文件路径等中有不存在的路径时的警告;
-  - `serial`：当在可序列化的类上缺少 serialVersionUID 定义时的警告;
-  - `finally`：任何 finally 子句不能正常完成时的警告;
-  - `all`：关于以上所有情况的警告。
-- `@SafeVarargs`：@SafeVarargs是JDK 7 专门为抑制“堆污染”警告提供的。
-- `@FunctionalInterface`：Java8新增的函数式接口。Java8规定：如果接口中只有一个抽象方法（可以包含多个默认方法或多个`static`方法），该接口称为函数式接口。如以下代码：
+### 1. @Override
+
+`@Override`用于标注重写了父类的方法。对于子类中被`@Override`修饰的方法，如果存在对应的被重写的父类方法，则正确；如果不存在，则报错。`@Override`只能作用于方法，不能作用于其他程序元素。
+
+### 2. @Deprecated
+
+`@Deprecated`用于表示某个程序元素（类、方法等）已过时。如果使用了被`@Deprecated`修饰的类或方法等，编译器会发出警告。
+
+### 3. @SuppressWarnings
+
+`@SuppressWarnings`用于抑制编译器的警告。指示被`@SuppressWarnings`修饰的程序元素（以及该程序元素中的所有子元素，例如类以及该类中的方法）取消显示指定的编译器警告。例如，常见的`@SuppressWarnings（value="unchecked"）`。
+
+`SuppressWarnings`注解的常见参数值主要有以下几种：
+
+- `deprecation`：使用了不赞成使用的类或方法时的警告(使用`@Deprecated`使得编译器产生的警告)；
+- `unchecked`：执行了未检查的转换时的警告，例如当使用集合时没有用泛型 (Generics) 来指定集合保存的类型; 关闭编译器警告
+- `fallthrough`：当 Switch 程序块直接通往下一种情况而没有 Break 时的警告;
+- `path`：在类路径、源文件路径等中有不存在的路径时的警告;
+- `serial`：当在可序列化的类上缺少 serialVersionUID 定义时的警告;
+- `finally`：任何 finally 子句不能正常完成时的警告;
+- `all`：关于以上所有情况的警告。
+
+### 4. @SafeVarargs
+
+`@SafeVarargs`是JDK 7 专门为抑制**堆污染**警告提供的。
+
+### 5. @FunctionalInterface
+
+`@FunctionalInterface`是Java8中新增的函数式接口。Java8规定：如果接口中只有一个抽象方法（可以包含多个默认方法或多个`static`方法），该接口称为函数式接口。如以下代码：
 
 ```java
 @FunctionalInterface
@@ -177,6 +194,83 @@ public @interface AccessContainer {
 
 可重复注解使得开发者可以根据具体的需求对同一个声明式或者类型加上同一类型的注解，从而增加代码的灵活性和可读性。
 
+## 自定义注解及解析
+
+### 1. 自定义注解
+
+创建Java的自定义注解和创建一个接口相似，但是注解的`interface`关键字需要以`@`符号开头。我们可以为注解声明方法。我们先来看看一个自定义注解的示例：
+
+```java
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@Inherited
+@Documented
+public @interface MethodInfo {
+
+    String author() default 'blinkfox';
+
+    String date();
+
+    int revision() default 1;
+
+    String comments();
+
+}
+```
+
+自定义注解就需要用到上面所介绍到的几种元注解，可以看出元注解就是用来注解其它注解。自定义注解和接口类似，只能定义**方法**，注解中的**方法**需要遵循以下几种规则：
+
+- 注解方法不能带有参数；
+- 注解方法返回值类型限定为：基本类型、String、Enums、Annotation或者是这些类型的数组；
+- 注解方法可以有默认值。
+
+### 2. 注解的解析
+
+要解析Java中的注解需要使用Java反射技术。那么注解的`RetentionPolicy`应该设置为`RUNTIME`，否则Java类的注解信息在执行过程中将不可用，我们也就不能从中得到任何和注解有关的数据。以下是解析注解常用的几种方法的示例代码：
+
+```java
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class AnnotationParsing {
+
+    private static final Logger log = LoggerFactory.getLogger(AnnotationParsing.class);
+
+    public static void main(String[] args) {
+        try {
+            for (Method method : AnnotationParsing.class.getClassLoader()
+                .loadClass(('com.journaldev.annotations.AnnotationExample')).getMethods()) {
+                // checks if MethodInfo annotation is present for the method
+                if (method.isAnnotationPresent(com.journaldev.annotations.MethodInfo.class)) {
+                // iterates all the annotations available in the method
+                    for (Annotation anno : method.getDeclaredAnnotations()) {
+                        System.out.println('Annotation in Method ''+ method + '' : ' + anno);
+                    }
+
+                    MethodInfo methodAnno = method.getAnnotation(MethodInfo.class);
+                    if (methodAnno.revision() == 1) {
+                        System.out.println('Method with revision no 1 = '+ method);
+                    }
+                }
+            }
+        } catch (Exception e) {
+                log.error("解析Java注解出错!", e);
+        }
+    }
+
+}
+```
+
 ## 注解的应用之监控方法执行耗时
 
 通过前面对元注解的介绍，我们就可以自定义我们需要的注解了。假如，我们需要监控某些方法的执行，最原始的办法就是在方法执行的开头和结尾分别记录时间，最后计算前后的时间差即可，但是这些代码与核心业务无关，且大量重复、分散在各处，维护起来也困难。这时我们可以[使用Spring AOP来统计方法的执行耗时](http://blinkfox.com/shi-yong-spring-aoplai-tong-ji-fang-fa-de-zhi-xing-shi-jian/)，同时我们也可以使用注解的方式来实现，更自由灵活。
@@ -218,6 +312,7 @@ import java.lang.reflect.Method;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
