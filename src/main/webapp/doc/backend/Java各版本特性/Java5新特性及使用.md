@@ -2,10 +2,10 @@
 
 ## 特性列表
 
-- 泛型
-- 增强for循环
+- 泛型(Generics)
+- 增强for循环(Enhanced for Loop)
+- 自动装箱拆箱(Autoboxing/Unboxing)
 - 枚举
-- 装箱拆箱
 - 变长参数
 - 注解
 - foreach循环
@@ -176,7 +176,7 @@ public class ClassTypeCapture<T> {
   - 消除强制类型转换。
   - 提高性能。
 
-## 二、增强for循环
+## 二、增强for循环(Enhanced for Loop)
 
 在Java5中，引入了另一种形式的for循环来对集合、数组、Map等进行遍历。如以下示例：
 
@@ -191,6 +191,149 @@ for (int i : integers) {
 借助增强for循环，可以用一种更简单地方式来完成遍历。能用这种方法遍历的对象的类型，可以是数组、`Collection`、`Map`或者任何其它实现了`java.lang.Iterable`接口的类。通过跟同样是在Java5中引入的泛型机制配合使用，可以精确的控制能采用的循环变量的类型。而且，因为这么编写的代码，会在编译期间被自动当成是和传统写法相同的形式，所以不必担心要额外付出性能方面的代价。
 
 > **注**：Java采用`for`（而不是意义更明确的`foreach`）来引导这种一般被叫做**for-each循环**的循环，并使用`:`（而不是意义更明确的`in`）来分割循环变量名称和要被遍历的对象。这样做的主要原因，是为了避免因为引入新的关键字，造成兼容性方面的问题——在Java语言中，不允许把关键字当作变量名来使用，虽然使用`foreach`这名字的情况并不是非常多，但是`in`却是一个经常用来表示输入流的名字（例如`java.lang.System`类里，就有一个名字叫做`in`的`static`属性，表示**标准输入流**）。
+
+## 三、自动装箱拆箱(Autoboxing/Unboxing)
+
+### 1. 概述
+
+自动装箱就是Java自动将原始类型值转换成对应的对象，比如将`int`的变量转换成`Integer`对象，这个过程叫做装箱，反之将`Integer`对象转换成`int`类型值，这个过程叫做拆箱。因为这里的装箱和拆箱是自动进行的非人为转换，所以就称作为自动装箱和拆箱。原始类型`byte`, `short`, `char`, `int`, `long`, `float`, `double`和`boolean`对应的封装类分别为`Byte`, `Short`, `Character`, `Integer`, `Long`, `Float`, `Double`, `Boolean`。
+
+自动装箱时编译器调用`valueOf`将原始类型值转换成对象，同时自动拆箱时，编译器通过调用类似`intValue()`, `doubleValue()`这类的方法将对象转换成原始类型值。自动装箱和拆箱在Java中很常见，比如我们有一个方法，接受一个对象类型的参数，如果我们传递一个原始类型值，那么Java会自动将这个原始类型值转换成与之对应的对象。最经典的一个场景就是当我们向`ArrayList`这样的容器中增加原始类型数据时，就会发生自动装箱。代码示例如下：
+
+```java
+ArrayList<Integer> intList = new ArrayList<Integer>();
+intList.add(1); //自动装箱
+intList.add(2); // 自动装箱
+
+int number = intList.get(0); // 自动拆箱
+```
+
+### 2. 对象相等的比较
+
+这是一个比较容易出错的地方，`==`可以用于原始值进行比较，也可以用于对象进行比较，当用于对象与对象之间比较时，比较的不是对象代表的值，而是检查两个对象是否是同一对象，这个比较过程中**没有自动装箱**发生。进行对象值比较不应该使用`==`，而应该使用对象对应的`equals`方法。看一个能说明问题的例子。
+
+```java
+public class AutoboxingTest {
+
+    public static void main(String args[]) {
+        // 示例 1: 使用'=='号进行原始类型的比较(没有自动装箱)
+        int i1 = 1;
+        int i2 = 1;
+        System.out.println("i1==i2 : " + (i1 == i2)); // true
+
+        // 示例 2: 使用'=='号进行原始类型和对象类型混合的比较(自动装箱)
+        Integer num1 = 1;
+        int num2 = 1;
+        System.out.println("num1 == num2 : " + (num1 == num2)); // true
+
+        // 示例 3: 使用'=='号进行Integer对象类型的比较(会有缓存的特殊情况)
+        Integer obj1 = 127; // 自动装箱将调用`Integer.valueOf()`且缓存该对象，以便重用
+        Integer obj2 = 127; // 获取已经缓存过的对象
+        System.out.println("obj1 == obj2 : " + (obj1 == obj2)); // true
+
+       // 示例 4: 使用'=='号进行Integer对象类型的比较(不会缓存)
+        Integer obj3 = 128; // 自动装箱将调用`Integer.valueOf()`不缓存该对象
+        Integer obj4 = 128; // 同样是自动装箱将调用`Integer.valueOf()`
+        System.out.println("obj3 == obj4 : " + (obj3 == obj4)); // false
+
+        // 示例 5: 使用'=='号进行`new`出来的新`Integer`对象类型的比较
+        Integer one = new Integer(1); // no autoboxing
+        Integer anotherOne = new Integer(1);
+        System.out.println("one == anotherOne : " + (one == anotherOne)); // false
+    }
+
+}
+```
+
+### 3. 缓存部分对象
+
+输出结果：
+
+```bash
+i1==i2 : true
+num1 == num2 : true
+obj1 == obj2 : true
+obj3 == obj4 : false
+one == anotherOne : false
+```
+
+在 Java5 中，为`Integer`的操作引入了一个新的特性，会对`-128`到`127`的`Integer`对象进行缓存，当创建新的`Integer`对象时，如果符合这个这个范围，并且已有存在的相同值的对象，则返回这个对象，否则创建新的`Integer`对象。这种`Integer`缓存策略仅在**自动装箱（autoboxing）**的时候有用，使用构造器创建的`Integer`对象不能被缓存。
+
+`Integer`类中有一个专门的私有静态内部类`IntegerCache`来负责`Integer`的缓存。代码如下：
+
+```java
+/**
+ * Cache to support the object identity semantics of autoboxing for values between
+ * -128 and 127 (inclusive) as required by JLS.
+ *
+ * The cache is initialized on first usage.  The size of the cache
+ * may be controlled by the {@code -XX:AutoBoxCacheMax=<size>} option.
+ * During VM initialization, java.lang.Integer.IntegerCache.high property
+ * may be set and saved in the private system properties in the
+ * sun.misc.VM class.
+ */
+private static class IntegerCache {
+    static final int low = -128;
+    static final int high;
+    static final Integer cache[];
+
+    static {
+        // high value may be configured by property
+        int h = 127;
+        String integerCacheHighPropValue =
+            sun.misc.VM.getSavedProperty("java.lang.Integer.IntegerCache.high");
+        if (integerCacheHighPropValue != null) {
+            try {
+                int i = parseInt(integerCacheHighPropValue);
+                i = Math.max(i, 127);
+                // Maximum array size is Integer.MAX_VALUE
+                h = Math.min(i, Integer.MAX_VALUE - (-low) -1);
+            } catch( NumberFormatException nfe) {
+                // If the property cannot be parsed into an int, ignore it.
+            }
+        }
+        high = h;
+
+        cache = new Integer[(high - low) + 1];
+        int j = low;
+        for(int k = 0; k < cache.length; k++)
+            cache[k] = new Integer(j++);
+
+        // range [-128, 127] must be interned (JLS7 5.1.7)
+        assert IntegerCache.high >= 127;
+    }
+
+    private IntegerCache() {}
+}
+```
+
+Javadoc详细的说明这个类是用来实现缓存支持，并支持`-128`到`127`之间的自动装箱过程。最大值`127`可以通过JVM的启动参数`-XX:AutoBoxCacheMax=size`修改。 缓存通过一个`for`循环实现。从小到大的创建尽可能多的整数并存储在一个名为`cache`的整数数组中。这个缓存会在`Integer`类第一次被使用的时候被初始化出来。以后，就可以使用缓存中包含的实例对象，而不是创建一个新的实例(在自动装箱的情况下)。
+
+这种缓存行为不仅适用于`Integer`对象。我们针对所有整数类型的类都有类似的缓存机制。
+
+- `ByteCache`用于缓存`Byte`对象
+- `ShortCache`用于缓存`Short`对象
+- `LongCache`用于缓存`Long`对象
+- `CharacterCache`用于缓存`Character`对象
+
+`Byte`，`Short`，`Long`有固定范围:`-128`到`127`。对于`Character`, 范围是`0`到`127`。除了`Integer`可以通过参数改变范围外，其它的都不行。
+
+> **注**：在Java中另一个节省内存的例子就是**字符串常量池**。
+
+### 4. 自动装箱拆箱的隐患
+
+另一个需要避免的问题就是混乱使用对象和原始数据值，一个具体的例子就是当我们在一个原始数据值与一个对象进行比较时，如果这个对象没有进行初始化或者为`null`，在自动拆箱过程中`obj.xxxValue`，会抛出`NullPointerException`，如下面的代码:
+
+```java
+private static Integer count;
+
+//NullPointerException on unboxing
+if (count <= 0) {
+    System.out.println("Count is not started yet");
+}
+```
+
+因为自动装箱会隐式地创建对象，像前面提到的那样，如果在一个循环体中，会创建无用的中间对象，这样会增加GC压力，拉低程序的性能。所以在写循环时一定要注意代码，避免引入不必要的自动装箱操作。
 
 ---
 
