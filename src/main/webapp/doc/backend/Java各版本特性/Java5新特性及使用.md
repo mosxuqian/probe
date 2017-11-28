@@ -11,12 +11,16 @@
 - 可变参数(Varargs)
 - 静态导入(Static Import)
 - 注解(Annotations)
-- 其它(others)
+- 值得关注
   - 进程构建器(ProcessBuilder)
   - 格式化(Formatter)
   - 扫描器(Scanner)
   - 反射(Reflection)
   - 集合框架(Collections Framework)
+  - 并发工具类(Concurrency Utilities)
+  - StringBuilder
+- 其它(others)
+
 
 ## 一、泛型(Generics)
 
@@ -418,7 +422,7 @@ double r = cos(PI * theta);
 
 关于注解的介绍，这里就不再细讲了，请参考我前段时间所写的[Java注解的理解和应用](http://blinkfox.com/javazhu-jie-de-li-jie-he-ying-yong/)一文。
 
-## 八、其它(others)
+## 八、值得关注
 
 ### 1. 新增ProcessBuilder类
 
@@ -652,6 +656,27 @@ Java5反射功能方面的增强主要在`java.lang.Class`和`java.lang.reflect`
   - `addAll(Collection<? super T> c, T... a)` - 将指定数组中的所有元素添加到指定的集合中。
   - `Comparator<T> reverseOrder(Comparator<T> cmp)` - 返回一个比较器，表示指定比较器的反向排序。
 - 提供了计算哈希代码和字符串表示的方法。`Arrays`工具类已经为所有类型的数组提供了基于内容的`hashCode`和`toString`方法。 这些方法补充了现有的`equals`方法。现在可以打印任何数组的内容。
+
+### 6. 并发工具类(Concurrency Utilities)
+
+`java.util.concurrent`，`java.util.concurrent.atomic`和`java.util.concurrent.locks`包为开发并发类应用程序提供了一个强大的，可扩展的高性能，可伸缩，线程安全构建框架，包括 线程池，线程安全集合，信号量，任务调度框架，任务同步实用程序，原子变量和锁。将这些软件包添加到核心类库可以使程序员免去手工制作这些工具的需要，这与集合框架用于数据结构的方式大致相同。关于并发相关的的介绍会在以后更详细的来讲解。
+
+### 7. StringBuilder
+
+`StringBuilder`也是Java5中新增的类，主要用来代替`+`号和`StringBuffer`来更加高效的拼接字符串。`StringBuffer`与`StringBuilder`都是继承于`AbstractStringBuilder`，主要的区别就是`StringBuffer`的函数上都有`synchronized`关键字，保证线程安全。
+
+关于`StringBuilder`的使用这里就不再详细介绍了，网上文章也有很多。总之，对于**动态字符串**的拼接推荐使用`StringBuilder`。**静态字符串**的拼接直接使用`+`号或者字符串的`concat(String str)`方法，甚至也使用`StringBuilder`亦可。
+
+## 九、其它(others)
+
+- **Instrumentation**: 使用`java.lang.instrument`，开发者可以构建一个代理，用来监测运行在JVM上的程序。它类似一种更低级，更松耦合的AOP，可以从底层来改变一个类的行为。
+- **Networking**: 网络编程功能增强。
+- **Internationalization**: 国际化是设计一个应用程序的过程，以便它可以适应各种语言和地区而无需改变工程。国际化这个术语缩写为`i18n`，因为在第一个`i`和最后一个`n`之间有`18`个字母。
+- **改善了环境变量的支持**: `System.getenv(String)`方法不再被弃用。新的`System.getenv()`方法允许作为`Map <String，String>`访问进程环境。
+- **JAXP**: 用于XML处理的`Java API(JAXP)`包括通过标准化的Java平台API来处理XML文档的基本设施。
+- **Serialization**: 已经添加了支持来处理5.0版本中新增的枚举类型。序列化枚举实例的规则与序列化**普通**可序列化对象的规则不同：枚举实例的序列化形式仅由其枚举常量名以及标识其基本枚举类型的信息组成。 反序列化行为也不相同 - 类信息用于查找适当的枚举类，并且`Enum.valueOf`方法与该类和所接收的常量名称一起被调用，以便获取返回的枚举常量。
+- **监控和管理**: Java5为Java平台的监视和管理提供了显着的增强。
+- ...
 
 ---
 
