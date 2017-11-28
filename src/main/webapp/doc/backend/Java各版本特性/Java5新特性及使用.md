@@ -21,7 +21,6 @@
   - StringBuilder
 - 其它(others)
 
-
 ## 一、泛型(Generics)
 
 ### 1. 概述
