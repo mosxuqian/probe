@@ -12,9 +12,11 @@
 - 静态导入(Static Import)
 - 注解(Annotations)
 - 其它(others)
-  - ProcessBuilder
-  - Formatter
-  - Scanner
+  - 进程构建器(ProcessBuilder)
+  - 格式化(Formatter)
+  - 扫描器(Scanner)
+  - 反射(Reflection)
+  - 集合框架(Collections Framework)
 
 ## 一、泛型(Generics)
 
@@ -619,6 +621,37 @@ s.close();
 red
 blue
 ```
+
+### 4. 增强反射功能(Reflection)
+
+Java5反射功能方面的增强主要在`java.lang.Class`和`java.lang.reflect`类中。
+
+主要有以下内容增强：
+
+- **支持泛型**: 可以检查类型、方法、构造方法或字段的声明并获取泛型所对应的类型信息。
+- **支持注解**: 通过使用`getAnnotation()`方法获取已经在运行时标记为可用的方法和构造方法的类型，方法，字段，构造方法和形式参数的注释。人们还可以确定一个接口是否是一个注解类型。
+- **支持枚举**: 可以确定一个类是否是一个枚举，以及一个字段是否代表一个枚举常量。
+- **支持可变参数**: 可以确定一个方法或构造方法是否是可变参数方法。
+- **便利的方法**: 用于确定一个类是否是本地的、匿名的还是成员类，以及一个类型的简单名称是什么。
+- **java.lang.Class类型标记**: 允许使用`java.lang.Class`的实例作为类型标记。
+
+### 5. 增强集合框架(Collections Framework)
+
+在Java5中[集合框架的增强](https://docs.oracle.com/javase/1.5.0/docs/guide/collections/changes5.html)主要在以下几个方面：
+
+- 三种新语言特性都有针对集合，包括**泛型**，**增强for循环**和**自动装箱**。
+- 三个新的接口已被添加到集合框架中，分别是：`Queue`，`BlockingQueue`和`ConcurrentMap`（后两个位于`java.util.concurrent`包中）。
+- 提供了两个新的具体队列实现(`PriorityQueue`、`ConcurrentLinkedQueue`)，一个现有的列表实现已经被改造来实现队列(`LinkedList`)，并且提供了一个抽象队列实现(`AbstractQueue`)。
+- 已经添加了五个阻塞队列实现，以及一个ConcurrentMap实现，分别是：`ArrayBlockingQueue`, `LinkedBlockingQueue`, `PriorityBlockingQueue`, `DelayQueue`, `SynchronousQueue`、`ConcurrentHashMap`。
+- 为类型安全的枚举提供了特殊用途的Map和Set实现。(`EnumMap`和`EnumSet`)
+- 添加了特殊用途的`copy-on-write`List和Set实现，分别是：`CopyOnWriteArrayList`和`CopyOnWriteArraySet`。
+- 提供了包装器的实现来对大多数`Collection`接口添加动态类型安全性的检查(`Collections.checkedInterface`)。检查要添加的元素的类型并返回结果。任何尝试添加非法类型的变量都会抛出一个`ClassCastException`异常。这个功能可以防止在运行的时候出错。
+- 提供了几个新的算法来处理集合。
+  - `frequency(Collection<?> c, Object o)` - 计算指定集合中指定元素出现的次数。
+  - `disjoint(Collection<?> c1, Collection<?> c2)` - 判断两个集合是否不相交，换句话说，是否它们不包含任何共同的元素。
+  - `addAll(Collection<? super T> c, T... a)` - 将指定数组中的所有元素添加到指定的集合中。
+  - `Comparator<T> reverseOrder(Comparator<T> cmp)` - 返回一个比较器，表示指定比较器的反向排序。
+- 提供了计算哈希代码和字符串表示的方法。`Arrays`工具类已经为所有类型的数组提供了基于内容的`hashCode`和`toString`方法。 这些方法补充了现有的`equals`方法。现在可以打印任何数组的内容。
 
 ---
 
