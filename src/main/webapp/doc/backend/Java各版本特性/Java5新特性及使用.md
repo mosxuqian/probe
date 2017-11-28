@@ -12,6 +12,9 @@
 - 静态导入(Static Import)
 - 注解(Annotations)
 - 其它(others)
+  - ProcessBuilder
+  - Formatter
+  - Scanner
 
 ## 一、泛型(Generics)
 
@@ -438,9 +441,9 @@ class PBDemo {
 }
 ```
 
-### 2. 格式化增强(Formatter)
+### 2. 新增Formatter格式化器(Formatter)
 
-`Formatter`类是`printf-style`格式化字符串的解释器，它提供对布局和对齐的支持，提供了对数字，字符串和日期/时间数据的常用格式以及特定于语言环境的输出。常见的Java类型，如`byte`，`java.math.BigDecimal`和`java.util.Calendar`都支持。 通过`java.util.Formattable`接口提供了针对任意用户类型的有限格式定制。
+`Formatter`类是Java5中新增的`printf-style`格式化字符串的解释器，它提供对布局和对齐的支持，提供了对数字，字符串和日期/时间数据的常用格式以及特定于语言环境的输出。常见的Java类型，如`byte`，`java.math.BigDecimal`和`java.util.Calendar`都支持。 通过`java.util.Formattable`接口提供了针对任意用户类型的有限格式定制。
 
 更详细的介绍见[这里](https://docs.oracle.com/javase/1.5.0/docs/api/java/util/Formatter.html)。主要使用方法的代码示例如下：
 
@@ -540,6 +543,81 @@ public class FormatTester {
     }
 
 }
+```
+
+### 3. 新增Scanner类(Scanner)
+
+`java.util.Scanner`是Java5的新特征，主要功能是简化文本扫描，但这个类最实用的地方还是在获取控制台输入。
+
+#### (1). Scanner概述
+
+可以从字符串(`Readable`)、输入流、文件、Channel等来直接构造Scanner对象，有了Scanner了，就可以逐段（根据正则分隔式）来扫描整个文本，并对扫描后的结果做想要的处理。
+
+`Scanner`默认使用**空格**作为分割符来分隔文本，但允许你使用`useDelimiter(Pattern pattern)`或`useDelimiter(String pattern)`方法来指定新的分隔符。
+
+主要API如下：
+
+- `delimiter()`: 返回此`Scanner`当前正在用于匹配分隔符的`Pattern`。
+- `hasNext()`: 判断扫描器中当前扫描位置后是否还存在下一段。
+- `hasNextLine()`: 如果在此扫描器的输入中存在另一行，则返回true。
+- `next()`: 查找并返回来自此扫描器的下一个完整标记。
+- `nextLine()`: 此扫描器执行当前行，并返回跳过的输入信息。
+
+#### (2). 扫描控制台输入
+
+当通过`new Scanner(System.in)`创建了一个`Scanner`实例时，控制台会一直等待输入，直到敲回车键结束，把所输入的内容传给`Scanner`，作为扫描对象。如果要获取输入的内容，则只需要调用`Scanner`的`nextLine()`方法即可。
+
+```java
+/**
+* 扫描控制台输入.
+*
+* @author blinkfox 2017-11-28
+*/
+public class ScannerTest {
+
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        System.out.println("请输入字符串：");
+        while (true) {
+            String line = s.nextLine();
+            if (line.equals("exit")) break;
+            System.out.println(">>>" + line);
+        }
+    }
+
+}
+```
+
+#### (3).其它示例
+
+该示例中会从`myNumbers`文件中读取长整型`long`的数据。
+
+```java
+Scanner sc = new Scanner(new File("myNumbers"));
+while (sc.hasNextLong()) {
+    long aLong = sc.nextLong();
+}
+```
+
+以下示例可以使用除空格之外的分隔符来从一个字符串中读取几个条目：
+
+```java
+String input = "1 fish 2 fish red fish blue fish";
+Scanner s = new Scanner(input).useDelimiter("\\s*fish\\s*");
+System.out.println(s.nextInt());
+System.out.println(s.nextInt());
+System.out.println(s.next());
+System.out.println(s.next());
+s.close();
+```
+
+将输出：
+
+```bash
+1
+2
+red
+blue
 ```
 
 ---
