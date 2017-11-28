@@ -2,6 +2,8 @@
 
 ## 新特性列表
 
+以下是Java5中的引入的部分新特性，关于更详细的新特性了解，可参考[这里](https://docs.oracle.com/javase/1.5.0/docs/relnotes/features.html)。
+
 - 泛型(Generics)
 - 增强for循环(Enhanced for Loop)
 - 自动装箱拆箱(Autoboxing/Unboxing)
@@ -9,9 +11,7 @@
 - 可变参数(Varargs)
 - 静态导入(Static Import)
 - 注解(Annotations)
-- 格式化
-- 线程框架/数据结构
-- Arrays工具类/StringBuilder/instrument
+- 其它(others)
 
 ## 一、泛型(Generics)
 
@@ -412,6 +412,31 @@ double r = cos(PI * theta);
 ## 七、注解(Annotations)
 
 关于注解的介绍，这里就不再细讲了，请参考我前段时间所写的[Java注解的理解和应用](http://blinkfox.com/javazhu-jie-de-li-jie-he-ying-yong/)一文。
+
+## 八、其它(others)
+
+### 1. 新增ProcessBuilder类
+
+`ProcessBuilder`类是Java5在`java.lang`包中新添加的一个新类，此类用于创建操作系统进程，它提供一种启动和管理进程（也就是应用程序）的方法。在此之前，都是由`Process`类处来实现进程的控制管理。每个`ProcessBuilder`实例管理一个进程属性集。它的`start()`方法利用这些属性创建一个新的`Process`实例。`start()`方法可以从同一实例重复调用，以利用相同的或相关的属性创建新的子进程。
+
+`ProcessBuilder`是一个`final`类，有两个带参数的构造方法，你可以通过构造方法来直接创建`ProcessBuilder`的对象。而`Process`是一个抽象类，一般都通过`Runtime.exec()`和`ProcessBuilder.start()`来间接创建其实例。`ProcessBuilder`为进程提供了更多的控制，例如，可以设置当前工作目录，还可以改变环境参数。而`Process`类的功能相对来说简单的多。`ProcessBuilder`类不是同步的。如果多个线程同时访问一个`ProcessBuilder`，而其中至少一个线程从结构上修改了其中一个属性，它必须保持外部同步。
+
+若要使用`ProcessBuilder`创建一个进程，只需要创建`ProcessBuilder`的一个实例，指定该进程的名称和所需参数。要执行此程序，调用该实例上的`start()`即可。下面是一个执行打开`Windows`记事本的例子。注意它将要编辑的文件名指定为一个参数。
+
+```java
+class PBDemo {
+
+    public static void main(String args[]) {
+        try {
+            ProcessBuilder proc = new ProcessBuilder("notepad.exe", "testfile");
+            proc.start();
+        } catch (Exception e) {
+            System.out.println("Error executing notepad.");
+        }
+    }
+
+}
+```
 
 ---
 
