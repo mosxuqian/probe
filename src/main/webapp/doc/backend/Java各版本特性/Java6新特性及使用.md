@@ -46,3 +46,48 @@ public class Hello {
 
 }
 ```
+
+## 二、Scripting
+
+Java6增加了对动态语言的支持，原理上是将脚本语言编译成字节码，这样脚本语言也能享用Java平台的诸多优势，包括可移植性，安全等。另外由于现在是编译成字节码后再执行，所以比原来边解释边执行效率要高很多。可以很好的利用脚本语言的动态特性，主要支持的有`JavaSrcipt`、`Ruby`、`Python`等。
+
+以下使用`JavaScript`的脚本，代码示例如下：
+
+```java
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * JsTest.
+ * @author blinkfox
+ * @version 1.0
+ *
+ */
+public class JsTest {
+
+    private static final Logger log = LoggerFactory.getLogger(Hello.class);
+
+    /**
+     * main方法.
+     * @param args 数组参数
+     * @throws ScriptException 脚本异常
+     * @throws NoSuchMethodException 无方法异常
+     */
+    public static void main(String[] args) throws ScriptException, NoSuchMethodException {
+        ScriptEngineManager enjineManager = new ScriptEngineManager();
+        ScriptEngine engine = enjineManager.getEngineByName("JavaScript");
+
+        String script="function hello(name){return 'Hello ' + name}";
+        engine.eval(script);
+        Invocable inv=(Invocable) engine;
+        String result = (String) inv.invokeFunction("hello", "blinkfox");
+        log.info("脚本执行结果:{}", result);
+    }
+
+}
+```
