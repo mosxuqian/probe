@@ -6,6 +6,7 @@
 
 - Web Service
 - Scripting
+- Compiler API
 
 ## 一、Web Service增强
 
@@ -87,6 +88,28 @@ public class JsTest {
         Invocable inv=(Invocable) engine;
         String result = (String) inv.invokeFunction("hello", "blinkfox");
         log.info("脚本执行结果:{}", result);
+    }
+
+}
+```
+
+## 三、Compiler API
+
+在Java6中提供了一套`Compiler API`，定义在`JSR199`中, 提供在运行期动态编译java代码为字节码的功能。一套API就好比是在java程序中模拟javac程序，将Java源文件编译为class文件；其提供的默认实现也正是在文件系统上进行查找、编译工作的。`Compiler API`结合反射功能就可以实现动态的产生Java代码并编译执行这些代码，有点动态语言的特征。
+
+基本使用示例如下：
+
+```java
+public class JavaCompilerAPICompiler {
+
+    public void compile(Path src, Path output) throws IOException {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)) {
+            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(src.toFile());
+            Iterable<String> options = Arrays.asList("-d", output.toString());
+            JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, options, null, compilationUnits);
+            boolean result = task.call();
+        }
     }
 
 }
