@@ -8,6 +8,7 @@
 - Scripting
 - Compiler API
 - Light-weight HTTP server
+- Common annotations(JSR 250)
 
 ## 一、Web Service增强
 
@@ -249,6 +250,25 @@ public class HttpTest {
 
 }
 ```
+
+## 五、Common annotations
+
+`Common annotations`原本是Java EE 5.0(JSR 244)规范的一部分，现在SUN把它的一部分放到了Java SE 6.0中.随着Annotation元数据功能(JSR 175)加入到Java SE 5.0里面，很多Java 技术(比如EJB,Web Services)都会用Annotation部分代替XML文件来配置运行参数（或者说是支持声明式编程,如EJB的声明式事务）, 如果这些技术为通用目的都单独定义了自己的Annotations,显然有点重复建设, 所以,为其他相关的Java技术定义一套公共的Annotation是有价值的，可以避免重复建设的同时，也保证Java SE和Java EE 各种技术的一致性。
+
+下面列举出`Common Annotations 1.0`里面的10个`Annotations`：
+
+| **Annotation** | **Retention** | **Target**                               | **Description**                          |
+| :------------- | :-----------: | :--------------------------------------- | :--------------------------------------- |
+| Generated      |    Source     | ANNOTATION_TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE | 用于标注生成的源代码                               |
+| Resource       |    Runtime    | TYPE, METHOD, FIELD                      | 用于标注所依赖的资源,容器据此注入外部资源依赖，有基于字段的注入和基于setter方法的注入两种方式 |
+| Resources      |    Runtime    | TYPE                                     | 同时标注多个外部依赖，容器会把所有这些外部依赖注入                |
+| PostConstruct  |    Runtime    | METHOD                                   | 标注当容器注入所有依赖之后运行的方法，用来进行依赖注入后的初始化工作，只有一个方法可以标注为PostConstruct |
+| PreDestroy     |    Runtime    | METHOD                                   | 当对象实例将要被从容器当中删掉之前，要执行的回调方法要标注为PreDestroy |
+| RunAs          |    Runtime    | TYPE                                     | 用于标注用什么安全角色来执行被标注类的方法，这个安全角色必须和Container 的Security角色一致的 |
+| RolesAllowed   |    Runtime    | TYPE, METHOD                             | 用于标注允许执行被标注类或方法的安全角色，这个安全角色必须和Container 的Security角色一致的 |
+| PermitAll      |    Runtime    | TYPE, METHOD                             | 允许所有角色执行被标注的类或方法                         |
+| DenyAll        |    Runtime    | TYPE, METHOD                             | 不允许任何角色执行被标注的类或方法，表明该类或方法不能在Java EE容器里面运行 |
+| DeclareRoles   |    Runtime    | TYPE                                     | 用来定义可以被应用程序检验的安全角色，通常用isUserInRole来检验安全角色 |
 
 ---
 
