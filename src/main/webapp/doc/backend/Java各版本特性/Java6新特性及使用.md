@@ -7,6 +7,7 @@
 - Web Service
 - Scripting
 - Compiler API
+- Light-weight HTTP server
 
 ## 一、Web Service增强
 
@@ -114,3 +115,145 @@ public class JavaCompilerAPICompiler {
 
 }
 ```
+
+## 四、轻量级HTTP server
+
+JDK6提供了一个轻量级的`Http Server API`，据此我们可以构建自己的嵌入式Http Server，它支持`Http`和`Https`协议,提供了HTTP1.1的部分实现，没有被实现的那部分可以通过扩展已有的Http Server API来实现，程序员必须自己实现`HttpHandler`接口，HttpServer会调用`HttpHandler`实现类的回调方法来处理客户端请求，在这里，我们把一个Http请求和它的响应称为一个交换,包装成`HttpExchange`类,HttpServer负责将`HttpExchange`传给`HttpHandler`实现类的回调方法。
+
+以下是通过JDK6新特性能够实现的HttpServer的示例：
+
+```java
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.spi.HttpServerProvider;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+
+/**
+ * 自定义的http服务器.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class MyHttpServer {
+
+    /**
+     * 启动服务，监听来自客户端的请求.
+     *
+     * @throws IOException IO异常
+     */
+    private static void httpserverService() throws IOException {
+        HttpServerProvider provider = HttpServerProvider.provider();
+        HttpServer httpserver = provider.createHttpServer(new InetSocketAddress(8888), 200); // 监听端口8888,能同时接受100个请求
+        httpserver.createContext("/mytest", new MyHttpHandler());
+        httpserver.setExecutor(null);
+        httpserver.start();
+        System.out.println("server started");
+    }
+
+    /**
+     * Http请求处理类.
+     */
+    private static class MyHttpHandler implements HttpHandler {
+
+        public void handle(HttpExchange httpExchange) throws IOException {
+            String responseMsg = "ok"; //响应信息
+            InputStream in = httpExchange.getRequestBody(); //获得输入流
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String temp = null;
+            while((temp = reader.readLine()) != null) {
+                System.out.println("client request:" + temp);
+            }
+            httpExchange.sendResponseHeaders(200, responseMsg.length()); //设置响应头属性及响应信息的长度
+            OutputStream out = httpExchange.getResponseBody();  //获得输出流
+            out.write(responseMsg.getBytes());
+            out.flush();
+            httpExchange.close();
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        httpserverService();
+    }
+
+}
+```
+
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * Http服务器测试类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class HttpTest {
+
+    public static void main(String[] args) {
+        ExecutorService exec = Executors.newCachedThreadPool();
+        // 测试并发对MyHttpServer的影响
+        for (int i = 0; i < 20; i++) {
+            Runnable run = new Runnable() {
+                public void run() {
+                    try {
+                        startWork();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            exec.execute(run);
+        }
+        exec.shutdown();// 关闭线程池
+    }
+
+    public static void startWork() throws IOException {
+        URL url = new URL("http://127.0.0.1:8888/mytest");
+        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+        urlConn.setDoOutput(true);
+        urlConn.setDoInput(true);
+        urlConn.setRequestMethod("POST");
+        // 测试内容包
+        String teststr = "this is a test message";
+        OutputStream out = urlConn.getOutputStream();
+        out.write(teststr.getBytes());
+        out.flush();
+        while (urlConn.getContentLength() != -1) {
+            if (urlConn.getResponseCode() == 200) {
+                InputStream in = urlConn.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                String temp = "";
+                while ((temp = reader.readLine()) != null) {
+                    System.err.println("server response:" + temp);// 打印收到的信息
+                }
+                reader.close();
+                in.close();
+                urlConn.disconnect();
+            }
+        }
+    }
+
+}
+```
+
+---
+
+参考文档：
+
+-[JavaSE6 Features and Enhancements](http://www.oracle.com/technetwork/java/javase/features-141434.html)
+-[Java6的新特性](https://segmentfault.com/a/1190000004417536)
+-[jdk6 HttpServer的使用](http://blog.csdn.net/xiaomin1991222/article/details/50979761)
