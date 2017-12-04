@@ -9,6 +9,8 @@
 - Compiler API
 - Light-weight HTTP server
 - Common annotations(JSR 250)
+- StAX
+- JAXB2
 
 ## 一、Web Service增强
 
@@ -270,10 +272,164 @@ public class HttpTest {
 | DenyAll        |    Runtime    | TYPE, METHOD                             | 不允许任何角色执行被标注的类或方法，表明该类或方法不能在Java EE容器里面运行 |
 | DeclareRoles   |    Runtime    | TYPE                                     | 用来定义可以被应用程序检验的安全角色，通常用isUserInRole来检验安全角色 |
 
+## 六、StAX
+
+StAX(JSR 173)是JDK6中新增的除了DOM和SAX之外的又一种处理XML文档的API。
+
+`StAX`是`The Streaming API for XML`的缩写，一种利用拉模式解析(pull-parsing)XML文档的API。StAX通过提供一种基于事件迭代器(Iterator)的API让程序员去控制xml文档解析过程,程序遍历这个事件迭代器去处理每一个解析事件，解析事件可以看做是程序拉出来的，也就是程序促使解析器产生一个解析事件然后处理该事件，之后又促使解析器产生下一个解析事件，如此循环直到碰到文档结束符；SAX也是基于事件处理xml文档，但却是用推模式解析，解析器解析完整个xml文档后，才产生解析事件，然后推给程序去处理这些事件；DOM采用的方式是将整个xml文档映射到一颗内存树，这样就可以很容易地得到父节点和子结点以及兄弟节点的数据，但如果文档很大，将会严重影响性能。
+
+下面是这几种XML解析API的特性比较：
+
+| Feature                      | StAX            | SAX             | DOM            | TrAX      |
+| ---------------------------- | --------------- | --------------- | -------------- | --------- |
+| API Type                     | Pull, streaming | Push, streaming | In memory tree | XSLT Rule |
+| Ease of Use                  | High            | Medium          | High           | Medium    |
+| XPath Capability             | No              | No              | Yes            | Yes       |
+| CPU and Memory Efficiency    | Good            | Good            | Varies         | Varies    |
+| Forward Only                 | Yes             | Yes             | No             | No        |
+| Read XML                     | Yes             | Yes             | Yes            | Yes       |
+| Write XML                    | Yes             | No              | Yes            | Yes       |
+| Create, Read, Update, Delete | No              | No              | Yes            | No        |
+
+下面代码演示了如何通过StAX读取xml文档和生成xml文档：
+
+需要读取的xml文件：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogs>
+    <catalog id="001">Book</catalog>
+    <catalog id="002">Video</catalog>
+</catalogs>
+```
+
+读和写XML文件的Java代码：
+
+```java
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import javax.xml.namespace.QName;
+import javax.xml.stream.*;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+
+/**
+ * Stax测试类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class StaxTester {
+
+    /**
+     * 根据StAX读取XML文件.
+     *
+     * @throws XMLStreamException XML流异常
+     * @throws FileNotFoundException 文件未找到异常
+     */
+    private static void readXxmlByStax() throws XMLStreamException, FileNotFoundException {
+        XMLInputFactory xmlif = XMLInputFactory.newInstance();
+        XMLEventReader xmler = xmlif.createXMLEventReader(new FileInputStream("G:\\test\\test.xml"));
+        XMLEvent event;
+        StringBuilder sb = new StringBuilder();
+        while (xmler.hasNext()) {
+            event = xmler.nextEvent();
+            if (event.isStartElement()) { //如果解析的是起始标记
+                StartElement element = event.asStartElement();
+                sb.append("<");
+                sb.append(element.getName());
+                if(element.getName().getLocalPart().equals("catalog")) {
+                    sb.append(" id=/");
+                    sb.append(element.getAttributeByName(new QName("id")).getValue());
+                    sb.append("/");
+                }
+                sb.append(">");
+            } else if (event.isCharacters()) { //如果解析的是文本内容
+                sb.append(event.asCharacters().getData());
+            } else if(event.isEndElement()) { //如果解析的是结束标记
+                sb.append("</");
+                sb.append(event.asEndElement().getName());
+                sb.append(">");
+            }
+        }
+        System.out.println(sb);
+    }
+
+    /**
+     * 根据StAX写入XML文件.
+     *
+     * @throws XMLStreamException XML流异常
+     * @throws FileNotFoundException 文件未找到异常
+     */
+    private static void writeXmlByStax() throws XMLStreamException, FileNotFoundException {
+        XMLOutputFactory xmlof = XMLOutputFactory.newInstance();
+        XMLStreamWriter xmlw = xmlof.createXMLStreamWriter(new FileOutputStream("G:\\test\\output.xml"));
+        // 写入默认的 XML 声明到xml文档
+        xmlw.writeStartDocument();
+        xmlw.writeCharacters("\n");
+        // 写入注释到xml文档
+        xmlw.writeComment("testing comment");
+        xmlw.writeCharacters("\n");
+        // 写入一个catalogs根元素
+        xmlw.writeStartElement("catalogs");
+        xmlw.writeNamespace("myNS", "http://blinkfox.com");
+        xmlw.writeAttribute("owner","Chinajash");
+        xmlw.writeCharacters("\n");
+        // 写入子元素catalog
+        xmlw.writeCharacters("    ");
+        xmlw.writeStartElement("http://blinkfox.com", "catalog");
+        xmlw.writeAttribute("id","007");
+        xmlw.writeCharacters("Apparel");
+        // 写入catalog元素的结束标签
+        xmlw.writeEndElement();
+        // 写入catalogs元素的结束标签
+        xmlw.writeCharacters("\n");
+        xmlw.writeEndElement();
+        // 结束 XML 文档
+        xmlw.writeEndDocument();
+        xmlw.close();
+        System.out.println("生成xml文件成功!");
+    }
+
+    /**
+     * main方法.
+     *
+     * @param args 数组参数
+     * @throws XMLStreamException XML流异常
+     * @throws FileNotFoundException 文件未找到异常
+     */
+    public static void main(String[] args) throws XMLStreamException, FileNotFoundException {
+        readXxmlByStax();
+        writeXmlByStax();
+    }
+
+}
+```
+
+运行上面程序后，控制台输出如下:
+
+```bash
+<catalogs>
+    <catalog id=/001/>Book</catalog>
+    <catalog id=/002/>Video</catalog>
+</catalogs>
+生成xml文件成功!
+```
+
+产生的`output.xml`文件如下:
+
+```xml
+<?xml version="1.0" ?>
+<!--testing comment-->
+<catalogs xmlns:myNS="http://blinkfox.com" owner="Chinajash">
+    <myNS:catalog id="007">Apparel</myNS:catalog>
+</catalogs>
+```
+
 ---
 
 参考文档：
 
 -[JavaSE6 Features and Enhancements](http://www.oracle.com/technetwork/java/javase/features-141434.html)
 -[Java6的新特性](https://segmentfault.com/a/1190000004417536)
--[jdk6 HttpServer的使用](http://blog.csdn.net/xiaomin1991222/article/details/50979761)
+-[chinajash](http://my.csdn.net/Chinajash)
