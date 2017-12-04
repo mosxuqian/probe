@@ -1,11 +1,8 @@
 package com.blinkfox.learn.jdbc;
 
 import com.blinkfox.utils.others.PropHelper;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.Properties;
 import org.pmw.tinylog.Logger;
 
@@ -65,6 +62,20 @@ public class JdbcDaoHelper {
         if (ps != null) {
             try {
                 ps.close();
+            } catch (SQLException e) {
+                Logger.error(e, "关闭PreparedStatement失败！");
+            }
+        }
+    }
+
+    /**
+     * 关闭PreparedStatement.
+     * @param st PreparedStatement
+     */
+    public static void close(Statement st) {
+        if (st != null) {
+            try {
+                st.close();
             } catch (SQLException e) {
                 Logger.error(e, "关闭PreparedStatement失败！");
             }

@@ -12,6 +12,8 @@
 - StAX
 - JAXB2
 - Console
+- Java DB(Derby)
+- JDBC4
 
 ## 一、Web Service增强
 
@@ -677,6 +679,135 @@ public class ConsoleTest {
 ```
 
 > **注**: 在这里可以看到输入密码时,控制台时不显示这些密码字符的,但是程序可以得到输入的密码字符串,这与Linux下面输入密码的情况是一样的。
+
+## 九、Java DB(Derby)
+
+从JDK6开始，JDK目录中新增了一个名为`db`的目录。这便是 Java 6 的新成员：Java DB。这是一个纯 Java 实现、开源的数据库管理系统（DBMS），源于 Apache 软件基金会（ASF）名下的项目`Derby`。它只有 2MB 大小，对比动辄上 G 的数据库来说可谓袖珍。但这并不妨碍 Derby 功能齐备，支持几乎大部分的数据库应用所需要的特性。JDK6.0里面带的这个Derby的版本是10.2.1.7,支持存储过程和触发器；有两种运行模式，一种是作为嵌入式数据库，另一种是作为网络数据库。前者的数据库服务器和客户端都在同一个JVM里面运行，后者允许数据库服务器端和客户端不在同一个JVM里面，而且允许这两者在不同的物理机器上。值得注意的是JDK6里面的这个Derby支持JDK6的新特性`JDBC 4.0`规范(JSR 221)。
+
+下面分两种情况演示一下如何用代码操作Derby数据库，一种是嵌入式数据库，一种是网络数据库。
+
+### 1. 嵌入式数据库
+
+```java
+import com.blinkfox.learn.jdbc.JdbcDaoHelper;
+
+import java.sql.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Derby内嵌数据库测试示例.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class EmbeddedDerbyTest {
+
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedDerbyTest.class);
+
+    /** Derby驱动,在derby.jar里面. */
+    private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+
+    /** 连接Derby的url，create=true表示当数据库不存在时就创建它. */
+    private static final String URL = "jdbc:derby:EmbeddedDB;create=true";
+
+    /**
+     * main方法.
+     *
+     * @param args 数组参数
+     */
+    public static void main(String[] args) {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            Class.forName(DRIVER);
+            conn = DriverManager.getConnection(URL);//启动嵌入式数据库
+            st = conn.createStatement();
+            st.execute("create table foo (FOOID INT NOT NULL, FOONAME VARCHAR(30) NOT NULL)"); //创建foo表
+            st.executeUpdate("insert into foo(FOOID,FOONAME) values (1, 'blinkfox')"); //插入一条数据
+            rs = st.executeQuery("select * from foo");//读取刚插入的数据
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                log.info("查询结果：id = {}; name = {}", id, name);
+            }
+        } catch (Exception e) {
+            log.error("使用Derby数据库出错!", e);
+        } finally {
+            JdbcDaoHelper.close(rs);
+            JdbcDaoHelper.close(st);
+            JdbcDaoHelper.close(conn);
+        }
+    }
+
+}
+```
+
+运行上面程序后，会在当前目录生成名为`EmbeddedDB`的文件夹，既是`EmbeddedDB`数据库的数据文件存放的地方，控制台将输出：
+
+```bash
+查询结果：id = 1; name = blinkfox
+```
+
+### 2. 网络数据库
+
+```java
+import java.io.PrintWriter;
+import java.sql.DriverManager;
+
+import org.apache.derby.drda.NetworkServerControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Derby网络数据库测试示例.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class NetworkServerDerbyTest {
+
+    private static final Logger log = LoggerFactory.getLogger(NetworkServerDerbyTest.class);
+
+    /** Derby驱动,在derbyclient.jar里面. */
+    private static final String DRIVER = "org.apache.derby.jdbc.ClientDriver";
+
+    /** 连接Derby的url. */
+    private static final String URL = "jdbc:derby://localhost:1527/NetworkDB;create=true";
+
+    /**
+     * main方法.
+     * <p>创建Derby网络服务器,默认端口是1527,也可以通过运行<Derby_Home>/frameworks/NetworkServer/bin/startNetworkServer.bat
+     来创建并启动Derby网络服务器,如果是Unix,用startNetworkServer.ksh</p>
+     *
+     * @param args 数组参数
+     */
+    public static void main(String[] args) {
+        NetworkServerControl derbyServer = null;
+        try {
+            //NetworkServerControl类在derbynet.jar里面
+            derbyServer = new NetworkServerControl();
+            PrintWriter pw = new PrintWriter(System.out); //用系统输出作为Derby数据库的输出
+            derbyServer.start(pw); //启动Derby服务器
+            Class.forName(DRIVER);
+            DriverManager.getConnection(URL);
+        } catch (Exception e) {
+            log.error("操作Derby网络数据库异常!", e);
+        } finally {
+            if (derbyServer != null) {
+                try {
+                    derbyServer.shutdown();
+                } catch (Exception e) {
+                    log.error("关闭Derby网络数据库异常!", e);
+                }
+            }
+        }
+    }
+
+}
+```
+
+运行上面程序后,会在当前目录生成名为`NetworkDB`的文件夹。关于`Derby`的详细情况,请参考[http://db.apache.org/derby](http://db.apache.org/derby)。
 
 ---
 
