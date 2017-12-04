@@ -426,6 +426,215 @@ public class StaxTester {
 </catalogs>
 ```
 
+## 七、JAXB2
+
+`JAXB`是`Java Architecture for XML Binding`的缩写，可以将一个Java对象转变成为XML格式，反之亦然。我们把对象与关系数据库之间的映射称为ORM, 其实也可以把对象与XML之间的映射称为`OXM`(Object XML Mapping). 原来JAXB是Java EE的一部分，在JDK6中，SUN将其放到了Java SE中，这也是SUN的一贯做法。JDK6中自带的这个JAXB版本是2.0, 比起1.0(JSR 31)来，JAXB2(JSR 222)用JDK5的新特性`Annotation`来标识要作绑定的类和属性等，这就极大简化了开发的工作量。实际上，在Java EE 5.0中，EJB和Web Services也通过Annotation来简化开发工作。另外,JAXB2在底层是用StAX(JSR 173)来处理XML文档。 下面用代码演示在JDK6中如何来用`JAXB2`：
+
+```java
+/**
+ * Gender性别枚举类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public enum Gender {
+
+    MALE(true),
+
+    FEMALE (false);
+
+    private boolean code;
+
+    /**
+     * 构造方法.
+     * @param code 性别值
+     */
+    Gender(boolean code) {
+        this.code = code;
+    }
+
+}
+```
+
+```java
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+
+/**
+ * Address地址类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class Address {
+
+    @XmlAttribute
+    String country;
+
+    @XmlElement
+    String state;
+
+    @XmlElement
+    String city;
+
+    @XmlElement
+    String street;
+
+    /** 由于没有添加@XmlElement,所以该元素不会出现在输出的xml中. */
+    String zipcode;
+
+    /**
+     * 默认的空构造方法.
+     */
+    public Address() {
+        super();
+    }
+
+    public Address(String country, String state, String city, String street, String zipcode) {
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.street = street;
+        this.zipcode = zipcode;
+    }
+
+    /**
+     * country的getter方法.
+     *
+     * @return country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+}
+```
+
+```java
+import java.util.Calendar;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Person类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+@XmlRootElement
+public class Person {
+
+    /** birthday将作为person的子元素. */
+    @XmlElement
+    Calendar birthDay;
+
+    /** name将作为person的的一个属性. */
+    @XmlAttribute
+    String name;
+
+    /** address将作为person的子元素. */
+    @XmlElement
+    Address address;
+
+    /** gender将作为person的子元素. */
+    @XmlElement
+    Gender gender;
+
+    /** job将作为person的子元素. */
+    @XmlElement
+    String job;
+
+    /**
+     * 默认的空构造方法.
+     */
+    public Person() {
+        super();
+    }
+
+    public Person(Calendar birthDay, String name, Address address, Gender gender, String job) {
+        this.birthDay = birthDay;
+        this.name = name;
+        this.address = address;
+        this.gender = gender;
+        this.job = job;
+    }
+
+    /**
+     * address的getter方法.
+     * @return address
+     */
+    public Address getAddress() {
+        return address;
+    }
+
+}
+```
+
+```java
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Calendar;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * JAXB2测试类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class JAXB2Test {
+
+    private static final Logger log = LoggerFactory.getLogger(JAXB2Test.class);
+
+    public static void main(String[] args) {
+        Address address = new Address("中国", "北京", "北京", "上地", "100080");
+        Person p = new Person(Calendar.getInstance(),"JAXB2", address, Gender.MALE, "软件工程师");
+
+        FileReader reader = null;
+        FileWriter writer = null;
+        try {
+            // 生成xml文件.
+            JAXBContext context = JAXBContext.newInstance(Person.class);
+            writer = new FileWriter("G:/test/person.xml");
+            Marshaller m = context.createMarshaller();
+            m.marshal(p, writer);
+            log.info("生成person.xml文件成功!");
+
+            // 读取xml文件.
+            reader = new FileReader("G:/test/person.xml");
+            Unmarshaller um = context.createUnmarshaller();
+            Person p2 = (Person) um.unmarshal(reader);
+            log.info("Country:{}", p2.getAddress().getCountry());
+        } catch (Exception e) {
+            log.error("生成和读取XML文件出错！", e);
+        } finally {
+            IOUtils.closeQuietly(writer);
+            IOUtils.closeQuietly(reader);
+        }
+    }
+
+}
+```
+
+运行该程序，我们会得到一个`person.xml`的文件，内容如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<person name="JAXB2">
+    <birthDay>2017-12-04T17:16:19.226+08:00</birthDay>
+    <address country="中国">
+        <state>北京</state>
+        <city>北京</city>
+        <street>上地</street>
+    </address>
+    <gender>MALE</gender>
+    <job>软件工程师</job>
+</person>
+```
+
 ---
 
 参考文档：
