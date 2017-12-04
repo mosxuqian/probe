@@ -11,6 +11,7 @@
 - Common annotations(JSR 250)
 - StAX
 - JAXB2
+- Console
 
 ## 一、Web Service增强
 
@@ -634,6 +635,48 @@ public class JAXB2Test {
     <job>软件工程师</job>
 </person>
 ```
+
+## 八、Console
+
+JDK6中提供了`java.io.Console`类专用来访问基于字符的控制台设备。你的程序如果要与Windows下的cmd或者Linux下的Terminal交互,就可以用Console类代劳. 但我们不总是能得到可用的Console, 一个JVM是否有可用的Console依赖于底层平台和JVM如何被调用。如果JVM是在交互式命令行(比如Windows的cmd)中启动的,并且输入输出没有重定向到另外的地方，那么就可以得到一个可用的Console实例。下面代码演示了Console类的用法:
+
+```java
+import java.io.Console;
+
+/**
+ * Jdk6之Console测试类.
+ *
+ * @author blinkfox on 2017-12-04.
+ */
+public class ConsoleTest {
+
+    public static void main(String[] args) {
+        // 获得Console实例，并判断console是否可用
+        Console console = System.console();
+        if (console != null) {
+            // 读取整行字符和密码，密码输入时不会显示
+            String user = new String(console.readLine("请输入用户名:"));
+            String pwd = new String(console.readPassword("再输入密码:"));
+            console.printf("用户名是:" + user + "\n");
+            console.printf("密码是:" + pwd + "\n");
+        } else {
+            System.out.println("Console不可用!");
+        }
+    }
+
+}
+```
+
+编译该代码，并在命令行中输入：`java ConsoleTest`，然后即可运行，运行示例如下：
+
+```bash
+请输入用户名:张三
+再输入密码:
+打印出的用户名是:张三
+打印出的密码是:123456
+```
+
+> **注**: 在这里可以看到输入密码时,控制台时不显示这些密码字符的,但是程序可以得到输入的密码字符串,这与Linux下面输入密码的情况是一样的。
 
 ---
 
