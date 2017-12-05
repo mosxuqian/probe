@@ -14,6 +14,10 @@
 - Console
 - Java DB(Derby)
 - JDBC 4.0
+- 值得关注的
+  - 集合框架增强
+- 其它
+  - GUI增强
 
 ## 一、Web Services Metadata
 
@@ -839,6 +843,61 @@ public class NetworkServerDerbyTest {
 - `Connection`和`Statement`接口增强；
 - `New Scalar Funtions`；
 - `JDBC API changes`。
+
+## 十一、值得关注的
+
+### 1. 集合框架增强
+
+Jdk6中的集合框架的API更改数量要少于JDK5，更多地关注了规范的准确性和清晰度。即使在编写旧版本的程序时，我们也建议使用Java SE 6规范。
+API更改的主要主题是更好的双向收集访问。
+
+新增了以下几个接口：
+
+- `Deque`: 双端队列接口，继承了Queue接口，队列两头都可以实现入队和出队。
+- `BlockingDeque`: 双端阻塞队列接口，继承了BlockingQueue、Deque接口。
+- `NavigableSet`: 可导航Set接口，继承自SortedSet接口。
+- `NavigableMap`: 可导航Map接口，继承自SortedMap接口。
+- `ConcurrentNavigableMap`: 支持并发的可导航Map，继承自`ConcurrentMap`接口和`NavigableMap`接口。
+
+新增了以下几个实现类：
+
+- `ArrayDeque`: 底层采用了循环数组的方式来完成双端队列的实现，无限扩展且可选容量。Java已不推荐使用Stack，而是推荐使用更高效的`ArrayDeque`来实现栈的功能，非线程安全。
+- `ConcurrentSkipListSet`: 底层使用跳跃列表来实现，适用于高并发的场景，内部使用了ConcurrentNavigableMap，同TreeSet功能相似，线程安全。
+- `ConcurrentSkipListMap`: 底层使用跳跃列表来实现，适用于高并发的场景，内部使用了ConcurrentNavigableMap，同TreeMap功能相似，是一个并发的、可排序的Map，线程安全。因此它可以在多线程环境中弥补ConcurrentHashMap不支持排序的问题。
+- `LinkedBlockingDeque`: 底层采用了双向链表实现的双端阻塞并发队列，无限扩展且可选容量。该阻塞队列同时支持FIFO和FILO两种操作方式，即可以从队列的头和尾同时操作(插入/删除)，且线程安全。
+- `AbstractMap.SimpleEntry`: `Map.Entry`的简单可变实现。
+- `AbstractMap.SimpleImmutableEntry`: `Map.Entry`的简单不可变实现。
+
+以下的类已经被改进来用来实现新的接口：
+
+- `LinkedList`: 改进以实现Deque接口。
+- `TreeSet`: 改进以实现NavigableSet接口。
+- `TreeMap`: 改进以实现NavigableMap接口。
+
+新增了两个新的方法到`Collections`的工具类中：
+
+- `newSetFromMap(Map)`: 从通用的Map实现中创建一个通用的Set实现。Java集合中有`IdentityHashMap`，但是没有`IdentityHashSet`类，我们可以通过这样的方式来实现：
+
+```java
+Set<Object> identityHashSet = Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>());
+```
+
+- `asLifoQueue(Deque)`: 通过传入`Deque`得到一个后进先出(LIFO)的队列。
+
+现在`Arrays`工具类，具有`copyOf`和`copyOfRange`方法，可以有效地调整，截断或复制所有类型的数组的子数组。
+
+以前是这样实现的：
+
+```java
+int[] newArray = new int[newLength];
+System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
+```
+
+现在可以这样实现：
+
+```java
+int[] newArray = Arrays.copyOf(a, newLength);
+```
 
 ---
 
