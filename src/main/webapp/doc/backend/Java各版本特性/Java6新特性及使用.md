@@ -4,7 +4,7 @@
 
 以下是Java6中的引入的部分新特性，相比Java5的新特性就少了很多了。关于Java6更详细的介绍可参考[这里](http://www.oracle.com/technetwork/java/javase/features-141434.html)。
 
-- Web Service
+- Web Services Metadata
 - Scripting
 - Compiler API
 - Light-weight HTTP server
@@ -15,7 +15,7 @@
 - Java DB(Derby)
 - JDBC 4.0
 
-## 一、Web Service增强
+## 一、Web Services Metadata
 
 `WebService`是一种独立于特定语言、特定平台，基于网络的、分布式的模块化组件。是一个能够使用`xml`消息通过网络来访问的接口，这个接口描述了一组可访问的操作。在Java6中，在想要发布为`WebService`的类上加上`@WebService`的注解，这个类的方法就变为`WebService`方法了，再通过`Endpoint.publish()`方法发布这个服务。到此，一个最简单的`WebService`搞定。运行`main`方法，在浏览器里输入`http://localhost:8080/com.thunisoft.sacweq.dataflow.organ.test.Hello?wsdl`，即可查看你WebService的WSDL信息。
 
@@ -54,6 +54,22 @@ public class Hello {
 
 }
 ```
+
+Java 自从JDK5中添加了元数据功能(注解)之后,SUN几乎重构了整个J2EE体系，由于变化很大，干脆将名字也重构为Java EE，Java EE(当前版本为5.0)将元数据纳入很多规范当中，这其中就包括`Web Services`的相关规范，这显然比以前的JAX-RPC编程模型简单(当然, Axis的编程模型也很简单)。这里要谈的Web服务元数据(JSR 181)只是Java Web 服务规范中的一个,它跟Common Annotations, JAXB2, StAX, SAAJ和JAX-WS等共同构成Java EE 5的Web Services技术堆栈。
+
+下面介绍`JSR-181`里面各个元数据的相关参数及用途。
+
+| Annotation   | Retention | Target            | Description                              |
+| ------------ | --------- | ----------------- | ---------------------------------------- |
+| WebService   | Runtime   | Type              | 标注要暴露为Web Services的类或接口                  |
+| WebParam     | Runtime   | Parameter         | 自定义服务方法参数到WSDL的映射                        |
+| WebResult    | Runtime   | Method            | 自定义服务方法返回值到WSDL的映射                       |
+| WebMethod    | Runtime   | Method            | 自定义单个服务方法到WSDL的映射                        |
+| Oneway       | Runtime   | Method            | 必须与@WebMethod连用,表明被标注方法只有输入没有输出,这就要求被标注方法不能有返回值,也不能声明checked exception |
+| HandlerChain | Runtime   | Type,Method,Field | 将Web服务与外部Handler chain关联起来               |
+| SOAPBinding  | Runtime   | Type,Method       | 自定义`SOAPBinding`                         |
+
+
 
 ## 二、Scripting
 
