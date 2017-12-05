@@ -13,7 +13,7 @@
 - JAXB2
 - Console
 - Java DB(Derby)
-- JDBC4
+- JDBC 4.0
 
 ## 一、Web Service增强
 
@@ -808,6 +808,21 @@ public class NetworkServerDerbyTest {
 ```
 
 运行上面程序后,会在当前目录生成名为`NetworkDB`的文件夹。关于`Derby`的详细情况,请参考[http://db.apache.org/derby](http://db.apache.org/derby)。
+
+## 十、JDBC 4.0
+
+在 Java SE 6 所提供的诸多新特性和改进中，值得一提的是为 Java 程序提供数据库访问机制的 JDBC 版本升级到了 4.0, 这个以 JSR-221 为代号的版本，提供了更加便利的代码编写机制及柔性，并且支持更多的数据类型。JDBC4.0 主要有以下改进和新特性。
+
+- 自动加载`java.sql.Driver`，而不需要再调用`class.forName`；
+- 添加了`java.sql.RowId`数据类型用来可以访问`sql rowid`；
+- 添加了`National Character Set`的支持；
+- 增强了`BLOB`和`CLOB`的支持功能；
+- `SQL/XML`和`XML`支持；
+- `Wrapper Pattern`；
+- `SQLException`增强；
+- `Connection`和`Statement`接口增强；
+- `New Scalar Funtions`；
+- `JDBC API changes`。
 
 ---
 
