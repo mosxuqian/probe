@@ -121,3 +121,27 @@ $$ LANGUAGE PLPGSQL;
 SELECT db_upid.update_gjf_cwupid('db_sacw_fy', 't_cw_jbxx',
     ARRAY['t_cw_kxzcxx', 't_cw_wpjdxx', 't_cw_ckrkxx'], '2017331000001520002', '2017331000001520001');
 ```
+
+```sql
+CREATE OR REPLACE FUNCTION totalRecords ()
+RETURNS integer AS $$
+declare
+    now_time TIMESTAMP;
+    sql VARCHAR;
+    r RECORD;
+BEGIN
+    -- 先清空需要插入的表数据和得到当前时间.
+    TRUNCATE TABLE db_temp.t_tj_table;
+    now_time := NOW();
+
+    -- 再查询db_sacw表中所有表的表名和记录总数，插入到db_temp.t_tj_table表中.
+    sql := 'SELECT relname AS table_name, reltuples AS row_count FROM pg_class WHERE relkind = ' 
+        || quote_literal('r') || ' AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = ' || quote_literal('db_sacw') || ') ORDER BY relname ASC';
+    FOR r IN EXECUTE sql LOOP
+    EXECUTE 'INSERT INTO db_temp.t_tj_table (c_name, n_count, dt_zhgxsj) VALUES (' || quote_literal(r.table_name) || ', ' 
+        || quote_literal(r.row_count) ||', ' || quote_literal(now_time) || ')';
+    END LOOP;
+    RETURN 1;
+END;
+$$ LANGUAGE plpgsql;
+```
