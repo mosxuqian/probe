@@ -123,25 +123,62 @@ SELECT db_upid.update_gjf_cwupid('db_sacw_fy', 't_cw_jbxx',
 ```
 
 ```sql
-CREATE OR REPLACE FUNCTION totalRecords ()
-RETURNS integer AS $$
-declare
-    now_time TIMESTAMP;
-    sql VARCHAR;
-    r RECORD;
+-- 在DB_STATIS数据库模式下创建统计某个数据库模式的记录数的函数,sn参数表是数据库模式表名，默认值为'db_sacw'.
+CREATE OR REPLACE FUNCTION db_statis.record_statis (sn VARCHAR DEFAULT 'db_sacw')
+RETURNS VARCHAR AS $$
+DECLARE
+    -- 定义变量，分别是:当前时间(now_time), 含模式的数据库表名(full_table_name), 查询所有表的sql变量(table_sql), 查询某张表所有列的sql变量(column_sql), 查询该列没有值的SQL变量(column_num_sql)
+    -- 查询的所有表每行的记录(table_record的简称tr), 查询该列所有列名的记录(column_record的简称cr), 该列有值的数据量, 该列有值的数据量, 该列有值的占比.
+    now_time TIMESTAMP := current_timestamp;
+    full_table_name VARCHAR;
+    table_sql VARCHAR;
+    column_sql VARCHAR;
+    column_num_sql VARCHAR;
+    tr RECORD;
+    cr RECORD;
+    wzsj_num INTEGER;
+    yzsj_num INTEGER;
+    yzzb_num NUMERIC;
 BEGIN
-    -- 先清空需要插入的表数据和得到当前时间.
-    TRUNCATE TABLE db_temp.t_tj_table;
-    now_time := NOW();
+    -- 先清空所需要统计插入的数据库模式的表数据.
+    EXECUTE 'DELETE FROM db_statis.t_record_table WHERE c_name LIKE ' || quote_literal(sn || '.%');
+    EXECUTE 'DELETE FROM db_statis.t_record_column WHERE c_table_name LIKE ' || quote_literal(sn || '.%');
 
-    -- 再查询db_sacw表中所有表的表名和记录总数，插入到db_temp.t_tj_table表中.
-    sql := 'SELECT relname AS table_name, reltuples AS row_count FROM pg_class WHERE relkind = ' 
-        || quote_literal('r') || ' AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = ' || quote_literal('db_sacw') || ') ORDER BY relname ASC';
-    FOR r IN EXECUTE sql LOOP
-    EXECUTE 'INSERT INTO db_temp.t_tj_table (c_name, n_count, dt_zhgxsj) VALUES (' || quote_literal(r.table_name) || ', ' 
-        || quote_literal(r.row_count) ||', ' || quote_literal(now_time) || ')';
+    -- 再查询db_sacw表中所有表的表名和记录总数，然后循环插入到db_statis.t_record_table和db_statis.t_record_column两张表中.
+    table_sql := 'SELECT relname AS table_name, reltuples AS row_count FROM pg_class WHERE relkind = '
+        || quote_literal('r') || ' AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = ' || quote_literal(sn) || ') ORDER BY relname ASC';
+    FOR tr IN EXECUTE table_sql LOOP
+        full_table_name := sn || '.' || tr.table_name;
+        -- 对每张表执行表分析，重新整理数据，使统计数据为最新数据且更准确.
+        EXECUTE 'ANALYZE ' || full_table_name;
+
+        -- 向'db_statis.t_record_table'表中,插入表名和该表所对应的总记录数.
+        EXECUTE 'INSERT INTO db_statis.t_record_table (c_name, n_count, dt_zhgxsj) VALUES (' || quote_literal(full_table_name) || ', '
+            || quote_literal(tr.row_count) || ', ' || quote_literal(now_time) || ')';
+
+        -- 再查询出该表中的所有列的数据,并循环查询出该列在该表中的有值和没有值的数据量和有值数据量的占比.
+        column_sql := 'SELECT column_name FROM information_schema.columns WHERE table_schema = ' || quote_literal(sn)
+            || ' AND table_name = ' || quote_literal(tr.table_name) || ' ORDER BY ordinal_position';
+        FOR cr IN EXECUTE column_sql LOOP
+            -- 如果某张表中的数据总数为0，则不需要再统计其每一列有值和没有值的情况了,均为0。否则,就统计该列没有值(即为null)的总数，就可以算出有值的数量和占比了.
+            IF tr.row_count = 0 THEN
+                wzsj_num := 0;
+                yzsj_num := 0;
+                yzzb_num := 0;
+            ELSE
+                -- 查询出该列没有值(即为null)的总数，并计算出有值的数量和占比.
+                column_num_sql := 'SELECT COUNT(*) FROM ' || full_table_name || ' where ' || cr.column_name || ' is null';
+                EXECUTE column_num_sql INTO wzsj_num;
+                yzsj_num := tr.row_count - wzsj_num;
+                yzzb_num := ROUND(yzsj_num/tr.row_count::numeric, 2);
+            END IF;
+
+            -- 向'db_statis.t_record_column'表中,插入表名、列名、该列有值的数量，无值的数量和有值的占比.
+            EXECUTE 'INSERT INTO db_statis.t_record_column (c_table_name, c_name, n_yzsjl, n_wzsjl, n_yzsjzb, dt_zhgxsj) VALUES ('
+                || quote_literal(full_table_name) || ', ' || quote_literal(cr.column_name) || ', ' || quote_literal(yzsj_num) || ', '
+                || quote_literal(wzsj_num) || ', ' || quote_literal(yzzb_num) || ', ' || quote_literal(now_time) || ')';
+        END LOOP;
     END LOOP;
-    RETURN 1;
-END;
-$$ LANGUAGE plpgsql;
+    RETURN '统计成功！执行耗时:' || EXTRACT(EPOCH FROM (current_timestamp - now_time)) || ' s';
+END; $$ LANGUAGE plpgsql;
 ```
