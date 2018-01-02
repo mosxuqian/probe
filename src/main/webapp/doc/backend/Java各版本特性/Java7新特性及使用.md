@@ -107,6 +107,42 @@ try (BufferedReader br = new BufferedReader(new FileReader(path)) {
 }
 ```
 
+## 四、catch多个异常
+
+自Java7开始，`catch`中可以一次性捕捉多个异常做统一处理。示例如下：
+
+Java7之前的写法：
+
+```java
+public void handle() {
+    ExceptionThrower thrower = new ExceptionThrower();
+    try {
+        thrower.manyExceptions();
+    } catch (ExceptionA a) {
+        System.out.println(a.getClass());
+    } catch (ExceptionB b) {
+        System.out.println(b.getClass());
+    } catch (ExceptionC c) {
+        System.out.println(c.getClass());
+    }
+}
+```
+
+Java7及之后的写法：
+
+```java
+public void handle() {
+    ExceptionThrower thrower = new ExceptionThrower();
+    try {
+        thrower.manyExceptions();
+    } catch (ExceptionA | ExceptionB ab) {
+        System.out.println(ab.getClass());
+    } catch (ExceptionC c) {
+        System.out.println(c.getClass());
+    }
+}
+```
+
 ---
 
 参考文档：
