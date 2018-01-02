@@ -143,6 +143,22 @@ public void handle() {
 }
 ```
 
+## 五、实例创建类型推断
+
+从Java7开始，泛型类的实例化也不用繁琐的将泛型声明再写一遍。示例如下：
+
+Java7之前的写法：
+
+```java
+Map<String, List<String>> map = new HashMap<String, List<String>>();
+```
+
+Java7及之后的写法：
+
+```java
+Map<String, List<String>> map = new HashMap<>();
+```
+
 ---
 
 参考文档：
