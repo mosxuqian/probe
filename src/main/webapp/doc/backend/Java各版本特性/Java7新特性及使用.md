@@ -4,8 +4,8 @@
 
 以下是Java7中的引入的部分新特性。关于Java7更详细的介绍可参考[这里](http://www.oracle.com/technetwork/java/javase/jdk7-relnotes-418459.html)。
 
-- 集合语法增强
 - switch支持String
+- 集合语法增强
 - try-with-resources
 - catch多个异常
 - 实例创建类型推断
@@ -21,6 +21,91 @@
   - 桌面客户端增强
 
 ## 一、switch支持String
+
+`switch`现在可以接受`String`类型的参数。示例代码如下：
+
+```java
+String s = ...
+switch(s) {
+case "quux":
+    processQuux(s);
+// fall-through
+case "foo":
+case "bar":
+    processFooOrBar(s);
+    break;
+case "baz":
+    processBaz(s);
+    // fall-through
+default:
+    processDefault(s);
+    break;
+}
+```
+
+## 二、集合语法增强
+
+现在Java初始化创建部分集合数据时的方式更简单了。使用示例及对比如下：
+
+Java7之前的写法：
+
+```java
+List<String> list = new ArrayList<String>();
+list.add("item");
+String item = list.get(0);
+
+Set<String> set = new HashSet<String>();
+set.add("item");
+Map<String, Integer> map = new HashMap<String, Integer>();
+map.put("key", 1);
+int value = map.get("key");
+```
+
+Java7及之后的写法：
+
+```java
+List<String> list = ["item"];
+String item = list[0];
+
+Set<String> set = {"item"};
+
+Map<String, Integer> map = {"key" : 1};
+int value = map["key"];
+```
+
+## 三、try-with-resources
+
+Java中某些资源是需要手动关闭的，如`InputStream`，`Writer`，`Sockets`，`Connection`等。这个新的语言特性允许try语句本身申请更多的资源，这些资源作用于try代码块，并自动关闭。
+
+Java7之前的写法：
+
+```java
+BufferedReader br = null;
+try {
+    br = new BufferedReader(new FileReader(path));
+    return br.readLine();
+} catch (Exception e) {
+    log.error("BufferedReader Exception", e);
+} finally {
+    if (br != null) {
+        try {
+            br.close();
+        } catch (Exception e) {
+            log.error("BufferedReader close Exception", e);
+        }
+    }
+}
+```
+
+Java7及之后的写法：
+
+```java
+try (BufferedReader br = new BufferedReader(new FileReader(path)) {
+    return br.readLine();
+} catch (Exception e) {
+    log.error("BufferedReader Exception", e);
+}
+```
 
 ---
 
