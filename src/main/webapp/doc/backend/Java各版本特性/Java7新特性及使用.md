@@ -9,7 +9,7 @@
 - try-with-resources
 - catch多个异常
 - 实例创建类型推断
-- 支持数字字面量下划线分割
+- 数字字面量下划线分割
 - 二进制字面量
 - 增强的文件操作
 - fork/join 框架
@@ -157,6 +157,14 @@ Java7及之后的写法：
 
 ```java
 Map<String, List<String>> map = new HashMap<>();
+```
+
+## 五、数字字面量下划线分割
+
+很长的数字可读性不好，在Java 7中可以使用下划线分隔长`int`以及`long`型整数了。如：
+
+```java
+public static final int ONE_MILLION = 1_000_000;
 ```
 
 ---
