@@ -5,7 +5,6 @@
 以下是Java7中的引入的部分新特性。关于Java7更详细的介绍可参考[这里](http://www.oracle.com/technetwork/java/javase/jdk7-relnotes-418459.html)。
 
 - switch支持String
-- 集合语法增强
 - try-with-resources
 - catch多个异常
 - 实例创建类型推断
@@ -43,37 +42,7 @@ default:
 }
 ```
 
-## 二、集合语法增强
-
-现在Java初始化创建部分集合数据时的方式更简单了。使用示例及对比如下：
-
-Java7之前的写法：
-
-```java
-List<String> list = new ArrayList<String>();
-list.add("item");
-String item = list.get(0);
-
-Set<String> set = new HashSet<String>();
-set.add("item");
-Map<String, Integer> map = new HashMap<String, Integer>();
-map.put("key", 1);
-int value = map.get("key");
-```
-
-Java7及之后的写法：
-
-```java
-List<String> list = ["item"];
-String item = list[0];
-
-Set<String> set = {"item"};
-
-Map<String, Integer> map = {"key" : 1};
-int value = map["key"];
-```
-
-## 三、try-with-resources
+## 二、try-with-resources
 
 Java中某些资源是需要手动关闭的，如`InputStream`，`Writer`，`Sockets`，`Connection`等。这个新的语言特性允许try语句本身申请更多的资源，这些资源作用于try代码块，并自动关闭。
 
@@ -107,7 +76,7 @@ try (BufferedReader br = new BufferedReader(new FileReader(path)) {
 }
 ```
 
-## 四、catch多个异常
+## 三、catch多个异常
 
 自Java7开始，`catch`中可以一次性捕捉多个异常做统一处理。示例如下：
 
@@ -143,7 +112,7 @@ public void handle() {
 }
 ```
 
-## 五、实例创建类型推断
+## 四、实例创建类型推断
 
 从Java7开始，泛型类的实例化也不用繁琐的将泛型声明再写一遍。示例如下：
 
@@ -164,7 +133,24 @@ Map<String, List<String>> map = new HashMap<>();
 很长的数字可读性不好，在Java 7中可以使用下划线分隔长`int`以及`long`型整数了。如：
 
 ```java
+long creditCardNumber = 1234_5678_9012_3456L;
 public static final int ONE_MILLION = 1_000_000;
+public static final float PI = 3.14_15F;
+```
+
+## 六、二进制字面量
+
+现在可以使用0b前缀创建二进制字面量：
+
+```java
+int binary = 0b1001_1001;
+```
+
+使用二进制字面量这种表示方式，使用非常简短的代码就可将二进制字符转换为数据类型，如在`byte`或`short`。
+
+```java
+byte aByte = (byte) 0b001;
+short aShort = (short) 0b010;
 ```
 
 ---
