@@ -11,7 +11,7 @@
 - 数字字面量下划线分割
 - 二进制字面量
 - 增强的文件系统
-- fork/join 框架
+- Fork/Join框架
 - 其它
   - JDBC4.1规范
   - 支持动态类型语言
@@ -242,9 +242,129 @@ public static void testWatch() {
 
 通过上述程序示例我们可以看出，使用`WatchService`接口进行文件监控非常简单和方便。首先我们需要定义好目标监控路径，然后调用`FileSystems`类型的`newWatchService()`方法创建`WatchService`对象。接下来我们还需使用`Path`接口的`register()`方法注册`WatchService`实例及监控事件。当这些基础作业层全部准备好后，我们再编写外围实时监测循环。最后迭代`WatchKey`来获取所有触发监控事件的文件即可。
 
+## 八、Fork/Join框架
+
+### 1. 什么是Fork/Join框架
+
+Java7提供的一个用于并行执行任务的框架，是一个把大任务分割成若干个小任务，最终汇总每个小任务结果后得到大任务结果的框架。
+
+Fork/Join的运行流程图如下：
+
+![Fork/Join的运行流程图](https://res.infoq.com/articles/fork-join-introduction/zh/resources/21.png)
+
+### 2. 工作窃取算法
+
+工作窃取（work-stealing）算法是指某个线程从其他队列里窃取任务来执行。工作窃取的运行流程图如下：
+
+![工作窃取的运行流程图](https://res.infoq.com/articles/fork-join-introduction/zh/resources/image3.png)
+
+工作窃取算法的优点是充分利用线程进行并行计算，并减少了线程间的竞争，其缺点是在某些情况下还是存在竞争，比如双端队列里只有一个任务时。并且消耗了更多的系统资源，比如创建多个线程和多个双端队列。
+
+### 3. Fork/Join框架的介绍
+
+设计一个Fork/Join框架，主要有以下两步骤：
+
+第一步分割任务。首先我们需要有一个fork类来把大任务分割成子任务，有可能子任务还是很大，所以还需要不停的分割，直到分割出的子任务足够小。
+
+第二步执行任务并合并结果。分割的子任务分别放在双端队列里，然后几个启动线程分别从双端队列里获取任务执行。子任务执行完的结果都统一放在一个队列里，启动一个线程从队列里拿数据，然后合并这些数据。
+
+Fork/Join使用两个类来完成以上两件事情：
+
+ForkJoinTask：我们要使用ForkJoin框架，必须首先创建一个ForkJoin任务。它提供在任务中执行fork()和join()操作的机制，通常情况下我们不需要直接继承ForkJoinTask类，而只需要继承它的子类，Fork/Join框架提供了以下两个子类：
+RecursiveAction：用于没有返回结果的任务。
+RecursiveTask ：用于有返回结果的任务。
+ForkJoinPool ：ForkJoinTask需要通过ForkJoinPool来执行，任务分割出的子任务会添加到当前工作线程所维护的双端队列中，进入队列的头部。当一个工作线程的队列里暂时没有任务时，它会随机从其他工作线程的队列的尾部获取一个任务。
+
+### 4. Fork/Join框架使用示例
+
+让我们通过一个简单的需求来使用下`Fork／Join`框架，需求是：计算`1 + 2 + 3 + 4`的结果。
+
+使用`Fork/Join`框架首先要考虑到的是如何分割任务，如果我们希望每个子任务最多执行两个数的相加，那么我们设置分割的阈值是`2`，由于是`4`个数字相加，所以`Fork/Join`框架会把这个任务`fork`成两个子任务，子任务一负责计算`1 + 2`，子任务二负责计算`3 + 4`，然后再`join`两个子任务的结果。
+
+因为是有结果的任务，所以必须继承`RecursiveTask`，实现代码如下：
+
+```java
+package com.blinkfox.test.other;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
+import java.util.concurrent.RecursiveTask;
+
+/**
+ * CountTask.
+ *
+ * @author blinkfox on 2018-01-03.
+ */
+public class CountTask extends RecursiveTask<Integer> {
+
+    /** 阈值. */
+    public static final int THRESHOLD = 2;
+
+    /** 计算的开始值. */
+    private int start;
+
+    /** 计算的结束值. */
+    private int end;
+
+    /**
+     * 构造方法.
+     *
+     * @param start 计算的开始值
+     * @param end 计算的结束值
+     */
+    public CountTask(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    /**
+     * 执行计算的方法.
+     *
+     * @return int型结果
+     */
+    @Override
+    protected Integer compute() {
+        int sum = 0;
+
+        // 如果任务足够小就计算任务.
+        if ((end - start) <= THRESHOLD) {
+            for (int i = start; i <= end; i++) {
+                sum += i;
+            }
+        } else {
+            // 如果任务大于阈值，就分裂成两个子任务来计算.
+            int middle = (start + end) / 2;
+            CountTask leftTask = new CountTask(start, middle);
+            CountTask rightTask = new CountTask(middle + 1, end);
+
+            // 等待子任务执行完，并得到结果，再合并执行结果.
+            leftTask.fork();
+            rightTask.fork();
+            sum = leftTask.join() + rightTask.join();
+        }
+        return sum;
+    }
+
+    /**
+     * main方法.
+     *
+     * @param args 数组参数
+     */
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ForkJoinPool fkPool = new ForkJoinPool();
+        CountTask task = new CountTask(1, 4);
+        Future<Integer> result = fkPool.submit(task);
+        System.out.println("result:" + result.get());
+    }
+
+}
+```
+
 ---
 
 参考文档：
 
--[JavaSE7 Features and Enhancements](http://www.oracle.com/technetwork/java/javase/jdk7-relnotes-418459.html)
--[Java7的新特性](https://segmentfault.com/a/1190000004417830)
+- [JavaSE7 Features and Enhancements](http://www.oracle.com/technetwork/java/javase/jdk7-relnotes-418459.html)
+- [Java7的新特性](https://segmentfault.com/a/1190000004417830)
+- [Fork/Join框架介绍](http://www.infoq.com/cn/articles/fork-join-introduction)
