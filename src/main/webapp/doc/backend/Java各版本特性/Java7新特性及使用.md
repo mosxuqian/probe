@@ -1,4 +1,4 @@
-# Java6新特性及使用
+# Java7新特性及使用
 
 ## 新特性列表
 
@@ -360,6 +360,48 @@ public class CountTask extends RecursiveTask<Integer> {
 
 }
 ```
+
+## 九、其它
+
+### 1. JDBC4.1规范
+
+JDBC4.1主要更新了两个新特性，分别是：
+
+#### (1). Connection，ResultSet 和 Statement 都实现了Closeable 接口
+
+`Connection`，`ResultSet`和`Statement`都实现了`Closeable`接口，所有在`try-with-resources`语句中调用，就可以自动关闭相关资源了。
+
+#### (2). RowSet 1.1
+
+引入`RowSetFactory`接口和`RowSetProvider`类，可以创建JDBC driver支持的各种`Rowsets。
+
+```java
+RowSetFactory myRowSetFactory = null;
+JdbcRowSet jdbcRs = null;
+ResultSet rs = null;
+Statement stmt = null;
+
+try {
+  myRowSetFactory = RowSetProvider.newFactory();//用缺省的RowSetFactory 实现
+  jdbcRs = myRowSetFactory.createJdbcRowSet();
+
+  //创建一个 JdbcRowSet 对象，配置数据库连接属性
+  jdbcRs.setUrl("jdbc:myDriver:myAttribute");
+  jdbcRs.setUsername(username);
+  jdbcRs.setPassword(password);
+
+  jdbcRs.setCommand("select ID from TEST");
+  jdbcRs.execute();
+}
+```
+
+`RowSetFactory`接口包括了创建不同类型的RowSet的方法：
+
+- createCachedRowSet
+- createFilteredRowSet
+- createJdbcRowSet
+- createJoinRowSet
+- createWebRowSet
 
 ---
 
