@@ -473,6 +473,47 @@ try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 
 对一个`stream`对象调用`onClose`方法会返回一个在原有功能基础上新增了关闭功能的stream对象，当对stream对象调用`close()`方法时，与关闭相关的处理器就会执行。
 
+## 八、Optional
+
+到目前为止，臭名昭著的空指针异常是导致Java应用程序失败的最常见原因。以前，为了解决空指针异常，Google公司著名的`Guava`项目引入了`Optional`类，Guava通过使用检查空值的方式来防止代码污染，它鼓励程序员写更干净的代码。受到Google Guava的启发，`Optional`类已经成为Java 8类库的一部分。
+
+`Optional`实际上是个容器：它可以保存类型T的值，或者仅仅保存null。`Optional`提供很多有用的方法，这样我们就不用显式进行空值检测。
+
+我们下面用两个小例子来演示如何使用Optional类：一个允许为空值，一个不允许为空值。
+
+```java
+Optional<String> fullName = Optional.ofNullable(null);
+System.out.println("Full Name is set? " + fullName.isPresent());
+System.out.println("Full Name: " + fullName.orElseGet(() -> "[none]"));
+System.out.println(fullName.map(s -> "Hey " + s + "!").orElse("Hey Stranger!"));
+```
+
+如果`Optional`类的实例为非空值的话，`isPresent()`返回`true`，否从返回`false`。为了防止Optional为空值，`orElseGet()`方法通过回调函数来产生一个默认值。`map()`函数对当前`Optional`的值进行转化，然后返回一个新的`Optional`实例。`orElse()`方法和`orElseGet()`方法类似，但是`orElse`接受一个默认值而不是一个回调函数。下面是这个程序的输出：
+
+```bash
+Full Name is set? false
+Full Name: [none]
+Hey Stranger!
+```
+
+让我们来看看另一个例子：
+
+```java
+Optional<String> firstName = Optional.of("Tom");
+System.out.println("First Name is set? " + firstName.isPresent());
+System.out.println("First Name: " + firstName.orElseGet(() -> "[none]"));
+System.out.println(firstName.map(s -> "Hey " + s + "!").orElse("Hey Stranger!"));
+System.out.println();
+```
+
+下面是程序的输出：
+
+```bash
+First Name is set? true
+First Name: Tom
+Hey Tom!
+```
+
 ---
 
 参考文档：
