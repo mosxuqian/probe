@@ -325,6 +325,154 @@ public class Annotations {
 }
 ```
 
+## 七、Stream
+
+最新添加的`Stream API(java.util.stream)`把真正的函数式编程风格引入到Java中。这是目前为止对Java类库最好的补充，因为`Stream API`可以极大提供Java程序员的生产力，让程序员写出高效率、干净、简洁的代码。
+
+Stream API极大简化了集合框架的处理。让我们以一个简单的`Task`类为例进行介绍：
+
+```java
+public class Streams  {
+
+    private enum Status {
+        OPEN, CLOSED
+    };
+
+    private static final class Task {
+
+        private final Status status;
+        private final Integer points;
+
+        Task(final Status status, final Integer points) {
+            this.status = status;
+            this.points = points;
+        }
+
+        public Integer getPoints() {
+            return points;
+        }
+
+        public Status getStatus() {
+            return status;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("[%s, %d]", status, points);
+        }
+    }
+
+}
+```
+
+`Task`类中有一个分数的概念，其次是还有一个值可以为`OPEN`或`CLOSED`的状态.让我们引入一个`Task`的小集合作为演示例子：
+
+```java
+final Collection<Task> tasks = Arrays.asList(
+    new Task(Status.OPEN, 5),
+    new Task(Status.OPEN, 13),
+    new Task(Status.CLOSED, 8)
+);
+```
+
+我们下面要讨论的第一个问题是所有状态为`OPEN`的任务一共有多少分数？在Java 8以前，一般的解决方式用foreach循环，但是在Java 8里面我们可以使用`stream`：一串支持连续、并行聚集操作的元素。
+
+```java
+// Calculate total points of all active tasks using sum()
+final long totalPointsOfOpenTasks = tasks
+    .stream()
+    .filter(task -> task.getStatus() == Status.OPEN)
+    .mapToInt(Task::getPoints)
+    .sum();
+
+System.out.println("Total points: " + totalPointsOfOpenTasks);
+```
+
+程序在控制台上的输出如下：
+
+```bash
+Total points: 18
+```
+
+这里有几个注意事项。第一，task集合被转换化为其相应的`stream`表示。然后，`filter`操作过滤掉状态为`CLOSED`的task。下一步，`mapToInt`操作通过`Task::getPoints`这种方式调用每个task实例的`getPoints`方法把Task的stream转化为`Integer`的`stream`。最后，用`sum`函数把所有的分数加起来，得到最终的结果。
+
+`.stream`操作被分成了中间操作与最终操作这两种。
+
+中间操作返回一个新的`stream`对象。中间操作总是采用惰性求值方式，运行一个像filter这样的中间操作实际上没有进行任何过滤，相反它在遍历元素时会产生了一个新的stream对象，这个新的stream对象包含原始`stream`中符合给定谓词的所有元素。
+
+像`forEach`、`sum`这样的最终操作可能直接遍历stream，产生一个结果或副作用。当最终操作执行结束之后，stream管道被认为已经被消耗了，没有可能再被使用了。在大多数情况下，最终操作都是采用及早求值方式，及早完成底层数据源的遍历。
+
+stream另一个有价值的地方是能够原生支持并行处理。让我们来看看这个算task分数和的例子。
+
+```java
+// Calculate total points of all tasks
+final double totalPoints = tasks
+   .stream()
+   .parallel()
+   .map(task -> task.getPoints()) // or map(Task::getPoints)
+   .reduce(0, Integer::sum);
+
+System.out.println("Total points (all tasks): " + totalPoints);
+```
+
+这个例子和第一个例子很相似，但这个例子的不同之处在于这个程序是并行运行的，其次使用`reduce`方法来算最终的结果。
+
+下面是这个例子在控制台的输出：
+
+```java
+Total points (all tasks): 26.0
+```
+
+经常会有这个一个需求：我们需要按照某种准则来对集合中的元素进行分组。`Stream`也可以处理这样的需求，下面是一个例子：
+
+```java
+// Group tasks by their status
+final Map<Status, List<Task>> map = tasks
+    .stream()
+    .collect(Collectors.groupingBy(Task::getStatus));
+System.out.println(map);
+```
+
+这个例子的控制台输出如下：
+
+```java
+{CLOSED=[[CLOSED, 8]], OPEN=[[OPEN, 5], [OPEN, 13]]}
+```
+
+让我们来计算整个集合中每个task分数（或权重）的平均值来结束task的例子。
+
+```java
+// Calculate the weight of each tasks (as percent of total points)
+final Collection<String> result = tasks
+    .stream()                                      // Stream<String>
+    .mapToInt(Task::getPoints)                     // IntStream
+    .asLongStream()                                // LongStream
+    .mapToDouble(points -> points / totalPoints)   // DoubleStream
+    .boxed()                                       // Stream<Double>
+    .mapToLong(weigth -> (long) (weigth * 100))    // LongStream
+    .mapToObj(percentage -> percentage + "%")      // Stream<String>
+    .collect(Collectors.toList());                 // List<String>
+
+System.out.println(result);
+```
+
+下面是这个例子的控制台输出：
+
+```java
+[19%, 50%, 30%]
+```
+
+最后，就像前面提到的，`Stream API`不仅仅处理Java集合框架。像从文本文件中逐行读取数据这样典型的I/O操作也很适合用Stream API来处理。下面用一个例子来应证这一点。
+
+```java
+final Path path = new File(filename).toPath();
+try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
+    lines.onClose(() -> System.out.println("Done!")).forEach(System.out::println);
+}
+```
+
+对一个`stream`对象调用`onClose`方法会返回一个在原有功能基础上新增了关闭功能的stream对象，当对stream对象调用`close()`方法时，与关闭相关的处理器就会执行。
+
 ---
 
 参考文档：
