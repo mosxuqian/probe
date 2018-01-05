@@ -292,6 +292,39 @@ public class RepeatingAnnotations {
 
 同时，反射相关的API提供了新的函数`getAnnotationsByType()`来返回重复注解的类型（请注意`Filterable.class.getAnnotation(Filters.class`)`经编译器处理后将会返回Filters的实例）。
 
+## 六、扩展注解的支持
+
+Java 8扩展了注解的上下文。现在几乎可以为任何东西添加注解：局部变量、泛型类、父类与接口的实现，就连方法的异常也能添加注解。下面演示几个例子：
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class Annotations {
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.TYPE_USE, ElementType.TYPE_PARAMETER })
+    public @interface NonEmpty {
+    }
+
+    public static class Holder<@NonEmpty T> extends @NonEmpty Object {
+        public void method() throws @NonEmpty Exception {
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static void main(String[] args) {
+        final Holder<String> holder = new @NonEmpty Holder<String>();
+        @NonEmpty Collection<@NonEmpty String> strings = new ArrayList<>();
+    }
+
+}
+```
+
 ---
 
 参考文档：
