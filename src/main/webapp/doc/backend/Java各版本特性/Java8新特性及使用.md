@@ -6,8 +6,8 @@
 
 - 方法引用
 - 接口默认方法和静态方法
-- 函数式接口
 - Lambda 表达式
+- 函数式接口
 - 重复注解
 - 扩展注解的支持
 - Stream
@@ -181,6 +181,70 @@ public static void main( String[] args ) {
 在JVM中，默认方法的实现是非常高效的，并且通过字节码指令为方法调用提供了支持。默认方法允许继续使用现有的Java接口，而同时能够保障正常的编译过程。这方面好的例子是大量的方法被添加到`java.util.Collection`接口中去：`stream()`，`parallelStream()`，`forEach()`，`removeIf()`等。
 
 尽管默认方法非常强大，但是在使用默认方法时我们需要小心注意一个地方：在声明一个默认方法前，请仔细思考是不是真的有必要使用默认方法，因为默认方法会带给程序歧义，并且在复杂的继承体系中容易产生编译错误。
+
+## 三、Lambda 表达式
+
+`Lambda`表达式（也称为闭包）是整个Java 8发行版中最受期待的在Java语言层面上的改变，Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中）。
+
+一个`Lambda`可以由用逗号分隔的参数列表、`–>`符号与函数体三部分表示。
+
+首先看看在老版本的Java中是如何排列字符串的：
+
+```java
+List<String> names = Arrays.asList("peter", "anna", "mike", "xenia");
+Collections.sort(names, new Comparator<String>() {
+
+    @Override
+    public int compare(String a, String b) {
+        return b.compareTo(a);
+    }
+
+});
+```
+
+只需要给静态方法`Collections.sort`传入一个List对象以及一个比较器来按指定顺序排列。通常做法都是创建一个匿名的比较器对象然后将其传递给sort方法。
+在Java 8 中你就没必要使用这种传统的匿名对象的方式了，Java 8提供了更简洁的语法，lambda表达式：
+
+```java
+Collections.sort(names, (String a, String b) -> {
+    return b.compareTo(a);
+});
+```
+
+看到了吧，代码变得更段且更具有可读性，但是实际上还可以写得更短：
+
+```java
+Collections.sort(names, (String a, String b) -> b.compareTo(a));
+```
+
+对于函数体只有一行代码的，你可以去掉大括号`{}`以及`return`关键字，但是你还可以写得更短点：
+
+```java
+Collections.sort(names, (a, b) -> b.compareTo(a));
+```
+
+Java编译器可以自动推导出参数类型，所以你可以不用再写一次类型。
+
+## 四、函数式接口
+
+`Lambda`表达式是如何在Java的类型系统中表示的呢？每一个Lambda表达式都对应一个类型，通常是接口类型。而**函数式接口**是指仅仅只包含一个抽象方法的接口，每一个该类型的Lambda表达式都会被匹配到这个抽象方法。因为**默认方法**不算抽象方法，所以你也可以给你的函数式接口添加默认方法。
+
+我们可以将Lambda表达式当作任意只包含一个抽象方法的接口类型，确保你的接口一定达到这个要求，你只需要给你的接口添加`@FunctionalInterface`注解，编译器如果发现你标注了这个注解的接口有多于一个抽象方法的时候会报错的。
+
+示例如下：
+
+```java
+@FunctionalInterface
+interface Converter<F, T> {
+    T convert(F from);
+}
+
+Converter<String, Integer> converter = (from) -> Integer.valueOf(from);
+Integer converted = converter.convert("123");
+System.out.println(converted); // 123
+```
+
+> **注**：如果`@FunctionalInterface`如果没有指定，上面的代码也是对的。
 
 ---
 
