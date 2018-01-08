@@ -14,7 +14,7 @@
 - Optional
 - Date/Time API
 - Base64
-- JavaFx
+- JavaFX
 - 其它
   - JDBC4.2规范
   - 更好的类型推测机制
@@ -664,6 +664,10 @@ Base64 finally in Java 8!
 ```
 
 Base64类同时还提供了对URL、MIME友好的编码器与解码器（`Base64.getUrlEncoder() / Base64.getUrlDecoder()`, `Base64.getMimeEncoder() / Base64.getMimeDecoder()`）。
+
+## 十一、JavaFX
+
+`JavaFX`是一个强大的图形和多媒体处理工具包集合，它允许开发者来设计、创建、测试、调试和部署富客户端程序，并且和Java一样跨平台。从Java8开始，JavaFx已经内置到了JDK中。关于JavaFx更详细的文档可参考[JavaFX中文文档](http://www.javafxchina.net/blog/docs/)。
 
 ---
 
