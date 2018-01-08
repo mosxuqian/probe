@@ -633,6 +633,38 @@ System.out.println(string);     // Nov 03, 2014 - 07:13
 
 关于Java8中日期API更多的使用示例可以参考[Java 8中关于日期和时间API的20个使用示例](http://blinkfox.com/java-8zhong-guan-yu-ri-qi-he-shi-jian-apide-20ge-shi-yong-shi-li/)。
 
+## 十、Base64
+
+在Java 8中，Base64编码已经成为Java类库的标准。它的使用十分简单，下面让我们看一个例子：
+
+```java
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+public class Base64s {
+
+    public static void main(String[] args) {
+        final String text = "Base64 finally in Java 8!";
+
+        final String encoded = Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+        System.out.println(encoded);
+
+        final String decoded = new String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8);
+        System.out.println(decoded);
+    }
+
+}
+```
+
+程序在控制台上输出了编码后的字符与解码后的字符：
+
+```bash
+QmFzZTY0IGZpbmFsbHkgaW4gSmF2YSA4IQ==
+Base64 finally in Java 8!
+```
+
+Base64类同时还提供了对URL、MIME友好的编码器与解码器（`Base64.getUrlEncoder() / Base64.getUrlDecoder()`, `Base64.getMimeEncoder() / Base64.getMimeDecoder()`）。
+
 ---
 
 参考文档：
