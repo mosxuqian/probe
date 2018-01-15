@@ -244,6 +244,153 @@ System.out.println(converted); // 123
 
 > **注**：如果`@FunctionalInterface`如果没有指定，上面的代码也是对的。
 
+Java8 API包含了很多内建的函数式接口，在老Java中常用到的比如`Comparator`或者`Runnable`接口，这些接口都增加了`@FunctionalInterface`注解以便能用在`Lambda`上。
+
+Java8 API同样还提供了很多全新的函数式接口来让工作更加方便，有一些接口是来自Google Guava库里的，即便你对这些很熟悉了，还是有必要看看这些是如何扩展到lambda上使用的。
+
+### 1. Predicate 接口
+
+`Predicate`接口只有一个参数，返回`boolean`类型。该接口包含多种默认方法来将`Predicate`组合成其他复杂的逻辑（比如：**与**，**或**，**非**）：
+
+```java
+Predicate<String> predicate = (s) -> s.length() > 0;
+predicate.test("foo");            // true
+predicate.negate().test("foo");     // false
+Predicate<Boolean> nonNull = Objects::nonNull;
+Predicate<Boolean> isNull = Objects::isNull;
+Predicate<String> isEmpty = String::isEmpty;
+Predicate<String> isNotEmpty = isEmpty.negate();
+```
+
+### 2. Function 接口
+
+`Function`接口有一个参数并且返回一个结果，并附带了一些可以和其他函数组合的默认方法（`compose`, `andThen`）。代码如下:
+
+```java
+Function<String, Integer> toInteger = Integer::valueOf;
+Function<String, String> backToString = toInteger.andThen(String::valueOf);
+backToString.apply("123");     // "123"
+```
+
+### 3. Supplier 接口
+
+`Supplier`接口返回一个任意范型的值，和Function接口不同的是该接口没有任何参数。代码如下:
+
+```java
+Supplier<Person> personSupplier = Person::new;
+personSupplier.get();   // new Person
+```
+
+### 4. Consumer 接口
+
+`Consumer`接口表示执行在单个参数上的操作。代码如下:
+
+```java
+Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
+greeter.accept(new Person("Luke", "Skywalker"));
+```
+
+### 5. Comparator 接口
+
+`Comparator`是老Java中的经典接口， Java 8在此之上添加了多种默认方法。代码如下:
+
+```java
+Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName);
+Person p1 = new Person("John", "Doe");
+Person p2 = new Person("Alice", "Wonderland");
+comparator.compare(p1, p2);             // > 0
+comparator.reversed().compare(p1, p2);  // < 0
+```
+
+### 6. Filter 过滤
+
+过滤通过一个`predicate`接口来过滤并只保留符合条件的元素，该操作属于中间操作，所以我们可以在过滤后的结果来应用其他Stream操作（比如forEach）。forEach需要一个函数来对过滤后的元素依次执行。forEach是一个最终操作，所以我们不能在forEach之后来执行其他Stream操作。代码如下:
+
+```java
+stringCollection
+    .stream()
+    .filter((s) -> s.startsWith("a"))
+    .forEach(System.out::println);
+// "aaa2", "aaa1"
+```
+
+### 7. Sort 排序
+
+排序是一个中间操作，返回的是排序好后的`Stream`。如果你不指定一个自定义的`Comparator`则会使用默认排序。代码如下:
+
+```java
+stringCollection
+    .stream()
+    .sorted()
+    .filter((s) -> s.startsWith("a"))
+    .forEach(System.out::println);
+// "aaa1", "aaa2"
+```
+
+需要注意的是，排序只创建了一个排列好后的Stream，而不会影响原有的数据源，排序之后原数据`stringCollection`是不会被修改的:
+
+```java
+System.out.println(stringCollection);
+// ddd2, aaa2, bbb1, aaa1, bbb3, ccc, bbb2, ddd1
+```
+
+### 8. Map 映射
+
+中间操作`map`会将元素根据指定的`Function`接口来依次将元素转成另外的对象，下面的示例展示了将字符串转换为大写字符串。你也可以通过map来讲对象转换成其他类型，map返回的Stream类型是根据你map传递进去的函数的返回值决定的。代码如下:
+
+```java
+stringCollection
+    .stream()
+    .map(String::toUpperCase)
+    .sorted((a, b) -> b.compareTo(a))
+    .forEach(System.out::println);
+// "DDD2", "DDD1", "CCC", "BBB3", "BBB2", "AAA2", "AAA1"
+```
+
+### 9. Match 匹配
+
+`Stream`提供了多种匹配操作，允许检测指定的`Predicate`是否匹配整个`Stream`。所有的匹配操作都是最终操作，并返回一个`boolean`类型的值。代码如下:
+
+```java
+boolean anyStartsWithA = stringCollection
+        .stream()
+        .anyMatch((s) -> s.startsWith("a"));
+System.out.println(anyStartsWithA);      // true
+boolean allStartsWithA = stringCollection
+        .stream()
+        .allMatch((s) -> s.startsWith("a"));
+System.out.println(allStartsWithA);      // false
+boolean noneStartsWithZ = stringCollection
+        .stream()
+        .noneMatch((s) -> s.startsWith("z"));
+System.out.println(noneStartsWithZ);      // true
+```
+
+### 10. Count 计数
+
+计数是一个最终操作，返回Stream中元素的个数，返回值类型是`long`。代码如下:
+
+```java
+long startsWithB = stringCollection
+        .stream()
+        .filter((s) -> s.startsWith("b"))
+        .count();
+System.out.println(startsWithB);    // 3
+```
+
+### 11. Reduce 规约
+
+这是一个最终操作，允许通过指定的函数来将`stream`中的多个元素规约为一个元素，规越后的结果是通过`Optional`接口表示的。代码如下:
+
+```java
+Optional<String> reduced = stringCollection
+        .stream()
+        .sorted()
+        .reduce((s1, s2) -> s1 + "#" + s2);
+reduced.ifPresent(System.out::println);
+// "aaa1#aaa2#bbb1#bbb2#bbb3#ccc#ddd1#ddd2"
+```
+
 ## 五、重复注解
 
 自从Java 5引入了注解机制，这一特性就变得非常流行并且广为使用。然而，使用注解的一个限制是相同的注解在同一位置只能声明一次，不能声明多次。Java 8打破了这条规则，引入了重复注解机制，这样相同的注解可以在同一地方声明多次。
