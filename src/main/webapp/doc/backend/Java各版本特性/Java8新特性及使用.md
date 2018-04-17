@@ -4,15 +4,15 @@
 
 以下是Java8中的引入的部分新特性。关于Java8新特性更详细的介绍可参考[这里](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html)。
 
-- 方法引用
 - 接口默认方法和静态方法
 - Lambda 表达式
 - 函数式接口
-- 重复注解
-- 扩展注解的支持
+- 方法引用
 - Stream
 - Optional
 - Date/Time API
+- 重复注解
+- 扩展注解的支持
 - Base64
 - JavaFX
 - 其它
@@ -25,103 +25,7 @@
   - 类依赖分析器jdeps
   - JVM的PermGen空间被移除
 
-## 一、方法引用
-
-方法引用是使用一对冒号`::`并通过方法的名字来指向一个方法。方法引用可以使语言的构造更紧凑简洁，减少冗余代码。
-
-下面，我们在`Car`类中定义了`4`个方法作为例子来区分 Java 中`4`种不同方法的引用。
-
-```java
-class Car {
-
-    // Supplier是jdk1.8的接口，这里和Lamda一起使用了
-    public static Car create(final Supplier<Car> supplier) {
-        return supplier.get();
-    }
-
-    public static void collide(final Car car) {
-        System.out.println("Collided " + car.toString());
-    }
-
-    public void follow(final Car another) {
-        System.out.println("Following the " + another.toString());
-    }
-
-    public void repair() {
-        System.out.println("Repaired " + this.toString());
-    }
-
-}
-```
-
-### 1. 构造器引用
-
-它的语法是`Class::new`，或者更一般的`Class<T>::new`实例如下：
-
-```java
-final Car car = Car.create(Car::new);
-final List<Car> cars = Arrays.asList(car);
-```
-
-### 2. 静态方法引用
-
-它的语法是`Class::static_method`，实例如下：
-
-```java
-cars.forEach(Car::collide);
-```
-
-### 3. 特定类的任意对象的方法引用
-
-它的语法是`Class::method`实例如下：
-
-```java
-cars.forEach(Car::repair);
-```
-
-### 4. 特定对象的方法引用
-
-它的语法是`instance::method`实例如下：
-
-```java
-final Car police = Car.create(Car::new);
-cars.forEach(police::follow);
-```
-
-以下是方法引用的实例：
-
-```java
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Tester.
- *
- * @author blinkfox on 2018-01-05.
- */
-public class Tester {
-
-    public static void main(String[] args) {
-        List<String> list = new ArrayList<>();
-        list.add("张三");
-        list.add("李四");
-        list.add("王五");
-
-        list.forEach(System.out::println);
-    }
-
-}
-```
-
-实例中我们将`System.out::println`方法作为静态方法来引用。执行以上程序，输出结果为：
-
-```bash
-张三
-李四
-王五
-```
-
-## 二、接口默认方法和静态方法
+## 一、接口默认方法和静态方法
 
 Java 8用默认方法与静态方法这两个新概念来扩展接口的声明。与传统的接口又有些不一样，它允许在已有的接口中添加新方法，而同时又保持了与旧版本代码的兼容性。
 
@@ -151,38 +55,85 @@ private static class OverridableImpl implements Defaulable {
 
 `Defaulable`接口用关键字`default`声明了一个默认方法`notRequired()`，`Defaulable`接口的实现者之一`DefaultableImpl`实现了这个接口，并且让默认方法保持原样。`Defaulable`接口的另一个实现者`OverridableImpl`用自己的方法覆盖了默认方法。
 
+#### (1). 多重继承的冲突说明
+
+由于同一个方法可以从不同的接口引入，自然而然的会有冲突的现象，规则如下：
+
+- 一个声明在类里面的方法优先于任何默认方法
+- 优先选取最具体的实现
+
+```java
+public interface A {
+
+    default void hello() {
+        System.out.println("Hello A");
+    }
+
+}
+```
+
+```java
+public interface B extends A {
+
+    default void hello() {
+        System.out.println("Hello B");
+    }
+
+}
+```
+
+```java
+public class C implements A, B {
+
+    public static void main(String[] args) {
+        new C().hello(); // 输出 Hello B
+    }
+
+}
+```
+
+#### (2). 优缺点
+
+- **优点**: 可以在不破坏代码的前提下扩展原有库的功能。它通过一个很优雅的方式使得接口变得更智能，同时还避免了代码冗余，并且扩展类库。
+- **缺点**: 使得**接口作为协议，类作为具体实现**的界限开始变得有点模糊。
+
+#### (3). 接口默认方法不能重载Object类的任何方法
+
+**接口不能提供对Object类的任何方法的默认实现**。简单地讲，每一个java类都是Object的子类，也都继承了它类中的`equals()`/`hashCode()`/`toString()`方法，那么在类的接口上包含这些默认方法是没有意义的，它们也从来不会被编译。
+
+在JVM中，默认方法的实现是非常高效的，并且通过字节码指令为方法调用提供了支持。默认方法允许继续使用现有的Java接口，而同时能够保障正常的编译过程。这方面好的例子是大量的方法被添加到`java.util.Collection`接口中去：`stream()`，`parallelStream()`，`forEach()`，`removeIf()`等。尽管默认方法非常强大，但是在使用默认方法时我们需要小心注意一个地方：在声明一个默认方法前，请仔细思考是不是真的有必要使用默认方法。
+
 ### 2. 接口静态方法
 
-Java 8带来的另一个有趣的特性是接口可以声明（并且可以提供实现）静态方法。在接口中定义静态方法，使用static关键字，例如：
+Java 8带来的另一个有趣的特性是接口可以声明（并且可以提供实现）静态方法。在接口中定义静态方法，使用`static`关键字，例如：
 
 ```java
-private interface DefaulableFactory {
-    // Interfaces now allow static methods
-    static Defaulable create(Supplier<Defaulable> supplier) {
-        return supplier.get();
+public interface StaticInterface {
+
+    static void method() {
+        System.out.println("这是Java8接口中的静态方法!");
     }
+
 }
 ```
 
-下面的一小段代码片段把上面的默认方法与静态方法黏合到一起。
+下面的一小段代码是上面静态方法的使用。
 
 ```java
-public static void main(String[] args) {
-    Defaulable defaulable = DefaulableFactory.create(DefaultableImpl::new);
-    System.out.println(defaulable.notRequired());
+public class Main {
 
-    defaulable = DefaulableFactory.create(OverridableImpl::new);
-    System.out.println(defaulable.notRequired());
+    public static void main(String[] args) {
+        StaticInterface.method(); // 输出 这是Java8接口中的静态方法!
+    }
+
 }
 ```
 
-在JVM中，默认方法的实现是非常高效的，并且通过字节码指令为方法调用提供了支持。默认方法允许继续使用现有的Java接口，而同时能够保障正常的编译过程。这方面好的例子是大量的方法被添加到`java.util.Collection`接口中去：`stream()`，`parallelStream()`，`forEach()`，`removeIf()`等。
+Java支持一个实现类可以实现多个接口，如果多个接口中存在同样的`static`方法会怎么样呢？如果有两个接口中的静态方法一模一样，并且一个实现类同时实现了这两个接口，此时并不会产生错误，因为Java8中只能通过接口类调用接口中的静态方法，所以对编译器来说是可以区分的。
 
-尽管默认方法非常强大，但是在使用默认方法时我们需要小心注意一个地方：在声明一个默认方法前，请仔细思考是不是真的有必要使用默认方法，因为默认方法会带给程序歧义，并且在复杂的继承体系中容易产生编译错误。
+二、Lambda 表达式
 
-## 三、Lambda 表达式
-
-`Lambda`表达式（也称为闭包）是整个Java 8发行版中最受期待的在Java语言层面上的改变，Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中）。
+`Lambda`表达式（也称为闭包）是整个Java 8发行版中最受期待的在Java语言层面上的改变，Lambda允许把函数作为一个方法的参数（即：**行为参数化**，函数作为参数传递进方法中）。
 
 一个`Lambda`可以由用逗号分隔的参数列表、`–>`符号与函数体三部分表示。
 
@@ -223,7 +174,7 @@ Collections.sort(names, (a, b) -> b.compareTo(a));
 
 Java编译器可以自动推导出参数类型，所以你可以不用再写一次类型。
 
-## 四、函数式接口
+## 三、函数式接口
 
 `Lambda`表达式是如何在Java的类型系统中表示的呢？每一个Lambda表达式都对应一个类型，通常是接口类型。而**函数式接口**是指仅仅只包含一个抽象方法的接口，每一个该类型的Lambda表达式都会被匹配到这个抽象方法。因为**默认方法**不算抽象方法，所以你也可以给你的函数式接口添加默认方法。
 
@@ -248,9 +199,91 @@ Java8 API包含了很多内建的函数式接口，在老Java中常用到的比�
 
 Java8 API同样还提供了很多全新的函数式接口来让工作更加方便，有一些接口是来自Google Guava库里的，即便你对这些很熟悉了，还是有必要看看这些是如何扩展到lambda上使用的。
 
-### 1. Predicate 接口
+### 1. Comparator (比较器接口)
 
-`Predicate`接口只有一个参数，返回`boolean`类型。该接口包含多种默认方法来将`Predicate`组合成其他复杂的逻辑（比如：**与**，**或**，**非**）：
+`Comparator`是老Java中的经典接口， Java 8在此之上添加了多种默认方法。源代码及使用示例如下:
+
+```java
+@FunctionalInterface
+public interface Comparator<T> {
+
+    int compare(T o1, T o2);
+
+}
+```
+
+```java
+Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName);
+Person p1 = new Person("John", "Doe");
+Person p2 = new Person("Alice", "Wonderland");
+comparator.compare(p1, p2);             // > 0
+comparator.reversed().compare(p1, p2);  // < 0
+```
+
+### 2. Consumer (消费型接口)
+
+`Consumer`接口表示执行在单个参数上的操作。源代码及使用示例如下:
+
+```java
+@FunctionalInterface
+public interface Consumer<T> {
+
+    void accept(T t);
+
+}
+```
+
+```java
+Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
+greeter.accept(new Person("Luke", "Skywalker"));
+```
+
+#### 更多的Consumer接口
+
+- `BiConsumer：void accept(T t, U u);`: 接受两个参数的二元函数
+- `DoubleConsumer：void accept(double value);`: 接受一个double参数的一元函数
+- `IntConsumer：void accept(int value);`: 接受一个int参数的一元函数
+- `LongConsumer：void accept(long value);`: 接受一个long参数的一元函数
+- `ObjDoubleConsumer：void accept(T t, double value);`: 接受一个泛型参数一个double参数的二元函数
+- `ObjIntConsumer：void accept(T t, int value);`: 接受一个泛型参数一个int参数的二元函数
+- `ObjLongConsumer：void accept(T t, long value);`: 接受一个泛型参数一个long参数的二元函数
+
+### 3. Supplier (供应型接口)
+
+`Supplier`接口是不需要参数并返回一个任意范型的值。其简洁的声明，会让人以为不是函数。这个抽象方法的声明，同Consumer相反，是一个只声明了返回值，不需要参数的函数。也就是说Supplier其实表达的不是从一个参数空间到结果空间的映射能力，而是表达一种生成能力，因为我们常见的场景中不止是要consume（Consumer）或者是简单的map（Function），还包括了new这个动作。而Supplier就表达了这种能力。源代码及使用示例如下:
+
+```java
+@FunctionalInterface
+public interface Supplier<T> {
+
+    T get();
+}
+```
+
+```java
+Supplier<Person> personSupplier = Person::new;
+personSupplier.get();   // new Person
+```
+
+#### 更多Supplier接口
+
+- `BooleanSupplier：boolean getAsBoolean();`: 返回boolean的无参函数
+- `DoubleSupplier：double getAsDouble();`: 返回double的无参函数
+- `IntSupplier：int getAsInt();`: 返回int的无参函数
+- `LongSupplier：long getAsLong();`: 返回long的无参函数
+
+### 4. Predicate (断言型接口)
+
+`Predicate`接口只有一个参数，返回`boolean`类型。该接口包含多种默认方法来将`Predicate`组合成其他复杂的逻辑（比如：**与**，**或**，**非**）。`Stream`的`filter`方法就是接受`Predicate`作为入参的。这个具体在后面使用`Stream`的时候再分析深入。源代码及使用示例如下:
+
+```java
+@FunctionalInterface
+public interface Predicate<T> {
+
+    boolean test(T t);
+
+}
+```
 
 ```java
 Predicate<String> predicate = (s) -> s.length() > 0;
@@ -262,9 +295,25 @@ Predicate<String> isEmpty = String::isEmpty;
 Predicate<String> isNotEmpty = isEmpty.negate();
 ```
 
-### 2. Function 接口
+#### 更多的Predicate接口
 
-`Function`接口有一个参数并且返回一个结果，并附带了一些可以和其他函数组合的默认方法（`compose`, `andThen`）。代码如下:
+- `BiPredicate：boolean test(T t, U u);`: 接受两个参数的二元断言函数
+- `DoublePredicate：boolean test(double value);`: 入参为double的断言函数
+- `IntPredicate：boolean test(int value);`: 入参为int的断言函数
+- `LongPredicate：boolean test(long value);`: 入参为long的断言函数
+
+### 5. Function (功能型接口)
+
+`Function`接口有一个参数并且返回一个结果，并附带了一些可以和其他函数组合的默认方法（`compose`, `andThen`）。源代码及使用示例如下:
+
+```java
+@FunctionalInterface
+public interface Function<T, R> {
+
+    R apply(T t);
+
+}
+```
 
 ```java
 Function<String, Integer> toInteger = Integer::valueOf;
@@ -272,51 +321,221 @@ Function<String, String> backToString = toInteger.andThen(String::valueOf);
 backToString.apply("123");     // "123"
 ```
 
-### 3. Supplier 接口
+#### 更多的Function接口
 
-`Supplier`接口返回一个任意范型的值，和Function接口不同的是该接口没有任何参数。代码如下:
+- `BiFunction ：R apply(T t, U u);`: 接受两个参数，返回一个值，代表一个二元函数；
+- `DoubleFunction ：R apply(double value);`: 只处理double类型的一元函数；
+- `IntFunction ：R apply(int value);`: 只处理int参数的一元函数；
+- `LongFunction ：R apply(long value);`: 只处理long参数的一元函数；
+- `ToDoubleFunction：double applyAsDouble(T value);`: 返回double的一元函数；
+- `ToDoubleBiFunction：double applyAsDouble(T t, U u);`: 返回double的二元函数；
+- `ToIntFunction：int applyAsInt(T value);`: 返回int的一元函数；
+- `ToIntBiFunction：int applyAsInt(T t, U u);`: 返回int的二元函数；
+- `ToLongFunction：long applyAsLong(T value);`: 返回long的一元函数；
+- `ToLongBiFunction：long applyAsLong(T t, U u);`: 返回long的二元函数；
+- `DoubleToIntFunction：int applyAsInt(double value);`: 接受double返回int的一元函数；
+- `DoubleToLongFunction：long applyAsLong(double value);`: 接受double返回long的一元函数；
+- `IntToDoubleFunction：double applyAsDouble(int value);`: 接受int返回double的一元函数；
+- `IntToLongFunction：long applyAsLong(int value);`: 接受int返回long的一元函数；
+- `LongToDoubleFunction：double applyAsDouble(long value);`: 接受long返回double的一元函数；
+- `LongToIntFunction：int applyAsInt(long value);`: 接受long返回int的一元函数；
+
+### 6. Operator
+
+`Operator`其实就是`Function`，函数有时候也叫作算子。算子在Java8中接口描述更像是函数的补充，和上面的很多类型映射型函数类似。算子Operator包括：`UnaryOperator`和`BinaryOperator`。分别对应单（一）元算子和二元算子。
+
+算子的接口声明如下：
 
 ```java
-Supplier<Person> personSupplier = Person::new;
-personSupplier.get();   // new Person
+@FunctionalInterface
+public interface UnaryOperator<T> extends Function<T, T> {
+
+    static <T> UnaryOperator<T> identity() {
+        return t -> t;
+    }
+}
 ```
-
-### 4. Consumer 接口
-
-`Consumer`接口表示执行在单个参数上的操作。代码如下:
 
 ```java
-Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
-greeter.accept(new Person("Luke", "Skywalker"));
+@FunctionalInterface
+public interface BinaryOperator<T> extends BiFunction<T,T,T> {
+
+    public static <T> BinaryOperator<T> minBy(Comparator<? super T> comparator) {
+        Objects.requireNonNull(comparator);
+        return (a, b) -> comparator.compare(a, b) <= 0 ? a : b;
+    }
+
+    public static <T> BinaryOperator<T> maxBy(Comparator<? super T> comparator) {
+        Objects.requireNonNull(comparator);
+        return (a, b) -> comparator.compare(a, b) >= 0 ? a : b;
+    }
+}
 ```
 
-### 5. Comparator 接口
-
-`Comparator`是老Java中的经典接口， Java 8在此之上添加了多种默认方法。代码如下:
+`Operator`只需声明一个泛型参数T即可。对应的使用示例如下：
 
 ```java
-Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName);
-Person p1 = new Person("John", "Doe");
-Person p2 = new Person("Alice", "Wonderland");
-comparator.compare(p1, p2);             // > 0
-comparator.reversed().compare(p1, p2);  // < 0
+UnaryOperator<Integer> increment = x -> x + 1;
+System.out.println("递增:" + increment.apply(2)); // 输出 递增:3
+
+BinaryOperator<Integer> add = (x, y) -> x + y;
+System.out.println("相加:" + add.apply(2, 3)); // 输出 相加:5
+
+BinaryOperator<Integer> min = BinaryOperator.minBy((o1, o2) -> o1 - o2);
+System.out.println("最小值:" + min.apply(2, 3)); // 输出 最小值:2
 ```
 
-### 6. Filter 过滤
+#### 更多的Operator接口
 
-过滤通过一个`predicate`接口来过滤并只保留符合条件的元素，该操作属于中间操作，所以我们可以在过滤后的结果来应用其他Stream操作（比如forEach）。forEach需要一个函数来对过滤后的元素依次执行。forEach是一个最终操作，所以我们不能在forEach之后来执行其他Stream操作。代码如下:
+- `LongUnaryOperator：long applyAsLong(long operand);`: 对long类型做操作的一元算子
+- `IntUnaryOperator：int applyAsInt(int operand);`: 对int类型做操作的一元算子
+- `DoubleUnaryOperator：double applyAsDouble(double operand);`: 对double类型做操作的一元算子
+- `DoubleBinaryOperator：double applyAsDouble(double left, double right);`: 对double类型做操作的二元算子
+- `IntBinaryOperator：int applyAsInt(int left, int right);`: 对int类型做操作的二元算子
+- `LongBinaryOperator：long applyAsLong(long left, long right);`: 对long类型做操作的二元算子
+
+### 6. 其它函数式接口
+
+- java.lang.Runnable
+- java.util.concurrent.Callable
+- java.security.PrivilegedAction
+- java.io.FileFilter
+- java.nio.file.PathMatcher 
+- java.lang.reflect.InvocationHandler
+- java.beans.PropertyChangeListener
+- java.awt.event.ActionListener  
+- javax.swing.event.ChangeListener
+
+## 四、方法引用
+
+### 1. 概述
+
+在学习了Lambda表达式之后，我们通常使用Lambda表达式来创建匿名方法。然而，有时候我们仅仅是调用了一个已存在的方法。如下：
+
+```java
+Arrays.sort(strArray, (s1, s2) -> s1.compareToIgnoreCase(s2));
+```
+
+在Java8中，我们可以直接通过方法引用来简写Lambda表达式中已经存在的方法。
+
+```java
+Arrays.sort(strArray, String::compareToIgnoreCase);
+```
+
+这种特性就叫做**方法引用**(`Method Reference`)。
+
+**方法引用**是用来直接访问类或者实例的已经存在的方法或者构造方法。方法引用提供了一种引用而不执行方法的方式，它需要由兼容的函数式接口构成的目标类型上下文。计算时，方法引用会创建函数式接口的一个实例。当Lambda表达式中只是执行一个方法调用时，不用Lambda表达式，直接通过方法引用的形式可读性更高一些。方法引用是一种更简洁易懂的Lambda表达式。
+
+> **注意**: 方法引用是一个Lambda表达式，其中方法引用的操作符是双冒号`::`。
+
+### 2. 分类
+
+方法引用的标准形式是：`类名::方法名`。（注意：只需要写方法名，不需要写括号）
+
+有以下四种形式的方法引用：
+
+| **类型**                         | **示例**                             |
+| -------------------------------- | ------------------------------------ |
+| 引用静态方法                      | ContainingClass::staticMethodName    |
+| 引用某个对象的实例方法             | containingObject::instanceMethodName |
+| 引用某个类型的任意对象的实例方法    | ContainingType::methodName           |
+| 引用构造方法                      | ClassName::new                       |
+
+### 3. 示例
+
+使用示例如下：
+
+```java
+public class Person {
+
+    String name;
+
+    LocalDate birthday;
+
+    public Person(String name, LocalDate birthday) {
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public static int compareByAge(Person a, Person b) {
+        return a.birthday.compareTo(b.birthday);
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+}
+```
+
+```java
+public class MethodReferenceTest {
+
+    @Test
+    public static void main() {
+        Person[] pArr = new Person[] {
+            new Person("003", LocalDate.of(2016,9,1)),
+            new Person("001", LocalDate.of(2016,2,1)),
+            new Person("002", LocalDate.of(2016,3,1)),
+            new Person("004", LocalDate.of(2016,12,1))
+        };
+
+        // 使用匿名类
+        Arrays.sort(pArr, new Comparator<Person>() {
+            @Override
+            public int compare(Person a, Person b) {
+                return a.getBirthday().compareTo(b.getBirthday());
+            }
+        });
+
+        //使用lambda表达式
+        Arrays.sort(pArr, (Person a, Person b) -> {
+            return a.getBirthday().compareTo(b.getBirthday());
+        });
+
+        //使用方法引用，引用的是类的静态方法
+        Arrays.sort(pArr, Person::compareByAge);
+    }
+
+}
+```
+
+## 五、Stream
+
+Java8添加的`Stream API(java.util.stream)`把真正的函数式编程风格引入到Java中。这是目前为止对Java类库最好的补充，因为`Stream API`可以极大提供Java程序员的生产力，让程序员写出高效率、干净、简洁的代码。
+
+流可以是无限的、有状态的，可以是顺序的，也可以是并行的。在使用流的时候，你首先需要从一些来源中获取一个流，执行一个或者多个中间操作，然后执行一个最终操作。中间操作包括`filter`、`map`、`flatMap`、`peel`、`distinct`、`sorted`、`limit`和`substream`。终止操作包括`forEach`、`toArray`、`reduce`、`collect`、`min`、`max`、`count`、`anyMatch`、`allMatch`、`noneMatch`、`findFirst`和`findAny`。 `java.util.stream.Collectors`是一个非常有用的实用类。该类实现了很多归约操作，例如将流转换成集合和聚合元素。
+
+### 1. 一些重要方法说明
+
+- `stream`: 返回数据流，集合作为其源
+- `parallelStream`: 返回并行数据流， 集合作为其源
+- `filter`: 方法用于过滤出满足条件的元素
+- `map`: 方法用于映射每个元素对应的结果
+- `forEach`: 方法遍历该流中的每个元素
+- `limit`: 方法用于减少流的大小
+- `sorted`: 方法用来对流中的元素进行排序
+- `anyMatch`: 是否存在任意一个元素满足条件（返回布尔值）
+- `allMatch`: 是否所有元素都满足条件（返回布尔值）
+- `noneMatch`: 是否所有元素都不满足条件（返回布尔值）
+- `collect`: 方法是终端操作，这是通常出现在管道传输操作结束标记流的结束
+
+### 2. 一些使用示例
+
+#### (1). Filter 过滤
 
 ```java
 stringCollection
     .stream()
     .filter((s) -> s.startsWith("a"))
     .forEach(System.out::println);
-// "aaa2", "aaa1"
 ```
 
-### 7. Sort 排序
-
-排序是一个中间操作，返回的是排序好后的`Stream`。如果你不指定一个自定义的`Comparator`则会使用默认排序。代码如下:
+### (2). Sort 排序
 
 ```java
 stringCollection
@@ -324,19 +543,9 @@ stringCollection
     .sorted()
     .filter((s) -> s.startsWith("a"))
     .forEach(System.out::println);
-// "aaa1", "aaa2"
 ```
 
-需要注意的是，排序只创建了一个排列好后的Stream，而不会影响原有的数据源，排序之后原数据`stringCollection`是不会被修改的:
-
-```java
-System.out.println(stringCollection);
-// ddd2, aaa2, bbb1, aaa1, bbb3, ccc, bbb2, ddd1
-```
-
-### 8. Map 映射
-
-中间操作`map`会将元素根据指定的`Function`接口来依次将元素转成另外的对象，下面的示例展示了将字符串转换为大写字符串。你也可以通过map来讲对象转换成其他类型，map返回的Stream类型是根据你map传递进去的函数的返回值决定的。代码如下:
+### (3). Map 映射
 
 ```java
 stringCollection
@@ -344,31 +553,28 @@ stringCollection
     .map(String::toUpperCase)
     .sorted((a, b) -> b.compareTo(a))
     .forEach(System.out::println);
-// "DDD2", "DDD1", "CCC", "BBB3", "BBB2", "AAA2", "AAA1"
 ```
 
-### 9. Match 匹配
-
-`Stream`提供了多种匹配操作，允许检测指定的`Predicate`是否匹配整个`Stream`。所有的匹配操作都是最终操作，并返回一个`boolean`类型的值。代码如下:
+### (4). Match 匹配
 
 ```java
 boolean anyStartsWithA = stringCollection
         .stream()
         .anyMatch((s) -> s.startsWith("a"));
 System.out.println(anyStartsWithA);      // true
+
 boolean allStartsWithA = stringCollection
         .stream()
         .allMatch((s) -> s.startsWith("a"));
 System.out.println(allStartsWithA);      // false
+
 boolean noneStartsWithZ = stringCollection
         .stream()
         .noneMatch((s) -> s.startsWith("z"));
 System.out.println(noneStartsWithZ);      // true
 ```
 
-### 10. Count 计数
-
-计数是一个最终操作，返回Stream中元素的个数，返回值类型是`long`。代码如下:
+### (5). Count 计数
 
 ```java
 long startsWithB = stringCollection
@@ -378,7 +584,7 @@ long startsWithB = stringCollection
 System.out.println(startsWithB);    // 3
 ```
 
-### 11. Reduce 规约
+### (6). Reduce 规约
 
 这是一个最终操作，允许通过指定的函数来将`stream`中的多个元素规约为一个元素，规越后的结果是通过`Optional`接口表示的。代码如下:
 
@@ -388,237 +594,9 @@ Optional<String> reduced = stringCollection
         .sorted()
         .reduce((s1, s2) -> s1 + "#" + s2);
 reduced.ifPresent(System.out::println);
-// "aaa1#aaa2#bbb1#bbb2#bbb3#ccc#ddd1#ddd2"
 ```
 
-## 五、重复注解
-
-自从Java 5引入了注解机制，这一特性就变得非常流行并且广为使用。然而，使用注解的一个限制是相同的注解在同一位置只能声明一次，不能声明多次。Java 8打破了这条规则，引入了重复注解机制，这样相同的注解可以在同一地方声明多次。
-
-重复注解机制本身必须用`@Repeatable`注解。事实上，这并不是语言层面上的改变，更多的是编译器的技巧，底层的原理保持不变。让我们看一个快速入门的例子：
-
-```java
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-public class RepeatingAnnotations {
-
-    @Target(ElementType.TYPE)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Filters {
-        Filter[] value();
-    }
-
-    @Target(ElementType.TYPE)
-    @Retention(RetentionPolicy.RUNTIME)
-    @Repeatable(Filters.class)
-    public @interface Filter {
-        String value();
-    };
-
-    @Filter("filter1")
-    @Filter("filter2")
-    public interface Filterable {
-    }
-
-    public static void main(String[] args) {
-        for(Filter filter: Filterable.class.getAnnotationsByType(Filter.class)) {
-            System.out.println(filter.value());
-        }
-    }
-
-}
-```
-
-正如我们看到的，这里有个使用`@Repeatable(Filters.class)`注解的注解类`Filter`，`Filters`仅仅是`Filter`注解的数组，但Java编译器并不想让程序员意识到`Filters`的存在。这样，接口`Filterable`就拥有了两次`Filter`（并没有提到`Filter`）注解。
-
-同时，反射相关的API提供了新的函数`getAnnotationsByType()`来返回重复注解的类型（请注意`Filterable.class.getAnnotation(Filters.class`)`经编译器处理后将会返回Filters的实例）。
-
-## 六、扩展注解的支持
-
-Java 8扩展了注解的上下文。现在几乎可以为任何东西添加注解：局部变量、泛型类、父类与接口的实现，就连方法的异常也能添加注解。下面演示几个例子：
-
-```java
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.Collection;
-
-public class Annotations {
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ ElementType.TYPE_USE, ElementType.TYPE_PARAMETER })
-    public @interface NonEmpty {
-    }
-
-    public static class Holder<@NonEmpty T> extends @NonEmpty Object {
-        public void method() throws @NonEmpty Exception {
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static void main(String[] args) {
-        final Holder<String> holder = new @NonEmpty Holder<String>();
-        @NonEmpty Collection<@NonEmpty String> strings = new ArrayList<>();
-    }
-
-}
-```
-
-## 七、Stream
-
-最新添加的`Stream API(java.util.stream)`把真正的函数式编程风格引入到Java中。这是目前为止对Java类库最好的补充，因为`Stream API`可以极大提供Java程序员的生产力，让程序员写出高效率、干净、简洁的代码。
-
-Stream API极大简化了集合框架的处理。让我们以一个简单的`Task`类为例进行介绍：
-
-```java
-public class Streams  {
-
-    private enum Status {
-        OPEN, CLOSED
-    };
-
-    private static final class Task {
-
-        private final Status status;
-        private final Integer points;
-
-        Task(final Status status, final Integer points) {
-            this.status = status;
-            this.points = points;
-        }
-
-        public Integer getPoints() {
-            return points;
-        }
-
-        public Status getStatus() {
-            return status;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("[%s, %d]", status, points);
-        }
-    }
-
-}
-```
-
-`Task`类中有一个分数的概念，其次是还有一个值可以为`OPEN`或`CLOSED`的状态.让我们引入一个`Task`的小集合作为演示例子：
-
-```java
-final Collection<Task> tasks = Arrays.asList(
-    new Task(Status.OPEN, 5),
-    new Task(Status.OPEN, 13),
-    new Task(Status.CLOSED, 8)
-);
-```
-
-我们下面要讨论的第一个问题是所有状态为`OPEN`的任务一共有多少分数？在Java 8以前，一般的解决方式用foreach循环，但是在Java 8里面我们可以使用`stream`：一串支持连续、并行聚集操作的元素。
-
-```java
-// Calculate total points of all active tasks using sum()
-final long totalPointsOfOpenTasks = tasks
-    .stream()
-    .filter(task -> task.getStatus() == Status.OPEN)
-    .mapToInt(Task::getPoints)
-    .sum();
-
-System.out.println("Total points: " + totalPointsOfOpenTasks);
-```
-
-程序在控制台上的输出如下：
-
-```bash
-Total points: 18
-```
-
-这里有几个注意事项。第一，task集合被转换化为其相应的`stream`表示。然后，`filter`操作过滤掉状态为`CLOSED`的task。下一步，`mapToInt`操作通过`Task::getPoints`这种方式调用每个task实例的`getPoints`方法把Task的stream转化为`Integer`的`stream`。最后，用`sum`函数把所有的分数加起来，得到最终的结果。
-
-`.stream`操作被分成了中间操作与最终操作这两种。
-
-中间操作返回一个新的`stream`对象。中间操作总是采用惰性求值方式，运行一个像filter这样的中间操作实际上没有进行任何过滤，相反它在遍历元素时会产生了一个新的stream对象，这个新的stream对象包含原始`stream`中符合给定谓词的所有元素。
-
-像`forEach`、`sum`这样的最终操作可能直接遍历stream，产生一个结果或副作用。当最终操作执行结束之后，stream管道被认为已经被消耗了，没有可能再被使用了。在大多数情况下，最终操作都是采用及早求值方式，及早完成底层数据源的遍历。
-
-stream另一个有价值的地方是能够原生支持并行处理。让我们来看看这个算task分数和的例子。
-
-```java
-// Calculate total points of all tasks
-final double totalPoints = tasks
-   .stream()
-   .parallel()
-   .map(task -> task.getPoints()) // or map(Task::getPoints)
-   .reduce(0, Integer::sum);
-
-System.out.println("Total points (all tasks): " + totalPoints);
-```
-
-这个例子和第一个例子很相似，但这个例子的不同之处在于这个程序是并行运行的，其次使用`reduce`方法来算最终的结果。
-
-下面是这个例子在控制台的输出：
-
-```java
-Total points (all tasks): 26.0
-```
-
-经常会有这个一个需求：我们需要按照某种准则来对集合中的元素进行分组。`Stream`也可以处理这样的需求，下面是一个例子：
-
-```java
-// Group tasks by their status
-final Map<Status, List<Task>> map = tasks
-    .stream()
-    .collect(Collectors.groupingBy(Task::getStatus));
-System.out.println(map);
-```
-
-这个例子的控制台输出如下：
-
-```java
-{CLOSED=[[CLOSED, 8]], OPEN=[[OPEN, 5], [OPEN, 13]]}
-```
-
-让我们来计算整个集合中每个task分数（或权重）的平均值来结束task的例子。
-
-```java
-// Calculate the weight of each tasks (as percent of total points)
-final Collection<String> result = tasks
-    .stream()                                      // Stream<String>
-    .mapToInt(Task::getPoints)                     // IntStream
-    .asLongStream()                                // LongStream
-    .mapToDouble(points -> points / totalPoints)   // DoubleStream
-    .boxed()                                       // Stream<Double>
-    .mapToLong(weigth -> (long) (weigth * 100))    // LongStream
-    .mapToObj(percentage -> percentage + "%")      // Stream<String>
-    .collect(Collectors.toList());                 // List<String>
-
-System.out.println(result);
-```
-
-下面是这个例子的控制台输出：
-
-```java
-[19%, 50%, 30%]
-```
-
-最后，就像前面提到的，`Stream API`不仅仅处理Java集合框架。像从文本文件中逐行读取数据这样典型的I/O操作也很适合用Stream API来处理。下面用一个例子来应证这一点。
-
-```java
-final Path path = new File(filename).toPath();
-try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
-    lines.onClose(() -> System.out.println("Done!")).forEach(System.out::println);
-}
-```
-
-对一个`stream`对象调用`onClose`方法会返回一个在原有功能基础上新增了关闭功能的stream对象，当对stream对象调用`close()`方法时，与关闭相关的处理器就会执行。
-
-## 八、Optional
+## 六、Optional
 
 到目前为止，臭名昭著的空指针异常是导致Java应用程序失败的最常见原因。以前，为了解决空指针异常，Google公司著名的`Guava`项目引入了`Optional`类，Guava通过使用检查空值的方式来防止代码污染，它鼓励程序员写更干净的代码。受到Google Guava的启发，`Optional`类已经成为Java 8类库的一部分。
 
@@ -659,7 +637,7 @@ First Name: Tom
 Hey Tom!
 ```
 
-## 九、Date/Time API
+## 七、Date/Time API
 
 Java 8 在包`java.time`下包含了一组全新的时间日期API。新的日期API和开源的`Joda-Time`库差不多，但又不完全一样，下面的例子展示了这组新API里最重要的一些部分：
 
@@ -777,6 +755,85 @@ System.out.println(string);     // Nov 03, 2014 - 07:13
 和`java.text.NumberFormat`不一样的是新版的`DateTimeFormatter`是不可变的，所以它是线程安全的。
 
 关于Java8中日期API更多的使用示例可以参考[Java 8中关于日期和时间API的20个使用示例](http://blinkfox.com/java-8zhong-guan-yu-ri-qi-he-shi-jian-apide-20ge-shi-yong-shi-li/)。
+
+## 八、重复注解
+
+自从Java 5引入了注解机制，这一特性就变得非常流行并且广为使用。然而，使用注解的一个限制是相同的注解在同一位置只能声明一次，不能声明多次。Java 8打破了这条规则，引入了重复注解机制，这样相同的注解可以在同一地方声明多次。
+
+重复注解机制本身必须用`@Repeatable`注解。事实上，这并不是语言层面上的改变，更多的是编译器的技巧，底层的原理保持不变。让我们看一个快速入门的例子：
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+public class RepeatingAnnotations {
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Filters {
+        Filter[] value();
+    }
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Repeatable(Filters.class)
+    public @interface Filter {
+        String value();
+    };
+
+    @Filter("filter1")
+    @Filter("filter2")
+    public interface Filterable {
+    }
+
+    public static void main(String[] args) {
+        for(Filter filter: Filterable.class.getAnnotationsByType(Filter.class)) {
+            System.out.println(filter.value());
+        }
+    }
+
+}
+```
+
+正如我们看到的，这里有个使用`@Repeatable(Filters.class)`注解的注解类`Filter`，`Filters`仅仅是`Filter`注解的数组，但Java编译器并不想让程序员意识到`Filters`的存在。这样，接口`Filterable`就拥有了两次`Filter`（并没有提到`Filter`）注解。
+
+同时，反射相关的API提供了新的函数`getAnnotationsByType()`来返回重复注解的类型（请注意`Filterable.class.getAnnotation(Filters.class`)`经编译器处理后将会返回Filters的实例）。
+
+## 九、扩展注解的支持
+
+Java 8扩展了注解的上下文。**现在几乎可以为任何东西添加注解：局部变量、泛型类、父类与接口的实现，就连方法的异常也能添加注解**。下面演示几个例子：
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class Annotations {
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.TYPE_USE, ElementType.TYPE_PARAMETER })
+    public @interface NonEmpty {
+    }
+
+    public static class Holder<@NonEmpty T> extends @NonEmpty Object {
+        public void method() throws @NonEmpty Exception {
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static void main(String[] args) {
+        final Holder<String> holder = new @NonEmpty Holder<String>();
+        @NonEmpty Collection<@NonEmpty String> strings = new ArrayList<>();
+    }
+
+}
+```
 
 ## 十、Base64
 
